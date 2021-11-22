@@ -1,0 +1,36 @@
+<template>
+<div class="login" >
+  <h3 class="text-center text-white pt-5">Login form</h3>
+  <div class="container">
+    <div id="login-row" class="row justify-content-center align-items-center">
+      <div id="login-column" style="border: #adacac 1px solid;
+    padding: 5%;
+    border-radius: 5%;" class="col-md-6">
+        <div id="login-box" class="col-md-12">
+          <form id="login-form" class="form" action="index.html" method="post">
+            <h1 class="text-center text-info "  style="margin-bottom: 0!important;">WELCOME</h1>
+            <h5 class="text-center"  style="color:#aaa!important; ">sign in to continue</h5><br>
+            <div class="form-group">
+             <!-- <label for="username" class="text-info">Username:</label><br>-->
+              <input type="email" placeholder="username" name="username" id="username" class="form-control">
+            </div>
+            <div class="form-group">
+              <!--<label for="password" class="text-info">Password:</label><br>-->
+              <input type="password" placeholder="password"  name="password" id="password" class="form-control">
+            </div>
+            <div id="register-link" class="text-right">
+              New user?
+              <a href="registration.html" class="text-info">Sign up</a>
+            </div>
+
+            <div class="form-group">
+              <input id="log" type="submit" name="submit"  class="btn btn-info btn-md" value="SIGN IN">
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</template>
