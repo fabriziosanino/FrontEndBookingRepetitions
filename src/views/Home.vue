@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <FreeReservations></FreeReservations>
+    <FreeReservations v-bind:products="products"></FreeReservations>
   </div>
 </template>
 
@@ -12,6 +12,11 @@ export default {
   name: 'Home',
   components: {
     FreeReservations
+  },
+  data(){
+    return {
+      products: [{name:'Banana',price:10},{name:'Apple', price:20}]
+    }
   }
 }
 </script>

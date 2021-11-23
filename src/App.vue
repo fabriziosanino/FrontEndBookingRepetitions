@@ -8,25 +8,24 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" style="color: white!important;" href="index.html">
-              <span class="btn-label"><i class="fa fa-home"></i></span> HOME</a>
+            <router-link class="nav-link" style="color: white!important;" to="/">
+              <span class="btn-label"><i class="fa fa-home"></i></span> HOME</router-link>
           </li>
           <li class="nav-item">
-            <a style="color: white!important; padding-left: 21px!important;" class="nav-link" href="#">
-              <span class="btn-label"><i class="fa fa-calendar-check-o "></i></span> MY RESERVATIONS</a>
+            <router-link style="color: white!important; padding-left: 21px!important;" class="nav-link" to=" name: 'about', meta: {user:'Giacomo'}">
+              <span class="btn-label"><i class="fa fa-calendar-check-o "></i></span> MY RESERVATIONS</router-link>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
         <ul class="navbar-nav ml-auto" style="float: right;">
           <li class="nav-item">
-            <a class="nav-link" style="color: white!important; text-align: right!important;" href="login.html">
-              <span class="btn-label"><i class="fa fa-sign-out  "></i></span>LOG OUT</a>
+            <router-link class="nav-link" style="color: white!important; text-align: right!important;" to="/login">
+              <span class="btn-label"><i class="fa fa-sign-out  "></i></span>LOGIN</router-link>
           </li>
         </ul>
       </div>
     </nav>
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
     <router-view/>
   </div>
 </template>

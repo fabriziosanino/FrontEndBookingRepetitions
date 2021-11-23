@@ -7,6 +7,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/css/main.css'
 import './assets/css/normalize.css'
 import $ from 'jquery'
+import store from './store'
 
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
@@ -14,12 +15,16 @@ Vue.use(BootstrapVue)
 new Vue({
   router,
   render: h => h(App),
+
   data: {
     sessionToken: '',
     account: '',
     link: 'localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session'
   },
+
   mounted() { this.getSession },
+  store,
+
   methods: {
     getSession: function() { //leggere il token dal local storage
       let self = this;
