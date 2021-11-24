@@ -87,6 +87,33 @@ export const store = new Vuex.Store({
 
       })
     },
+
+    registerUser: (context, payload) => {
+      return new Promise((resolve, reject) => {
+        $.post({
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-registration",
+          dataType: 'json',
+          data: {account:payload.account, password:payload.pwd, name: payload.name, surname: payload.surname, role: "Client"}, // Si possono registrare solo Client
+          timeout: 5000
+        })
+        .done(function(results) {
+          if(results.done){
+            console.log(results);
+            localStorage.setItem("token", results.token);
+            context.commit('setSessionToken', results);
+            resolve();
+          }
+          else{
+            reject("Registration failed. Please, try again!");
+          }
+        })
+        .fail(function(strError) {
+          console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
+          reject(JSON.stringify(strError.status + ": " + strError.statusText));
+        })
+
+      })
+    },
      
     checkSession: (context, payload) => {
       $.ajax({
