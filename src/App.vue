@@ -12,16 +12,20 @@
               <span class="btn-label"><i class="fa fa-home"></i></span> HOME</router-link>
           </li>
           <li class="nav-item">
-            <router-link style="color: white!important; padding-left: 21px!important;" class="nav-link" to=" name: 'about', meta: {user:'Giacomo'}">
+            <router-link style="color: white!important; padding-left: 21px!important;" class="nav-link" to="/about">
               <span class="btn-label"><i class="fa fa-calendar-check-o "></i></span> MY RESERVATIONS</router-link>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
         <ul class="navbar-nav ml-auto" style="float: right;">
-          <li class="nav-item">
+          <li class="nav-item" v-if="getUser.account === ''">
             <router-link class="nav-link" style="color: white!important; text-align: right!important;" to="/login">
               <span class="btn-label"><i class="fa fa-sign-out  "></i></span>LOGIN</router-link>
+          </li>
+          <li class="nav-item" v-if="getUser.account !== ''">
+            <router-link class="nav-link" style="color: white!important; text-align: right!important;" to="/logout">
+              <span class="btn-label"><i class="fa fa-sign-out  "></i></span>LOGOUT</router-link>
           </li>
         </ul>
       </div>
@@ -29,6 +33,30 @@
     <router-view/>
   </div>
 </template>
+
+<script>
+  export default {
+    name: 'App',
+    mounted: function(){
+      //elements might not have been added to DOM yet
+      this.$nextTick(() => {
+        //definetely added
+        this.checkSession();
+      });
+    },
+    computed: {
+      getUser(){
+        return this.$store.getters.getUser;
+      }
+    },
+    methods: {
+      checkSession(){
+        if(localStorage.getItem("token") !== "")
+          this.$store.dispatch('checkSession', localStorage.getItem("token") || "");
+      }
+    }
+  };
+</script>
 
 <style>
 #app {

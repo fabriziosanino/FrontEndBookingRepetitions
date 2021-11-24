@@ -25,8 +25,13 @@
               <button v-on:click="loginHandler" id="btn-login" name="btn-login" class="btn btn-info btn-md" >SIGN IN</button>
             </div>
 
-            <br/><div v-if="userError" class="alert alert-danger" role="alert">Please enter a valid Username and Password</div>
+            <br/>
+            <div v-if="error[0].userError" class="alert alert-danger" role="alert">{{ error[0].userMsg }}</div>
+            <div v-else-if="error[1].pwdError" class="alert alert-danger" role="alert">{{ error[1].pwdMsg }}</div>
+            <div v-else-if="error[2].generalError" class="alert alert-danger" role="alert">{{ error[2].generalMsg }}</div>
           </form>
+
+          <span class="account">{{ getUser.account }}</span>
         </div>
       </div>
     </div>
@@ -35,42 +40,39 @@
 </template>
 
 <script>
-  import $ from 'jquery';
-
   export default {
     name: 'Login',
     data: () => ({
       user: '',
       pwd: '',
-      userError: false,
-      pwdError: false
+      error: [{userError:false, userMsg:"Please enter a valid Username"}, {pwdError:false, pwdMsg:"Please enter a valid Password"}, {generalError:false, generalMsg:""}]
     }),
+    computed: {
+      getUser(){
+        return this.$store.getters.getUser;
+      }
+    },
     methods: {
       loginHandler(){
+        this.error[2].generalError = false;
+        this.error[1].pwdError = false;
+        this.error[0].userError = false;
         if(validateEmail(this.user))
           if(validatePassword(this.pwd)){
-            alert('OK');
-            $.post({
-              url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-login",
-              contentType: "application/json; charset=utf-8",
-              dataType: 'json',
-              data: {'Account':this.user, 'Pwd':this.pwd},
-              timeout: 5000
-            })
-            .done(function() { //dataStr
-              alert("LOGIN OK");
-            })
-            .fail(function(strError) {
-              console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
-            });	
-          }else{
-            this.pwdError = true;
-          } 
-        else{
-          this.userError = true;
-        }
+            var userCredentials = {account: this.user, pwd: this.pwd};
+            this.$store.dispatch('loginUser', userCredentials).then( () => {
+              this.$router.push('/');
+            }, error => {
+              this.error[2].generalError = true;
+              this.error[2].generalMsg = error;
+            });
+          }else
+            this.error[1].pwdError = true;
+        else
+          this.error[0].userError = true;
       }
     }
+
   };
 
   function validateEmail(user) {
