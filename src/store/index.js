@@ -71,6 +71,7 @@ export const store = new Vuex.Store({
         })
         .done(function(results) {
           if(results.done){
+            localStorage.setItem("token", results.token);
             context.commit('setSessionToken', results);
             resolve();
           }
@@ -95,8 +96,9 @@ export const store = new Vuex.Store({
         timeout: 5000
       })
       .done(function(results) { 
-        if(results.done)
+        if(results.done) {
           context.commit("setSessionToken", results);
+        }
       })
       .fail(function(strError) {
         console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
