@@ -76,7 +76,7 @@
   };
 
   function validateEmail(user) {
-    const emailPattern = new RegExp('^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$');
+    const emailPattern = new RegExp('^[a-zA-Z0-9._-]+@[a-z]+.+[a-z]+$');
 
     if (!emailPattern.test(String(user).toLowerCase()))
       return false;
