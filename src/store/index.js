@@ -4,136 +4,208 @@ import $ from 'jquery';
 
 Vue.use(Vuex)
 
+//TODO:ogni volta che viene ritornato no session bisogna sloggare l'utente
+
 export const store = new Vuex.Store({
-  strict: true, //non permette di modificare i dati contenuti nello store(in state, nello specifico) se non attraverso una mutations!
-  
-  state: {
-    products: [
-      {name: 'Banana Skin', price: 20},
-      {name: 'Shiny Star', price: 40},
-      {name: 'Green Shells', price: 60},
-      {name: 'Red Shells', price: 80}
-    ],
-    user: {
-      account: '',
-      pwd: '',
-      role: '',
-      name: '',
-      surname: '',
-      sessionToken: ''
-    }
-  },
+    strict: true, //non permette di modificare i dati contenuti nello store(in state, nello specifico) se non attraverso una mutations!
 
-  getters:{
-    salesProducts: state => { // applicato per ogni elemento in state
-      var saleProducts = state.products.map(product => {
-        return {name:"**"+product.name+"**", price:product.price/2}
-      }); //prende l'array products nello store e, per ogni elemento(product), lo "sconta" alla metà
-      
-      return saleProducts;
-    },
-
-    getUser: state => {
-      return state.user;
-    }
-
-  },
-
-  mutations:{ //NB. con l'estensione VueJS DevTools queste mutazioni possono essere debuggate
-    reducePrice: (state, payload) => { // applicato per ogni elemento in state(dati dello store), riduco di un intero pari a quanto specificato dal payload parameter
-        state.products.forEach(product => {
-          product.price -= payload;
-        });
-    },
-
-    setSessionToken: (state, payload) => {
-      state.user.account = payload.account;
-      state.user.name = payload.name;
-      state.user.surname = payload.surname;
-      state.user.role = payload.role;
-      state.user.sessionToken = payload.token;
-    }
-  },
-
-  actions:{
-    reducePrice: (context, payload) => { //context mi rappresenta lo store | payload è un eventuale parametro che in questo caso specifica di quanto modificare il valore dei dati 
-      setTimeout(function(){ //simulo un async task (es. chiamata al server)
-        context.commit('reducePrice', payload); //mutation che vogliamo venga eseguita al RITORNO dall'async task (es. estrapolazione dati dal server)
-      }, 2000);
-    },
-
-    loginUser: (context, payload) => {
-      return new Promise((resolve, reject) => {
-        $.post({
-          url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-login",
-          dataType: 'json',
-          data: {account:payload.account, password:payload.pwd},
-          timeout: 5000
-        })
-        .done(function(results) {
-          if(results.done){
-            localStorage.setItem("token", results.token);
-            context.commit('setSessionToken', results);
-            resolve();
-          }
-          else{
-            reject("Login failed. Please, try again!");
-          }
-        })
-        .fail(function(strError) {
-          console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
-          reject(JSON.stringify(strError.status + ": " + strError.statusText));
-        })
-
-      })
-    },
-
-    registerUser: (context, payload) => {
-      return new Promise((resolve, reject) => {
-        $.post({
-          url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-registration",
-          dataType: 'json',
-          data: {account:payload.account, password:payload.pwd, name: payload.name, surname: payload.surname, role: "Client"}, // Si possono registrare solo Client
-          timeout: 5000
-        })
-        .done(function(results) {
-          if(results.done){
-            console.log(results);
-            localStorage.setItem("token", results.token);
-            context.commit('setSessionToken', results);
-            resolve();
-          }
-          else{
-            reject("Registration failed. Please, try again!");
-          }
-        })
-        .fail(function(strError) {
-          console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
-          reject(JSON.stringify(strError.status + ": " + strError.statusText));
-        })
-
-      })
-    },
-     
-    checkSession: (context, payload) => {
-      $.ajax({
-        type: "POST",
-        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session",
-        dataType: 'json',
-        data: {sessionToken: payload},
-        timeout: 5000
-      })
-      .done(function(results) { 
-        if(results.done) {
-          context.commit("setSessionToken", results);
+    state: {
+        user: {
+            account: '',
+            pwd: '',
+            role: 'Client',
+            name: '',
+            surname: '',
+            sessionToken: ''
         }
-      })
-      .fail(function(strError) {
-        console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
-      });	
+    },
 
+    getters: {
+        getUser: state => {
+            return state.user;
+        }
+    },
+
+    mutations: { //NB. con l'estensione VueJS DevTools queste mutazioni possono essere debuggate
+        setSessionToken: (state, payload) => {
+            state.user.account = payload.account;
+            state.user.name = payload.name;
+            state.user.surname = payload.surname;
+            state.user.role = payload.role;
+            state.user.sessionToken = payload.token;
+        }
+    },
+
+    actions: {
+        loginUser: (context, payload) => {
+            return new Promise((resolve, reject) => {
+                $.post({
+                    url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-login",
+                    dataType: 'json',
+                    data: {account: payload.account, password: payload.pwd},
+                    timeout: 5000
+                })
+                    .done(function (results) {
+                        if (results.done) {
+                            localStorage.setItem("token", results.token);
+                            context.commit('setSessionToken', results);
+                            resolve();
+                        } else {
+                            reject("Login failed. Please, try again!");
+                        }
+                    })
+                    .fail(function (strError) {
+                        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                        reject(JSON.stringify(strError.status + ": " + strError.statusText));
+                    })
+
+            })
+        },
+
+        registerUser: (context, payload) => {
+            return new Promise((resolve, reject) => {
+                $.post({
+                    url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-registration",
+                    dataType: 'json',
+                    data: {
+                        account: payload.account,
+                        password: payload.pwd,
+                        name: payload.name,
+                        surname: payload.surname,
+                        role: "Client"
+                    }, // Si possono registrare solo Client
+                    timeout: 5000
+                })
+                    .done(function (results) {
+                        if (results.done) {
+                            localStorage.setItem("token", results.token);
+                            context.commit('setSessionToken', results);
+                            resolve();
+                        } else {
+                            reject("Registration failed. Please, try again!");
+                        }
+                    })
+                    .fail(function (strError) {
+                        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                        reject(JSON.stringify(strError.status + ": " + strError.statusText));
+                    })
+
+            })
+        },
+
+        checkSession: (context, payload) => {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session;jsessionid=" + payload,
+                dataType: 'json',
+                data: {sessionToken: payload},
+                timeout: 5000
+            })
+                .done(function (results) {
+                    if (results.done) {
+                        context.commit("setSessionToken", results);
+                    } else
+                        console.log(results);
+                })
+                .fail(function (strError) {
+                    console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                });
+        },
+
+        getCourses: (context) => {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+                    dataType: 'json',
+                    data: {type: "getCourses", sessionToken: context.state.user.sessionToken},
+                    timeout: 5000
+                })
+                    .done(function (results) {
+                        if (results.done) {
+                            resolve(results.results);
+                        } else {
+                            reject("Filed to load courses!");
+                        }
+                    })
+                    .fail(function (strError) {
+                        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                        reject(JSON.stringify(strError.status + ": " + strError.statusText));
+                    })
+
+            })
+        },
+
+        deleteCourse: (context, idCourse) => {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+                    dataType: 'json',
+                    data: {type: "deleteCourse", idCourse:idCourse, sessionToken: context.state.user.sessionToken},
+                    timeout: 5000
+                })
+                    .done(function (results) {
+                        if (results.done) {
+                            resolve();
+                        } else {
+                            reject("Filed to delete course!");
+                        }
+                    })
+                    .fail(function (strError) {
+                        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                        reject(JSON.stringify(strError.status + ": " + strError.statusText));
+                    })
+            })
+        },
+
+        getTeachers: (context) => {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+                    dataType: 'json',
+                    data: {type: "getTeachers", sessionToken: context.state.user.sessionToken},
+                    timeout: 5000
+                })
+                    .done(function (results) {
+                        if (results.done) {
+                            resolve(results.results);
+                        } else {
+                            reject("Filed to load teachers!");
+                        }
+                    })
+                    .fail(function (strError) {
+                        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                        reject(JSON.stringify(strError.status + ": " + strError.statusText));
+                    })
+
+            })
+        },
+
+        deleteTeacher: (context, idTeacher) => {
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+                    dataType: 'json',
+                    data: {type: "deleteTeacher", idTeacher:idTeacher, sessionToken: context.state.user.sessionToken},
+                    timeout: 5000
+                })
+                    .done(function (results) {
+                        if (results.done) {
+                            resolve();
+                        } else {
+                            reject("Filed to delete teacher!");
+                        }
+                    })
+                    .fail(function (strError) {
+                        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                        reject(JSON.stringify(strError.status + ": " + strError.statusText));
+                    })
+            })
+        },
     }
-  }
 });
 
 /*
