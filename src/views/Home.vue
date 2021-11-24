@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <FreeReservations v-bind:products="products"></FreeReservations>
+    <FreeReservations></FreeReservations>
   </div>
 </template>
 
@@ -14,9 +14,7 @@ export default {
     FreeReservations
   },
   data(){
-    return {
-      products: [{name:'Banana',price:10},{name:'Apple', price:20}]
-    }
+    return {}
   }
 }
 </script>
