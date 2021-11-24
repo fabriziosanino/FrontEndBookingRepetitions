@@ -50,6 +50,7 @@ export const store = new Vuex.Store({
       state.user.account = payload.account;
       state.user.name = payload.name;
       state.user.surname = payload.surname;
+      state.user.role = payload.role;
       state.user.sessionToken = payload.token;
     }
   },
