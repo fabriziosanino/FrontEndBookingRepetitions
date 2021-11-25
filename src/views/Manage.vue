@@ -1,5 +1,5 @@
 <template>
-  <div id="manage" class="mange">
+  <div id="manage" class="manage">
     <section v-if="dialog==''">
       <div style="margin: 5px;" class="card">
         <div class="card-body">
@@ -91,7 +91,7 @@
       teachers: [],
       teaches: [],
       selectedTab: "course",
-      dialog:""
+      dialog:"",
     }),
     components: {
       Modal

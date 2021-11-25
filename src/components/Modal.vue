@@ -1,5 +1,5 @@
 <template>
-  <div id="modal" class="modal">
+  <div id="modal">
     <h3 class="text-center">COURSE</h3>
     <div class="container">
       <div id="modal-row" class="row justify-content-center align-items-center">
