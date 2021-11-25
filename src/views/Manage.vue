@@ -1,13 +1,13 @@
 <template>
-  <div id="manage" class="manage">
+  <div id="manage" class="manage" v-if="getUser.account !== ''">
     <section v-if="dialog==''">
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <a class="nav-item nav-link active" id="nav-monday-tab" data-toggle="tab" v-on:click="setTab('course')">COURSES</a>
-              <a class="nav-item nav-link" id="nav-tuesday-tab" data-toggle="tab" v-on:click="setTab('teacher')">TEACHERS</a>
-              <a class="nav-item nav-link" id="nav-wednesday-tab" data-toggle="tab" v-on:click="setTab('course-teacher')">COURSE - TEACHERS</a>
+              <a v-bind:class = "(selectedTab==='course')?'nav-item nav-link active':'nav-item nav-link'" id="nav-course-tab" data-toggle="tab" v-on:click="setTab('course')">COURSES</a>
+              <a v-bind:class = "(selectedTab==='teacher')?'nav-item nav-link active':'nav-item nav-link'" id="nav-teacher-tab" data-toggle="tab" v-on:click="setTab('teacher')">TEACHERS</a>
+              <a v-bind:class = "(selectedTab==='course-teacher')?'nav-item nav-link active':'nav-item nav-link'" id="nav-teach-tab" data-toggle="tab" v-on:click="setTab('course-teacher')">TEACHES</a>
             </div>
           </nav>
           <br>
@@ -97,6 +97,11 @@
     }),
     components: {
       Modal
+    },
+    computed: {
+      getUser(){
+        return this.$store.getters.getUser;
+      }
     },
     mounted: function(){
       //elements might not have been added to DOM yet

@@ -2,7 +2,8 @@
   <div id="app">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #1DA1F2!important;">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -11,22 +12,27 @@
           <li class="nav-item">
             <router-link to="/">
               <a class="nav-link" style="color: white!important;">
-                <span class="btn-label"><i class="fa fa-home"></i></span> 
+                <span class="btn-label"><i class="fa fa-home"></i></span>
                 HOME
               </a>
             </router-link>
           </li>
           <li class="nav-item">
-              <router-link to="/about">
-                <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
-                  <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span> 
-                  MY RESERVATIONS
-                </a>
-              </router-link>
+            <router-link to="/about">
+              <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
+                <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
+                MY RESERVATIONS
+              </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="getUser.role === 'Administrator'" style="color: white!important; padding-left: 21px!important;" class="nav-link" to="/manage">
-              <span class="btn-label"><i class="fa fa-calendar-check-o "></i></span> MANAGEMENT OF Teachers and Courses </router-link>
+            <router-link v-if="getUser.role === 'Administrator'" to="/manage">
+              <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
+              <span class="btn-label"><i class="fa fa-wrench"></i>
+              </span>
+                MANAGEMENT
+              </a>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -41,12 +47,10 @@
             </router-link>
           </li>
           <li class="nav-item" v-if="getUser.account !== ''">
-            <router-link to="/logout">
-              <a class="nav-link" style="color: white!important; text-align: right!important;">
-                <span class="btn-label"><i class="fa fa-sign-out"></i></span>
-                LOG OUT
-              </a>
-            </router-link>
+            <a class="nav-link" style="color: white!important; text-align: right!important;" v-on:click="logOut">
+              <span class="btn-label"><i class="fa fa-sign-out"></i></span>
+              LOG OUT
+            </a>
           </li>
         </ul>
       </div>
@@ -59,26 +63,31 @@
 </template>
 
 <script>
-  export default {
-    name: 'App',
-    mounted: function(){
-      //elements might not have been added to DOM yet
-      this.$nextTick(() => {
-        this.checkSession(localStorage.getItem("token"));
-      });
-    },
-    computed: {
-      getUser(){
-        return this.$store.getters.getUser;
-      }
-    },
-    methods: {
-      checkSession(){
-        if(localStorage.getItem("token") != "")
-          this.$store.dispatch('checkSession', localStorage.getItem("token"));
-      }
+export default {
+  name: 'App',
+  mounted: function () {
+    //elements might not have been added to DOM yet
+    this.$nextTick(() => {
+      this.checkSession(localStorage.getItem("token"));
+    });
+  },
+  computed: {
+    getUser() {
+      return this.$store.getters.getUser;
     }
-  };
+  },
+  methods: {
+    checkSession() {
+      if (localStorage.getItem("token") != "")
+        this.$store.dispatch('checkSession', localStorage.getItem("token"));
+    },
+    logOut() {
+      this.$store.dispatch('logOut').then(() =>{
+        this.$router.push('/')
+      });
+    }
+  }
+};
 </script>
 
 <style>

@@ -5,6 +5,7 @@ import $ from 'jquery';
 Vue.use(Vuex)
 
 //TODO:ogni volta che viene ritornato no session bisogna sloggare l'utente
+//TODO:il token che si passa all richesta deve essere preso dal local storage altrimenti se l'utente lo cancella la sessione rimane comunque attiva
 
 export const store = new Vuex.Store({
   strict: true, //non permette di modificare i dati contenuti nello store(in state, nello specifico) se non attraverso una mutations!
@@ -57,6 +58,16 @@ export const store = new Vuex.Store({
           state.user.surname = payload.surname;
           state.user.role = payload.role;
           state.user.sessionToken = payload.token;
+      },
+
+      clearSession: (state) => {
+        localStorage.clear();
+        state.state.user.sessionToken = "";
+        state.state.user.name = "";
+        state.state.user.surname = "";
+        state.state.user.role = "";
+        state.state.user.pwd = "";
+        state.state.user.account = "";
       },
 
       setFreeRepetitions: (state, payload) => {
@@ -113,6 +124,29 @@ export const store = new Vuex.Store({
           console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
           reject(JSON.stringify(strError.status + ": " + strError.statusText));
         })
+      });
+    },
+
+    logOut: (context) => {
+      return new Promise((resolve, reject) => {
+        $.get({
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-logout",
+          dataType: 'json',
+          timeout: 5000
+        })
+            .done(function (results) {
+              if (results.done) {
+                context.commit('clearSession', results);
+
+                resolve();
+              } else {
+                reject("Logout failed. Please, try again!");
+              }
+            })
+            .fail(function (strError) {
+              console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              reject(JSON.stringify(strError.status + ": " + strError.statusText));
+            })
       });
     },
      
@@ -193,7 +227,11 @@ export const store = new Vuex.Store({
           if (results.done) {
             resolve(results.results);
           } else {
-            reject("Filed to load courses!");
+            if(results.error == "no session") {
+              context.commit('clearSession', results);
+              reject("NO SESSION");
+            } else
+              reject("Filed to load courses!");
           }
         })
         .fail(function (strError) {
@@ -215,6 +253,9 @@ export const store = new Vuex.Store({
         .done(function (results) {
           if (results.done) {
               resolve();
+          } if(results.error == "no session") {
+            context.commit('clearSession', results);
+            reject("NO SESSION");
           } else {
               reject("Filed to delete course!");
           }
@@ -238,6 +279,9 @@ export const store = new Vuex.Store({
         .done(function (results) {
           if (results.done) {
               resolve(results.results);
+          } if(results.error == "no session") {
+            context.commit('clearSession', results);
+            reject("NO SESSION");
           } else {
               reject("Filed to load teachers!");
           }
@@ -261,6 +305,9 @@ export const store = new Vuex.Store({
         .done(function (results) {
           if (results.done) {
               resolve();
+          } if(results.error == "no session") {
+            context.commit('clearSession', results);
+            reject("NO SESSION");
           } else {
               reject("Filed to delete teacher!");
           }
@@ -284,6 +331,9 @@ export const store = new Vuex.Store({
             .done(function (results) {
               if (results.done) {
                 resolve(results.results);
+              } if(results.error == "no session") {
+                context.commit('clearSession', results);
+                reject("NO SESSION");
               } else {
                 reject("Filed to load teaches!");
               }
@@ -313,6 +363,9 @@ export const store = new Vuex.Store({
             .done(function (results) {
               if (results.done) {
                 resolve();
+              } if(results.error == "no session") {
+                context.commit('clearSession', results);
+                reject("NO SESSION");
               } else {
                 reject("Filed to delete teach!");
               }
@@ -336,6 +389,9 @@ export const store = new Vuex.Store({
             .done(function (results) {
               if (results.done) {
                 resolve();
+              } if(results.error == "no session") {
+                context.commit('clearSession', results);
+                reject("NO SESSION");
               } else {
                 reject("Filed to insert course!");
               }
@@ -359,6 +415,9 @@ export const store = new Vuex.Store({
             .done(function (results) {
               if (results.done) {
                 resolve();
+              } if(results.error == "no session") {
+                context.commit('clearSession', results);
+                reject("NO SESSION");
               } else {
                 reject("Filed to insert teacher!");
               }
@@ -382,6 +441,9 @@ export const store = new Vuex.Store({
             .done(function (results) {
               if (results.done) {
                 resolve();
+              } if(results.error == "no session") {
+                context.commit('clearSession', results);
+                reject("NO SESSION");
               } else {
                 reject("Filed to insert teach!");
               }
