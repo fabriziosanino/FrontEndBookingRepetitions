@@ -1,6 +1,6 @@
 <template>
   <div id="manage" class="mange">
-    <section>
+    <section v-if="dialog==''">
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
@@ -16,7 +16,9 @@
             <tr>
               <th scope="col">IDCourse</th>
               <th scope="col">Title</th>
-              <th scope="col"></th>
+              <th scope="col">
+                <input id="addCourse" class="btn btn-info btn-md" value="ADD NEW COURSE" v-on:click="dialog='course'">
+              </th>
             </tr>
             </thead>
             <tbody>
@@ -36,7 +38,9 @@
               <th scope="col">Mail</th>
               <th scope="col">Surname</th>
               <th scope="col">Name</th>
-              <th scope="col"></th>
+              <th scope="col">
+                <input id="addTeacher" class="btn btn-info btn-md" value="ADD NEW TEACHER" v-on:click="dialog='teacher'">
+              </th>
             </tr>
             </thead>
             <tbody>
@@ -51,20 +55,47 @@
             </tr>
             </tbody>
           </table>
+          <table class="table" v-if="selectedTab === 'course-teacher'">
+            <thead>
+            <tr>
+              <th scope="col">IDTeacher</th>
+              <th scope="col">IDCourse</th>
+              <th scope="col">
+                <input id="addTeach" class="btn btn-info btn-md" value="ADD NEW TEACH" v-on:click="dialog='teach'">
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(teach, index) in teaches" v-bind:key="index">
+              <td>{{ teach.IDTeacher }}</td>
+              <td>{{ teach.IDCourse}}</td>
+              <td >
+                <input id="deleteTeach" class="btn btn-info btn-md" value="DELETE" v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
+    <Modal :type="dialog" v-else></Modal>
   </div>
 </template>
 
 <script>
+  import Modal from '@/components/Modal.vue'
   export default {
     name: 'Manage',
     data: () => ({
       courses: [],
       teachers: [],
-      selectedTab: "course"
+      teaches: [],
+      selectedTab: "course",
+      dialog:""
     }),
+    components: {
+      Modal
+    },
     mounted: function(){
       //elements might not have been added to DOM yet
       this.$nextTick(() => {
@@ -79,6 +110,8 @@
           this.getCourses();
         else if(type == 'teacher')
           this.getTeachers();
+        else if(type == 'course-teacher')
+          this.getTeaches();
       },
       getCourses(){
         this.$store.dispatch('getCourses').then((results) => {
@@ -106,6 +139,21 @@
               this.teachers.splice(i, 1);
           }
           alert("Professore eliminato correttamente!");
+        })
+      },
+      getTeaches(){
+        this.$store.dispatch('getTeaches').then((results) => {
+          this.teaches = results;
+        })
+      },
+      deleteTeach(idTeacher, idCourse){
+        let teachToDelete = {idTeacher: idTeacher, idCourse: idCourse};
+        this.$store.dispatch('deleteTeach', teachToDelete).then(() => {
+          for(let i = 0; i < this.teaches.length; i++){
+            if(this.teaches[i].IDTeacher == idTeacher && this.teaches[i].IDCourse == idCourse)
+              this.teaches.splice(i, 1);
+          }
+          alert("Professore - Corso eliminato correttamente!");
         })
       }
     }

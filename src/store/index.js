@@ -10,12 +10,6 @@ export const store = new Vuex.Store({
   strict: true, //non permette di modificare i dati contenuti nello store(in state, nello specifico) se non attraverso una mutations!
   
   state: {
-    products: [
-      {name: 'Banana Skin', price: 20},
-      {name: 'Shiny Star', price: 40},
-      {name: 'Green Shells', price: 60},
-      {name: 'Red Shells', price: 80}
-    ],
     user: {
       account: '',
       pwd: '',
@@ -125,7 +119,7 @@ export const store = new Vuex.Store({
     checkSession: (context, payload) => {
       $.ajax({
         type: "POST",
-        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session",
+        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session;jsessionid=" + payload,
         dataType: 'json',
         data: {sessionToken: payload},
         timeout: 5000
@@ -184,25 +178,6 @@ export const store = new Vuex.Store({
           reject(JSON.stringify(strError.status + ": " + strError.statusText));
         })
       })
-    },
-
-    checkSession: (context, payload) => {
-      $.ajax({
-        type: "POST",
-        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session;jsessionid=" + payload,
-        dataType: 'json',
-        data: {sessionToken: payload},
-        timeout: 5000
-      })
-      .done(function (results) {
-        if (results.done) {
-          context.commit("setSessionToken", results);
-        } else
-          console.log(results);
-      })
-      .fail(function (strError) {
-        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-      });
     },
 
     getCourses: (context) => {
@@ -295,7 +270,82 @@ export const store = new Vuex.Store({
           reject(JSON.stringify(strError.status + ": " + strError.statusText));
         })
       })
-    }
+    },
+
+    getTeaches: (context) => {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+          dataType: 'json',
+          data: {type: "getTeaches", sessionToken: context.state.user.sessionToken},
+          timeout: 5000
+        })
+            .done(function (results) {
+              if (results.done) {
+                resolve(results.results);
+              } else {
+                reject("Filed to load teaches!");
+              }
+            })
+            .fail(function (strError) {
+              console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              reject(JSON.stringify(strError.status + ": " + strError.statusText));
+            })
+
+      })
+    },
+
+    deleteTeach: (context, teachToDelete) => {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+          dataType: 'json',
+          data: {
+            type: "deleteTeach",
+            idTeacher: teachToDelete.idTeacher,
+            idCourse: teachToDelete.idCourse,
+            sessionToken: context.state.user.sessionToken
+          },
+          timeout: 5000
+        })
+            .done(function (results) {
+              if (results.done) {
+                resolve();
+              } else {
+                reject("Filed to delete teach!");
+              }
+            })
+            .fail(function (strError) {
+              console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              reject(JSON.stringify(strError.status + ": " + strError.statusText));
+            })
+      })
+    },
+
+    insertCourse: (context, title) => {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+          dataType: 'json',
+          data: {type: "addCourse", title: title, sessionToken: context.state.user.sessionToken},
+          timeout: 5000
+        })
+            .done(function (results) {
+              if (results.done) {
+                resolve();
+              } else {
+                reject("Filed to insert course!");
+              }
+            })
+            .fail(function (strError) {
+              console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              reject(JSON.stringify(strError.status + ": " + strError.statusText));
+            })
+      })
+    },
   }
 });
 

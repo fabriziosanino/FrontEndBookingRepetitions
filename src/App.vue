@@ -64,8 +64,7 @@
     mounted: function(){
       //elements might not have been added to DOM yet
       this.$nextTick(() => {
-        //definetely added
-        this.checkSession();
+        this.checkSession(localStorage.getItem("token"));
       });
     },
     computed: {
@@ -75,8 +74,8 @@
     },
     methods: {
       checkSession(){
-        if(localStorage.getItem("token") !== "")
-          this.$store.dispatch('checkSession', localStorage.getItem("token") || "");
+        if(localStorage.getItem("token") != "")
+          this.$store.dispatch('checkSession', localStorage.getItem("token"));
       }
     }
   };
