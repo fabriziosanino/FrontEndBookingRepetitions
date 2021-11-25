@@ -9,11 +9,11 @@
             <h1 class="text-center text-info"  style="margin-bottom: 0!important;">WELCOME</h1>
             <h5 class="text-center"  style="color:#aaa!important; ">sign in to continue</h5><br>
             <div class="form-group">
-              <label for="username" class="text-info">Username:</label><br>
-              <input type="email" v-model="user" placeholder="username" name="username" id="username" class="form-control" required/>
+              <label for="username" class="text-info">Username</label><br>
+              <input type="email" v-model="user" placeholder="mario.rossi@email.com" name="username" id="username" class="form-control" required/>
             </div>
             <div class="form-group">
-              <label for="password" class="text-info">Password:</label><br>
+              <label for="password" class="text-info">Password</label><br>
               <input type="password" v-model="pwd" placeholder="password" name="password" id="password" class="form-control" required/>
             </div>
             <div id="register-link" class="text-right">
@@ -45,7 +45,7 @@
     data: () => ({
       user: '',
       pwd: '',
-      error: [{userError:false, userMsg:"Please enter a valid Username"}, {pwdError:false, pwdMsg:"Please enter a valid Password"}, {generalError:false, generalMsg:""}]
+      error: [{userError:false, userMsg:"Please enter a valid Username"}, {pwdError:false, pwdMsg:"Please enter a valid Password (at least 1 digit)"}, {generalError:false, generalMsg:""}]
     }),
     computed: {
       getUser(){

@@ -21,7 +21,26 @@ export const store = new Vuex.Store({
       name: '',
       surname: '',
       sessionToken: ''
-    }
+    },
+    freeRepetitions: [
+      {
+        startTime: '16:00',
+        coursesList: [
+          {
+            Title: '', 
+            IDCourse: '', 
+            teacherList:[
+              {
+                Surname: '',
+                Name: '',
+                IDTeacher: ''
+              }
+            ]
+          }  
+        ]
+      }
+    ]
+
   },
 
   getters:{
@@ -35,6 +54,10 @@ export const store = new Vuex.Store({
 
     getUser: state => {
       return state.user;
+    },
+
+    getFreeRepetitions: state => {
+      return state.freeRepetitions;
     }
 
   },
@@ -52,6 +75,37 @@ export const store = new Vuex.Store({
       state.user.surname = payload.surname;
       state.user.role = payload.role;
       state.user.sessionToken = payload.token;
+    },
+
+    setFreeRepetitions: (state, payload) => {
+      if(payload !== undefined){
+        state.freeRepetitions = payload.map((item) => {
+          const freeRepetitionsItem = {};
+  
+          freeRepetitionsItem.startTime = item.startTime;
+          if(item !== undefined){
+            freeRepetitionsItem.coursesList = item.coursesList.map((courseItem) => {
+              const coursesListItem = {};
+    
+              coursesListItem.IDCourse = courseItem.IDCourse;
+              coursesListItem.Title = courseItem.Title;
+              if(courseItem !== undefined){
+                coursesListItem.teachersList = courseItem.teachersList.map((teacherItem) => {
+                  const teachersListItem = {};
+      
+                  teachersListItem.IDTeacher = teacherItem.IDTeacher;
+                  teachersListItem.Surname = teacherItem.Surname;
+                  teachersListItem.Name = teacherItem.Name;
+      
+                  return teachersListItem;
+                });
+              }
+              return coursesListItem;
+            });
+          }
+          return freeRepetitionsItem;
+        });
+      }
     }
   },
 
@@ -97,9 +151,26 @@ export const store = new Vuex.Store({
         timeout: 5000
       })
       .done(function(results) { 
-        if(results.done) {
+        if(results.done)
           context.commit("setSessionToken", results);
-        }
+      })
+      .fail(function(strError) {
+        console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
+      });	
+
+    },
+
+    getFreeRepetitions: (context, payload) => {
+      $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-free-repetitions",
+        dataType: 'json',
+        data: {day: payload.selectedDay, account: payload.account},
+        timeout: 5000
+      })
+      .done(function(results) { 
+        if(results.done)
+          context.commit('setFreeRepetitions',results.results);
       })
       .fail(function(strError) {
         console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
