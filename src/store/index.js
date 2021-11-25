@@ -346,6 +346,52 @@ export const store = new Vuex.Store({
             })
       })
     },
+
+    insertTeacher: (context, teacher) => {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+          dataType: 'json',
+          data: {type: "addTeacher", mail: teacher.mail, name: teacher.name, surname:teacher.surname, sessionToken: context.state.user.sessionToken},
+          timeout: 5000
+        })
+            .done(function (results) {
+              if (results.done) {
+                resolve();
+              } else {
+                reject("Filed to insert teacher!");
+              }
+            })
+            .fail(function (strError) {
+              console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              reject(JSON.stringify(strError.status + ": " + strError.statusText));
+            })
+      })
+    },
+
+    insertTeach: (context, teach) => {
+      return new Promise((resolve, reject) => {
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded//servlet-managment-administrator;jsessionid=" + context.state.user.sessionToken,
+          dataType: 'json',
+          data: {type: "addTeach", idTeacher: teach.idTeacher, idCourse: teach.idCourse, sessionToken: context.state.user.sessionToken},
+          timeout: 5000
+        })
+            .done(function (results) {
+              if (results.done) {
+                resolve();
+              } else {
+                reject("Filed to insert teach!");
+              }
+            })
+            .fail(function (strError) {
+              console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              reject(JSON.stringify(strError.status + ": " + strError.statusText));
+            })
+      })
+    },
   }
 });
 

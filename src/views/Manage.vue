@@ -58,8 +58,9 @@
           <table class="table" v-if="selectedTab === 'course-teacher'">
             <thead>
             <tr>
-              <th scope="col">IDTeacher</th>
-              <th scope="col">IDCourse</th>
+              <th scope="col">Title</th>
+              <th scope="col">Name</th>
+              <th scope="col">Surname</th>
               <th scope="col">
                 <input id="addTeach" class="btn btn-info btn-md" value="ADD NEW TEACH" v-on:click="dialog='teach'">
               </th>
@@ -67,8 +68,9 @@
             </thead>
             <tbody>
             <tr v-for="(teach, index) in teaches" v-bind:key="index">
-              <td>{{ teach.IDTeacher }}</td>
-              <td>{{ teach.IDCourse}}</td>
+              <td>{{ teach.Title }}</td>
+              <td>{{ teach.Name}}</td>
+              <td>{{ teach.Surname}}</td>
               <td >
                 <input id="deleteTeach" class="btn btn-info btn-md" value="DELETE" v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
               </td>
@@ -101,6 +103,7 @@
       this.$nextTick(() => {
         //definetely added
         this.getCourses();
+        this.getTeachers();  //serve per averli nelle modal
       });
     },
     methods: {
@@ -135,7 +138,7 @@
       deleteTeacher(idTeacher){
         this.$store.dispatch('deleteTeacher', idTeacher).then(() => {
           for(let i = 0; i < this.teachers.length; i++){
-            if(this.teachers[i].IDCourse == idTeacher)
+            if(this.teachers[i].IDTeacher == idTeacher)
               this.teachers.splice(i, 1);
           }
           alert("Professore eliminato correttamente!");
