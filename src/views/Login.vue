@@ -17,8 +17,8 @@
               <input type="password" v-model="pwd" placeholder="password" name="password" id="password" class="form-control" required/>
             </div>
             <div id="register-link" class="text-right">
-              New user?
-              <a href="registration.html" class="text-info">Sign up</a>
+              <router-link class="nav-link" style="color: #aaa!important; text-align: right!important;" to="/registration">
+              New User? SIGN UP</router-link>
             </div>
 
             <div class="form-group">

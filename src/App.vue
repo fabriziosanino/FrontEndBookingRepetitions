@@ -24,6 +24,10 @@
                 </a>
               </router-link>
           </li>
+          <li class="nav-item">
+            <router-link v-if="getUser.role === 'Administrator'" style="color: white!important; padding-left: 21px!important;" class="nav-link" to="/manage">
+              <span class="btn-label"><i class="fa fa-calendar-check-o "></i></span> MANAGEMENT OF Teachers and Courses </router-link>
+          </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
