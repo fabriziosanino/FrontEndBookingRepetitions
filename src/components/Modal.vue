@@ -29,13 +29,15 @@
               <br>
               <div class="form-group">
                 <label for="title" class="text-info">Mail:</label><br>
-                <input type="text" v-model="mail" placeholder="mario@unito.it" name="mail" id="mail" class="form-control"
+                <input type="text" v-model="mail" placeholder="mario@unito.it" name="mail" id="mail"
+                       class="form-control"
                        required/>
                 <label for="name" class="text-info">Name:</label><br>
                 <input type="text" v-model="nameT" placeholder="mario" name="name" id="name" class="form-control"
                        required/>
                 <label for="surname" class="text-info">Surname:</label><br>
-                <input type="text" v-model="surname" placeholder="rossi" name="surname" id="surname" class="form-control"
+                <input type="text" v-model="surname" placeholder="rossi" name="surname" id="surname"
+                       class="form-control"
                        required/>
               </div>
               <div class="form-group">
@@ -57,12 +59,16 @@
               <br>
               <div class="form-group">
                 <label>IDTeacher:</label>
-                <select name="idTeachers" id="idTeachers" @change="onChangeTeacher($event)" >
-                  <option v-for="teacher in this.$parent.$data.teachers" v-bind:key="teacher.IDTeacher" v-bind:value="teacher.IDTeacher">{{teacher.Name}} {{teacher.Surname}}</option>
+                <select name="idTeachers" id="idTeachers" @change="onChangeTeacher($event)">
+                  <option v-for="teacher in this.$parent.$data.teachers" v-bind:key="teacher.IDTeacher"
+                          v-bind:value="teacher.IDTeacher">{{ teacher.Name }} {{ teacher.Surname }}
+                  </option>
                 </select>
                 <label>IDCourse:</label>
-                <select name="idCourses" id="idCourses" @change="onChangeCourse($event)" >
-                  <option v-for="course in this.$parent.$data.courses" v-bind:key="course.IDCourse" v-bind:value="course.IDCourse">{{course.Title}}</option>
+                <select name="idCourses" id="idCourses" @change="onChangeCourse($event)">
+                  <option v-for="course in this.$parent.$data.courses" v-bind:key="course.IDCourse"
+                          v-bind:value="course.IDCourse">{{ course.Title }}
+                  </option>
                 </select>
               </div>
               <div class="form-group">
@@ -84,6 +90,8 @@
 </template>
 
 <script>
+import $ from "jquery";
+
 export default {
   name: "Modal",
   props: ['type'],
@@ -124,34 +132,101 @@ export default {
       if (this.type == "course") {
         if (this.title != '') {
           let ref = this;
-          this.$store.dispatch('insertCourse', this.title).then(() => {
-            ref.$parent.getCourses();
-            ref.$parent.$data.dialog = "";
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + localStorage.getItem("token"),
+            dataType: 'json',
+            data: {type: "addCourse", title: this.title, sessionToken: localStorage.getItem("token")},
+            timeout: 5000
           })
+              .done(function (results) {
+                if (results.done) {
+                  ref.$parent.getCourses();
+                  ref.$parent.$data.dialog = "";
+                } else if (results.error == "no session") {
+                  localStorage.clear();
+                  ref.user.account = "";
+                  ref.user.sessionToken = "";
+                  ref.user.role = "";
+                  this.$parent.checkSession();
+                } else {
+                  console.log("error: " + results.error);
+                }
+              })
+              .fail(function (strError) {
+                console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              })
         }
       } else if (this.type == "teacher") {
         if (validateEmail(this.mail)) {
-          if(this.nameT != "") {
-            if(this.surname != "") {
+          if (this.nameT != "") {
+            if (this.surname != "") {
               let ref = this;
-              this.$store.dispatch('insertTeacher', {
-                mail: this.mail,
-                name: this.nameT,
-                surname: this.surname
-              }).then(() => {
-                ref.$parent.getTeachers();
-                ref.$parent.$data.dialog = "";
+              $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + localStorage.getItem("token"),
+                dataType: 'json',
+                data: {
+                  type: "addTeacher",
+                  mail: this.mail,
+                  name: this.nameT,
+                  surname: this.surname,
+                  sessionToken: localStorage.getItem("token")
+                },
+                timeout: 5000
               })
+                  .done(function (results) {
+                    if (results.done) {
+                      ref.$parent.getTeachers();
+                      ref.$parent.$data.dialog = "";
+                    } else if (results.error == "no session") {
+                      localStorage.clear();
+                      ref.user.account = "";
+                      ref.user.sessionToken = "";
+                      ref.user.role = "";
+                      this.$parent.checkSession();
+                    } else {
+                      console.log("error: " + results.error);
+                    }
+                  })
+                  .fail(function (strError) {
+                    console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                  })
             } else this.error[4].surnameError = true;
           } else this.error[3].nameError = true;
         } else this.error[2].mailError = true;
       } else if (this.type == "teach") {
         if (this.idTeacher != '' && this.idCourse != '') {
           let ref = this;
-          this.$store.dispatch('insertTeach', {idTeacher: this.idTeacher, idCourse: this.idCourse}).then(() => {
-            ref.$parent.getTeaches();
-            ref.$parent.$data.dialog = "";
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + localStorage.getItem("token"),
+            dataType: 'json',
+            data: {
+              type: "addTeach",
+              idTeacher: this.idTeacher,
+              idCourse: this.idCourse,
+              sessionToken: localStorage.getItem("token")
+            },
+            timeout: 5000
           })
+              .done(function (results) {
+                if (results.done) {
+                  ref.$parent.getTeaches();
+                  ref.$parent.$data.dialog = "";
+                } else if (results.error == "no session") {
+                  localStorage.clear();
+                  ref.user.account = "";
+                  ref.user.sessionToken = "";
+                  ref.user.role = "";
+                  this.$parent.checkSession();
+                } else {
+                  console.log("error: " + results.error);
+                }
+              })
+              .fail(function (strError) {
+                console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+              })
         } else this.error[5].selectError = true;
       }
     }

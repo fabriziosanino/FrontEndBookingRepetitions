@@ -35,13 +35,11 @@
 
 <script>
 // @ is an alias to /src
-import FreeReservations from '@/components/FreeReservations.vue'
 import FreeRepetitionsList from '@/components/FreeRepetitionsList.vue'
 
 export default {
   name: 'Home',
   components: {
-    FreeReservations,
     FreeRepetitionsList
   },
 
