@@ -81,6 +81,10 @@ export default {
     });
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
+
     checkSession() {
       let ref = this;
       $.ajax({
@@ -90,20 +94,22 @@ export default {
         data: {sessionToken: localStorage.getItem("token")},
         timeout: 5000
       })
-          .done(function (result) {
-            if (!result.done) {
-              localStorage.clear();
+      .done(function (result) {
+        if (!result.done) {
+          localStorage.clear();
 
-              ref.$router.push("/");
-            } else {
-              ref.user.account = result.account;
-              ref.user.role = result.role;
-              ref.user.sessionToken = result.token;
-            }
-          })
-          .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-          });
+          if(ref.$router.app._route.fullPath != '/')
+            ref.$router.push('/');
+          
+        } else {
+          ref.user.account = result.account;
+          ref.user.role = result.role;
+          ref.user.sessionToken = result.token;
+        }
+      })
+      .fail(function (strError) {
+        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+      });
     },
 
     logOut() {

@@ -119,6 +119,7 @@ export default {
   },
   mounted: function () {
     //elements might not have been added to DOM yet
+    this.dialog = "";
     this.$nextTick(() => {
       //definetely added
 

@@ -30,11 +30,12 @@
                 </button>
               </div>
 
-            <br/>
-            <div v-if="error[0].userError" class="alert alert-danger" role="alert">{{ error[0].userMsg }}</div>
-            <div v-else-if="error[1].pwdError" class="alert alert-danger" role="alert">{{ error[1].pwdMsg }}</div>
-            <div v-else-if="error[2].generalError" class="alert alert-danger" role="alert">{{ error[2].generalMsg }}</div>
-          </form>
+              <br/>
+              <div v-if="error[0].userError" class="alert alert-danger" role="alert">{{ error[0].userMsg }}</div>
+              <div v-else-if="error[1].pwdError" class="alert alert-danger" role="alert">{{ error[1].pwdMsg }}</div>
+              <div v-else-if="error[2].generalError" class="alert alert-danger" role="alert">{{ error[2].generalMsg }}</div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

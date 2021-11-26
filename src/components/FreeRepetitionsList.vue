@@ -170,6 +170,7 @@
             if(results.done){
               this.bookedResult[0].newResults = true;
               this.bookedResult[2].bookedSuccess = true;
+              
               this.dataLoaded=false;
               this.fetchFreeRepetitions(this.$props.selectedDay);
               this.dataLoaded=true;
