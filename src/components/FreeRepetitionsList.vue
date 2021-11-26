@@ -22,10 +22,7 @@
           <input :id="'btnBookARepetition_'+index" class="btn btn-info btn-md" value="BOOK" @click="bookThisRepetitionListener($event)">
         </td>
       </tr>
-      <div v-if="bookedResult[0].newResults">
-          <div v-if="bookedResult[1].bookedError" class="alert alert-danger" role="alert">{{ bookedResult[1].errorMsg }}</div>
-          <div v-else-if="bookedResult[2].bookedSuccess" class="alert alert-success" role="alert">{{ bookedResult[2].successMsg }}</div>
-      </div>
+      <tr v-if="freeRepetitions.length<=0"><td><div class="alert alert-warning" role="alert">No repetitions left on this day.</div></td></tr>
     </tbody>
 </template>
 
@@ -47,16 +44,15 @@
       return{
         dataLoaded:false,
         courseSelected: false,
-        bookedResult: [{newResults: false}, {bookedError:false, errorMsg:""}, {bookedSuccess:false, successMsg:"Repetition booked successfully! Check it out in the Booked-Repetitions section."}],
         freeRepetitions: [],
         teachersOfSelectedCourse: []
       }
     },
     mounted: function () {
       this.dataLoaded = false;
-      this.bookedResult[0].newResults = false;
-      this.bookedResult[1].bookedError = false;
-      this.bookedResult[2].bookedSuccess = false;
+      this.$parent.bookedResult[0].newResults = false;
+      this.$parent.bookedResult[1].bookedError = false;
+      this.$parent.bookedResult[2].bookedSuccess = false;
 
       this.fetchFreeRepetitions(this.$props.selectedDay);
     },
@@ -145,9 +141,9 @@
        }
       },
       bookThisRepetitionListener: function(event){
-        this.bookedResult[0].newResults = false;
-        this.bookedResult[1].bookedError = false;
-        this.bookedResult[2].bookedSuccess = false;
+        this.$parent.bookedResult[0].newResults = false;
+        this.$parent.bookedResult[1].bookedError = false;
+        this.$parent.bookedResult[2].bookedSuccess = false;
 
         var callerID = event.currentTarget.id;
         var tmp = callerID.split('_');
@@ -168,27 +164,30 @@
           })
           .done((results) => { 
             if(results.done){
-              this.bookedResult[0].newResults = true;
-              this.bookedResult[2].bookedSuccess = true;
+              this.$parent.bookedResult[0].newResults = true;
+              this.$parent.bookedResult[2].bookedSuccess = true;
               
               this.dataLoaded=false;
+              $("#FormControlSub_"+tmp[1]).val(-1);
+              $("#FormControlTeacher_"+tmp[1]).val(-1);
+              $("#FormControlTeacher_"+tmp[1]).addClass("hiddenTeacherList");
               this.fetchFreeRepetitions(this.$props.selectedDay);
               this.dataLoaded=true;
             }else{
-              this.bookedResult[0].newResults = true;
-              this.bookedResult[1].bookedError = true;
-              this.bookedResult[1].errorMsg = results.error;
+              this.$parent.bookedResult[0].newResults = true;
+              this.$parent.bookedResult[1].bookedError = true;
+              this.$parent.bookedResult[1].errorMsg = results.error;
             }
           })
           .fail((strError) => {
-            this.bookedResult[0].newResults = true;
-            this.bookedResult[1].bookedError = true;
-            this.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+            this.$parent.bookedResult[0].newResults = true;
+            this.$parent.bookedResult[1].bookedError = true;
+            this.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
           });
         }else{
-          this.bookedResult[0].newResults = true;
-          this.bookedResult[1].bookedError = true;
-          this.bookedResult[1].errorMsg = "Please select a Course and a Teacher, then try again.";
+          this.$parent.bookedResult[0].newResults = true;
+          this.$parent.bookedResult[1].bookedError = true;
+          this.$parent.bookedResult[1].errorMsg = "Please select a Course and a Teacher, then try again.";
         }
       }
     }

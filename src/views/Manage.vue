@@ -365,3 +365,6 @@ export default {
 }
 </script>
 
+<style scoped>
+  #nav-tab:hover{ cursor: pointer; }
+</style>

@@ -10,44 +10,36 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link to="/">
-              <a class="nav-link" style="color: white!important;">
-                <span class="btn-label"><i class="fa fa-home"></i></span>
-                HOME
-              </a>
-            </router-link>
+            <a href="/" class="nav-link" style="color: white!important;">
+              <span class="btn-label"><i class="fa fa-home"></i></span>
+              HOME
+            </a>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
-            <router-link to="/bookedRepetitions">
-              <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
-                <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
-                MY RESERVATIONS
-              </a>
-            </router-link>
+            <a href="/bookedRepetitions" style="color: white!important; padding-left: 21px!important;" class="nav-link">
+              <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
+              MY RESERVATIONS
+            </a>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" to="/manage">
-              <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
-              <span class="btn-label"><i class="fa fa-wrench"></i>
-              </span>
-                MANAGEMENT
-              </a>
-            </router-link>
+            <a v-if="user.role === 'Administrator'" href="/manage" style="color: white!important; padding-left: 21px!important;" class="nav-link">
+            <span class="btn-label"><i class="fa fa-wrench"></i>
+            </span>
+              MANAGEMENT
+            </a>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
         <ul class="navbar-nav ml-auto" style="float: right;">
           <li class="nav-item" v-if="user.account === ''">
-            <router-link to="/login">
-              <a class="nav-link" style="color: white!important; text-align: right!important;">
-                <span class="btn-label"><i class="fa fa-sign-out"></i></span>
-                LOG IN
-              </a>
-            </router-link>
+            <a href="/login" class="nav-link" style="color: white!important; text-align: right!important;">
+              <span class="btn-label"><i class="fa fa-sign-out"></i></span>
+              LOG IN
+            </a>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
-            <a class="nav-link" style="color: white!important; text-align: right!important;" v-on:click="logOut">
+            <a @click="logOut()" class="nav-link" id="aLogOut" style="color: white!important; text-align: right!important;">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG OUT
             </a>
@@ -79,12 +71,8 @@ export default {
     this.$nextTick(() => {
       this.checkSession();
     });
-  },
+  }, 
   methods: {
-    reloadPage() {
-      window.location.reload();
-    },
-
     checkSession() {
       let ref = this;
       $.ajax({
@@ -119,20 +107,20 @@ export default {
         dataType: 'json',
         timeout: 5000
       })
-          .done(function (results) {
-            if (results.done) {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.role = "";
+      .done(function (results) {
+        if (results.done) {
+          localStorage.clear();
+          ref.user.account = "";
+          ref.user.role = "";
 
-              ref.$router.push('/')
-            } else {
-              console.log("error: " + results.error);
-            }
-          })
-          .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-          })
+          ref.$router.push('/')
+        } else {
+          console.log("error: " + results.error);
+        }
+      })
+      .fail(function (strError) {
+        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+      })
     },
   }
 };
@@ -159,4 +147,6 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+#aLogOut:hover{ cursor: pointer; }
 </style>

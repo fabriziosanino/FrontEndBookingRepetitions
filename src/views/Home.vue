@@ -1,8 +1,11 @@
 <template>
   <div class="home">
     <section>
-
-    <div style="margin: 20px;" class="card">
+    <div v-if="bookedResult[0].newResults">
+      <div v-if="bookedResult[1].bookedError" class="alert alert-danger" role="alert">{{ bookedResult[1].errorMsg }}</div>
+      <div v-else-if="bookedResult[2].bookedSuccess" class="alert alert-success" role="alert">{{ bookedResult[2].successMsg }}</div>
+    </div>
+    <div style="margin: 5px;" class="card">
       <div class="card-body">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -45,7 +48,8 @@ export default {
 
   data(){
     return {
-      selectedDay: "Monday"
+      selectedDay: "Monday",
+      bookedResult: [{newResults: false}, {bookedError:false, errorMsg:""}, {bookedSuccess:false, successMsg:"Repetition booked successfully! Check it out in the \"My Reservations\" section."}],
     }
   },
 
@@ -56,3 +60,8 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #nav-tab:hover{ cursor: pointer; }
+  .active{font-weight: bold;}
+</style>
