@@ -11,6 +11,13 @@
                  id="nav-cancelled-tab" data-toggle="tab" v-on:click="setTab('Cancelled')">CANCELLED</a>
               <a v-bind:class="(selectedTab==='Done')?'nav-item nav-link active':'nav-item nav-link'" id="nav-done-tab"
                  data-toggle="tab" v-on:click="setTab('Done')">DONE</a>
+              <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success" role="alert">
+                {{ stateChangeResult[0].changeMessage }}
+              </div>
+              <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger" role="alert">{{
+                  stateChangeResult[1].changeError
+                }}
+              </div>
             </div>
           </nav>
           <br>
@@ -69,7 +76,17 @@ export default {
       account: "",
       sessionToken: "",
       role: ""
-    }
+    },
+    stateChangeResult: [
+      {
+        changeMessage: "Booked repetion state modifyed successfully",
+        changeSuccess: false
+      },
+      {
+        changeError: false,
+        changeMessage: "Error while updating state"
+      }
+    ]
   }),
   mounted() {
     this.$nextTick(() => {
@@ -108,7 +125,6 @@ export default {
               ref.user.account = "";
               ref.user.sessionToken = "";
               ref.user.role = "";
-              this.$parent.checkSession();
             } else {
               console.log("error: " + results.error);
             }
@@ -123,6 +139,8 @@ export default {
       });
     },
     changeState(idRepetition, newState) {
+      this.stateChangeResult[0].changeSuccess = false;
+      this.stateChangeResult[0].changeError = false;
       let ref = this;
       $.ajax({
         type: "GET",
@@ -137,15 +155,22 @@ export default {
                 if (ref.booked[i].IDRepetition == idRepetition)
                   ref.booked.splice(i, 1);
               }
-              alert("Cambio stato fatto!");
+
+              ref.stateChangeResult[0].changeSuccess = true;
+              setTimeout(function () {
+                ref.stateChangeResult[0].changeSuccess = false;
+              }, 5000);
             } else if (results.error == "no session") {
               localStorage.clear();
               ref.user.account = "";
               ref.user.sessionToken = "";
               ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              ref.stateChangeResult[1].changeError = true;
+              ref.stateChangeResult[1].changeMessage += " " + results.error();
+              setTimeout(function (){
+                ref.stateChangeResult[1].changeError = false;
+              });
             }
           })
           .fail(function (strError) {

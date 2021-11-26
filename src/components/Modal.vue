@@ -60,12 +60,14 @@
               <div class="form-group">
                 <label>IDTeacher:</label>
                 <select name="idTeachers" id="idTeachers" @change="onChangeTeacher($event)">
+                  <option value="">Select a teacher</option>
                   <option v-for="teacher in this.$parent.$data.teachers" v-bind:key="teacher.IDTeacher"
                           v-bind:value="teacher.IDTeacher">{{ teacher.Name }} {{ teacher.Surname }}
                   </option>
                 </select>
                 <label>IDCourse:</label>
                 <select name="idCourses" id="idCourses" @change="onChangeCourse($event)">
+                  <option value="">Select a course</option>
                   <option v-for="course in this.$parent.$data.courses" v-bind:key="course.IDCourse"
                           v-bind:value="course.IDCourse">{{ course.Title }}
                   </option>
@@ -81,7 +83,18 @@
                   error[1].generalMsg
                 }}
               </div>
+              <div v-else-if="error[5].selectError" class="alert alert-danger" role="alert">{{
+                  error[5].selectMsg
+                }}
+              </div>
             </form>
+            <div v-if="addResult[0].addSuccess" class="alert alert-success" role="alert">
+              {{ addResult[0].addMessage }}
+            </div>
+            <div v-else-if="addResult[1].addError" class="alert alert-danger" role="alert">{{
+                addResult[1].addError
+              }}
+            </div>
           </div>
         </div>
       </div>
@@ -109,6 +122,16 @@ export default {
       {nameError: false, nameMsg: "Please enter a valid Name"},
       {surnameError: false, surnameMsg: "Please enter a valid Surname"},
       {selectError: false, selectMsg: "Please select a valid Teacher or Course"},
+    ],
+    addResult: [
+      {
+        addMessage: "",
+        addSuccess: false
+      },
+      {
+        addError: false,
+        addMessage: "Error while inserting"
+      }
     ]
   }),
   methods: {
@@ -142,7 +165,12 @@ export default {
               .done(function (results) {
                 if (results.done) {
                   ref.$parent.getCourses();
-                  ref.$parent.$data.dialog = "";
+                  //ref.$parent.$data.dialog = "";
+                  ref.addResult[0].addSuccess = true;
+                  ref.addResult[0].addMessage = "Course added successfully. Press back to return..."
+                  setTimeout(function () {
+                    ref.addResult[0].addSuccess = false;
+                  }, 5000);
                 } else if (results.error == "no session") {
                   localStorage.clear();
                   ref.user.account = "";
@@ -150,7 +178,11 @@ export default {
                   ref.user.role = "";
                   this.$parent.checkSession();
                 } else {
-                  console.log("error: " + results.error);
+                  ref.addResult[1].addError = true;
+                  ref.addResult[1].addMessage += " " + results.error();
+                  setTimeout(function () {
+                    ref.addResult[1].addError = false;
+                  }, 5000);
                 }
               })
               .fail(function (strError) {
@@ -178,7 +210,12 @@ export default {
                   .done(function (results) {
                     if (results.done) {
                       ref.$parent.getTeachers();
-                      ref.$parent.$data.dialog = "";
+                      //ref.$parent.$data.dialog = "";
+                      ref.addResult[0].addSuccess = true;
+                      ref.addResult[0].addMessage = "Teacher added successfully. Press back to return..."
+                      setTimeout(function () {
+                        ref.addResult[0].addSuccess = false;
+                      }, 5000);
                     } else if (results.error == "no session") {
                       localStorage.clear();
                       ref.user.account = "";
@@ -186,7 +223,11 @@ export default {
                       ref.user.role = "";
                       this.$parent.checkSession();
                     } else {
-                      console.log("error: " + results.error);
+                      ref.addResult[1].addError = true;
+                      ref.addResult[1].addMessage += " " + results.error();
+                      setTimeout(function () {
+                        ref.addResult[1].addError = false;
+                      }, 5000);
                     }
                   })
                   .fail(function (strError) {
@@ -213,7 +254,13 @@ export default {
               .done(function (results) {
                 if (results.done) {
                   ref.$parent.getTeaches();
-                  ref.$parent.$data.dialog = "";
+                  //ref.$parent.$data.dialog = "";
+
+                  ref.addResult[0].addSuccess = true;
+                  ref.addResult[0].addMessage = "Teach added successfully. Press back to return..."
+                  setTimeout(function () {
+                    ref.addResult[0].addSuccess = false;
+                  }, 5000);
                 } else if (results.error == "no session") {
                   localStorage.clear();
                   ref.user.account = "";
@@ -221,7 +268,11 @@ export default {
                   ref.user.role = "";
                   this.$parent.checkSession();
                 } else {
-                  console.log("error: " + results.error);
+                  ref.addResult[1].addError = true;
+                  ref.addResult[1].addMessage += " " + results.error();
+                  setTimeout(function () {
+                    ref.addResult[1].addError = false;
+                  }, 5000);
                 }
               })
               .fail(function (strError) {

@@ -11,6 +11,13 @@
                  id="nav-teacher-tab" data-toggle="tab" v-on:click="setTab('teacher')">TEACHERS</a>
               <a v-bind:class="(selectedTab==='course-teacher')?'nav-item nav-link active':'nav-item nav-link'"
                  id="nav-teach-tab" data-toggle="tab" v-on:click="setTab('course-teacher')">TEACHES</a>
+              <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
+                {{ deleteResult[0].deleteMessage }}
+              </div>
+              <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger" role="alert">{{
+                  deleteResult[1].deleteError
+                }}
+              </div>
             </div>
           </nav>
           <br>
@@ -107,7 +114,17 @@ export default {
       sessionToken: "",
       account: "",
       role: ""
-    }
+    },
+    deleteResult: [
+      {
+        deleteMessage: "",
+        deleteSuccess: false
+      },
+      {
+        deleteError: false,
+        deleteMessage: "Error while deleting"
+      }
+    ]
   }),
   components: {
     Modal
@@ -183,7 +200,12 @@ export default {
                 if (ref.courses[i].IDCourse == idCourse)
                   ref.courses.splice(i, 1);
               }
-              alert("Corso eliminato correttamente!");
+
+              ref.deleteResult[0].deleteSuccess = true;
+              ref.deleteResult[0].deleteMessage = "Course deleted successfully";
+              setTimeout(function () {
+                ref.deleteResult[0].deleteSuccess = false;
+              }, 5000);
             } else {
               if (results.error == "no session") {
                 localStorage.clear();
@@ -191,8 +213,13 @@ export default {
                 ref.user.sessionToken = "";
                 ref.user.role = "";
                 this.$parent.checkSession();
-              } else
-                console.log("error: " + results.error);
+              } else {
+                ref.deleteResult[1].deleteError = true;
+                ref.deleteResult[1].deleteMessage += " " + results.error();
+                setTimeout(function () {
+                  ref.deleteResult[1].deleteError = false;
+                }, 5000);
+              }
             }
           })
           .fail(function (strError) {
@@ -240,7 +267,12 @@ export default {
                 if (ref.teachers[i].IDTeacher == idTeacher)
                   ref.teachers.splice(i, 1);
               }
-              alert("Professore eliminato correttamente!");
+
+              ref.deleteResult[0].deleteSuccess = true;
+              ref.deleteResult[0].deleteMessage = "Teacher deleted successfully";
+              setTimeout(function () {
+                ref.deleteResult[0].deleteSuccess = false;
+              }, 5000);
             } else if (results.error == "no session") {
               localStorage.clear();
               ref.user.account = "";
@@ -248,7 +280,11 @@ export default {
               ref.user.role = "";
               this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              ref.deleteResult[1].deleteError = true;
+              ref.deleteResult[1].deleteMessage += " " + results.error();
+              setTimeout(function () {
+                ref.deleteResult[1].deleteError = false;
+              }, 5000);
             }
           })
           .fail(function (strError) {
@@ -301,7 +337,12 @@ export default {
                 if (ref.teaches[i].IDTeacher == idTeacher && ref.teaches[i].IDCourse == idCourse)
                   ref.teaches.splice(i, 1);
               }
-              alert("Professore - Corso eliminato correttamente!");
+
+              ref.deleteResult[0].deleteSuccess = true;
+              ref.deleteResult[0].deleteMessage = "Teach deleted successfully";
+              setTimeout(function () {
+                ref.deleteResult[0].deleteSuccess = false;
+              }, 5000);
             } else if (results.error == "no session") {
               localStorage.clear();
               ref.user.account = "";
@@ -309,7 +350,11 @@ export default {
               ref.user.role = "";
               this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              ref.deleteResult[1].deleteError = true;
+              ref.deleteResult[1].deleteMessage += " " + results.error();
+              setTimeout(function () {
+                ref.deleteResult[1].deleteError = false;
+              }, 5000);
             }
           })
           .fail(function (strError) {
