@@ -2,7 +2,8 @@
   <div id="app">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #1DA1F2!important;">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
@@ -11,28 +12,33 @@
           <li class="nav-item">
             <router-link to="/">
               <a class="nav-link" style="color: white!important;">
-                <span class="btn-label"><i class="fa fa-home"></i></span> 
+                <span class="btn-label"><i class="fa fa-home"></i></span>
                 HOME
               </a>
             </router-link>
           </li>
-          <li class="nav-item">
-              <router-link to="/about">
-                <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
-                  <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span> 
-                  MY RESERVATIONS
-                </a>
-              </router-link>
+          <li class="nav-item" v-if="user.account !== ''">
+            <router-link to="/bookedRepetitions">
+              <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
+                <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
+                MY RESERVATIONS
+              </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="getUser.role === 'Administrator'" style="color: white!important; padding-left: 21px!important;" class="nav-link" to="/manage">
-              <span class="btn-label"><i class="fa fa-calendar-check-o "></i></span> MANAGEMENT OF Teachers and Courses </router-link>
+            <router-link v-if="user.role === 'Administrator'" to="/manage">
+              <a style="color: white!important; padding-left: 21px!important;" class="nav-link">
+              <span class="btn-label"><i class="fa fa-wrench"></i>
+              </span>
+                MANAGEMENT
+              </a>
+            </router-link>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
         <ul class="navbar-nav ml-auto" style="float: right;">
-          <li class="nav-item" v-if="getUser.account === ''">
+          <li class="nav-item" v-if="user.account === ''">
             <router-link to="/login">
               <a class="nav-link" style="color: white!important; text-align: right!important;">
                 <span class="btn-label"><i class="fa fa-sign-out"></i></span>
@@ -40,13 +46,11 @@
               </a>
             </router-link>
           </li>
-          <li class="nav-item" v-if="getUser.account !== ''">
-            <router-link to="/logout">
-              <a class="nav-link" style="color: white!important; text-align: right!important;">
-                <span class="btn-label"><i class="fa fa-sign-out"></i></span>
-                LOG OUT
-              </a>
-            </router-link>
+          <li class="nav-item" v-if="user.account !== ''">
+            <a class="nav-link" style="color: white!important; text-align: right!important;" v-on:click="logOut">
+              <span class="btn-label"><i class="fa fa-sign-out"></i></span>
+              LOG OUT
+            </a>
           </li>
         </ul>
       </div>
@@ -59,26 +63,73 @@
 </template>
 
 <script>
-  export default {
-    name: 'App',
-    mounted: function(){
-      //elements might not have been added to DOM yet
-      this.$nextTick(() => {
-        this.checkSession(localStorage.getItem("token"));
-      });
-    },
-    computed: {
-      getUser(){
-        return this.$store.getters.getUser;
-      }
-    },
-    methods: {
-      checkSession(){
-        if(localStorage.getItem("token") != "")
-          this.$store.dispatch('checkSession', localStorage.getItem("token"));
-      }
+import $ from "jquery";
+
+export default {
+  name: 'App',
+  data:() => ({
+    user: {
+      account: '',
+      role: '',
+      sessionToken: ''
     }
-  };
+  }),
+  mounted: function () {
+    //elements might not have been added to DOM yet
+    this.$nextTick(() => {
+      this.checkSession();
+    });
+  },
+  methods: {
+    checkSession() {
+      let ref = this;
+      $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session;jsessionid=" + localStorage.getItem("token"),
+        dataType: 'json',
+        data: {sessionToken: localStorage.getItem("token")},
+        timeout: 5000
+      })
+          .done(function (result) {
+            if (!result.done) {
+              localStorage.clear();
+
+              ref.$router.push("/");
+            } else {
+              ref.user.account = result.account;
+              ref.user.role = result.role;
+              ref.user.sessionToken = result.token;
+            }
+          })
+          .fail(function (strError) {
+            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+          });
+    },
+
+    logOut() {
+      let ref = this;
+      $.get({
+        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-logout",
+        dataType: 'json',
+        timeout: 5000
+      })
+          .done(function (results) {
+            if (results.done) {
+              localStorage.clear();
+              ref.user.account = "";
+              ref.user.role = "";
+
+              ref.$router.push('/')
+            } else {
+              console.log("error: " + results.error);
+            }
+          })
+          .fail(function (strError) {
+            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+          })
+    },
+  }
+};
 </script>
 
 <style>

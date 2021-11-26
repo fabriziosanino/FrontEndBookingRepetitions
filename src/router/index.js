@@ -29,6 +29,11 @@ const routes = [
     component: () => import('../views/Registration.vue')
   },
   {
+    path: '/bookedRepetitions',
+    name: 'BookedRepetitions',
+    component: () => import('../views/BookedRepetitions.vue')
+  },
+  {
     path: '*',
     component: () => import('../views/pageNotFound.vue')
   }
