@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <section>
-
-    <div style="margin: 20px;" class="card">
+    <div style="margin: 5px;" class="card">
       <div class="card-body">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -56,3 +55,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  #nav-tab:hover{ cursor: pointer; }
+</style>

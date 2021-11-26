@@ -39,7 +39,7 @@
             </a>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
-            <a class="nav-link" style="color: white!important; text-align: right!important;" v-on:click="logOut">
+            <a @click="logOut()" class="nav-link" id="aLogOut" style="color: white!important; text-align: right!important;">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG OUT
             </a>
@@ -71,12 +71,8 @@ export default {
     this.$nextTick(() => {
       this.checkSession();
     });
-  },
+  }, 
   methods: {
-    reloadPage() {
-      window.location.reload();
-    },
-
     checkSession() {
       let ref = this;
       $.ajax({
@@ -111,20 +107,20 @@ export default {
         dataType: 'json',
         timeout: 5000
       })
-          .done(function (results) {
-            if (results.done) {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.role = "";
+      .done(function (results) {
+        if (results.done) {
+          localStorage.clear();
+          ref.user.account = "";
+          ref.user.role = "";
 
-              ref.$router.push('/')
-            } else {
-              console.log("error: " + results.error);
-            }
-          })
-          .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-          })
+          ref.$router.push('/')
+        } else {
+          console.log("error: " + results.error);
+        }
+      })
+      .fail(function (strError) {
+        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+      })
     },
   }
 };
@@ -151,4 +147,6 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+#aLogOut:hover{ cursor: pointer; }
 </style>

@@ -76,8 +76,7 @@ export default {
                   localStorage.setItem("role", results.role);
 
                   ref.$parent.checkSession();
-
-                  ref.$router.push("/")
+                    ref.$router.push("/");
                 } else {
                   console.log("error: " + results.error);
                   ref.error[2].generalError = true;
