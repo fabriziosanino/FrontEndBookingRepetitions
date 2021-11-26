@@ -4,66 +4,199 @@
         <td>{{ repetition.startTime }} - {{ getEndTime(repetition.startTime) }}</td>
         <td>
           <div class="form-group">
-            <select class="form-control" id="FormControlSub">
-              <option value="-1">Choose a course...</option>
-              <option v-for="(courseItem, index2) in freeRepetitions[index].coursesList" :key="index2" :value="courseItem.IDCourse">{{ courseItem.Title }}</option>
+            <select class="form-control" :id="'FormControlSub_'+index" @change="courseSelectedChangeListener($event)">
+              <option selected value="-1">Choose a course...</option>
+              <option v-for="(courseItem, index2) in freeRepetitions[index].coursesList" :key="index2" :value="courseItem.IDCourse+'_'+index2">{{ courseItem.Title }}</option>
             </select>
           </div>
         </td>
         <td>
-          <div class="form-group">
-            <select class="form-control" id="FormControlTeacher">
-              <option value="-1">Choose a teacher...</option>
-              <option v-for="(teacherItem, index3) in freeRepetitions[index].coursesList[index]" :key="index3" :value="teacherItem.IDTeacher">{{ teacherItem.Surname }}</option>
+          <div class="form-group" >
+            <select :id="'FormControlTeacher_'+index" class="form-control hiddenTeacherList">
+              <option selected value="-1">Choose a teacher...</option>
+              <option v-for="(teacherItem, index3) in teachersOfSelectedCourse" :key="index3" :value="teacherItem.IDTeacher">{{ teacherItem.Surname }}</option>
             </select>
           </div>
         </td>
         <td >
-          <input id="log" class="btn btn-info btn-md" value="BOOK">
+          <input :id="'btnBookARepetition_'+index" class="btn btn-info btn-md" value="BOOK" @click="bookThisRepetitionListener($event)">
         </td>
       </tr>
+      <div v-if="bookedResult[0].newResults">
+          <div v-if="bookedResult[1].bookedError" class="alert alert-danger" role="alert">{{ bookedResult[1].errorMsg }}</div>
+          <div v-else-if="bookedResult[2].bookedSuccess" class="alert alert-success" role="alert">{{ bookedResult[2].successMsg }}</div>
+      </div>
     </tbody>
 </template>
 
 <script>
+  import $ from 'jquery';
+
   export default {
-      name: 'FreeRepetitionsList',
-      props: {selectedDay: String},
-      data: () => {
-        return{
-          dataLoaded:false
+    name: 'FreeRepetitionsList',
+    props: ['selectedDay'],
+    watch: { 
+      '$props':{
+        handler: function (val) { 
+          this.fetchFreeRepetitions(val.selectedDay);
+        },
+        deep: true
+      }
+    },
+    data: () => {
+      return{
+        dataLoaded:false,
+        courseSelected: false,
+        bookedResult: [{newResults: false}, {bookedError:false, errorMsg:""}, {bookedSuccess:false, successMsg:"Repetition booked successfully! Check it out in the Booked-Repetitions section."}],
+        freeRepetitions: [],
+        teachersOfSelectedCourse: []
+      }
+    },
+    mounted: function () {
+      this.dataLoaded = false;
+      this.bookedResult[0].newResults = false;
+      this.bookedResult[1].bookedError = false;
+      this.bookedResult[2].bookedSuccess = false;
+
+      this.fetchFreeRepetitions(this.$props.selectedDay);
+    },
+    methods: {
+      fetchFreeRepetitions: function(selectedDay) {
+        let account = "";
+        if(localStorage.getItem('token') != undefined)
+          account = localStorage.getItem('account');
+
+        var self = this;
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-free-repetitions",
+          dataType: 'json',
+          data: {day: selectedDay, account: account},
+          timeout: 5000
+        })
+        .done((results) => { 
+          if(results.done){
+            this.setFreeRepetitions(self, results.results);
+          
+            this.dataLoaded = true;
+          }
+        })
+        .fail((strError) => {
+          console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
+        });
+      },
+      getEndTime: (startTime) => {
+        var tmp = startTime.split(':');
+        var endTime = parseInt(tmp[0])+1;
+        return endTime + ":00";
+      },
+      setFreeRepetitions: (self, payload) => {
+        if(payload !== undefined){
+          self.freeRepetitions = payload.map((item) => {
+            const freeRepetitionsItem = {};
+
+            freeRepetitionsItem.startTime = item.startTime;
+            if(item !== undefined){
+              freeRepetitionsItem.coursesList = item.coursesList.map((courseItem) => {
+                const coursesListItem = {};
       
+                coursesListItem.IDCourse = courseItem.IDCourse;
+                coursesListItem.Title = courseItem.Title;
+                if(courseItem !== undefined){
+                  coursesListItem.teachersList = courseItem.teachersList.map((teacherItem) => {
+                    const teachersListItem = {};
+        
+                    teachersListItem.IDTeacher = teacherItem.IDTeacher;
+                    teachersListItem.Surname = teacherItem.Surname;
+                    teachersListItem.Name = teacherItem.Name;
+        
+                    return teachersListItem;
+                  });
+                }
+                return coursesListItem;
+              });
+            }
+            return freeRepetitionsItem;
+          });
         }
       },
-      mounted: function () {
-        this.dataLoaded = false;
-        var userStored = this.$store.getters.user;
-        if(userStored != undefined)
-          this.$store.dispatch('getFreeRepetitions', {account: userStored.account, selectedDay: this.selectedDay}).then( () => {this.dataLoaded=true;});
-        else
-          this.$store.dispatch('getFreeRepetitions', {account: '', selectedDay: this.selectedDay}).then(() => {this.dataLoaded=true;});
+      courseSelectedChangeListener: function(event) {
+        var callerID = event.currentTarget.id;
+        var selectedOption = event.target.value;
+
+        var tmp = callerID.split('_');
+        var tmp2 = selectedOption.split('_');
+        if($("#"+callerID).val() != -1){
+          this.teachersOfSelectedCourse = this.freeRepetitions[tmp[1]].coursesList[tmp2[1]].teachersList.map((teacherItem) =>{
+            {
+              const teachersListItem = {};
+
+              teachersListItem.IDTeacher = teacherItem.IDTeacher;
+              teachersListItem.Surname = teacherItem.Surname;
+              teachersListItem.Name = teacherItem.Name;
+  
+              return teachersListItem;
+            }
+          });
+          $("#FormControlTeacher_"+tmp[1]).removeClass('hiddenTeacherList');
+        }else{
+          $("#FormControlTeacher_"+tmp[1]).addClass('hiddenTeacherList');
+          this.teachersOfSelectedCourse = [];
+       }
       },
-      computed: {
-        freeRepetitions(){
-          return this.$store.getters.getFreeRepetitions;
-        }
-      },
-      methods: {
-        getEndTime: (startTime) => {
-          var tmp = startTime.split(':');
-          var endTime = parseInt(tmp[0])+1;
-          return endTime + ":00";
+      bookThisRepetitionListener: function(event){
+        this.bookedResult[0].newResults = false;
+        this.bookedResult[1].bookedError = false;
+        this.bookedResult[2].bookedSuccess = false;
+
+        var callerID = event.currentTarget.id;
+        var tmp = callerID.split('_');
+
+        var day = this.selectedDay;
+        var startTime =  this.freeRepetitions[tmp[1]].startTime;
+        var IDCourseJOINED = $("#FormControlSub_"+tmp[1]).val();
+        var IDCourse = IDCourseJOINED.split('_')[0];
+        var IDTeacher = $("#FormControlTeacher_"+tmp[1]).val();
+        var account = localStorage.getItem('account');
+        if(IDCourse != -1 && IDTeacher != -1 && account != undefined){
+          $.ajax({
+            type: "POST",
+            url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-book-a-repetition;jsessionid="+localStorage.getItem('token'),
+            dataType: 'json',
+            data: {day: day, startTime: startTime, IDCourse: IDCourse, IDTeacher:IDTeacher, account:account, sessionToken: localStorage.getItem('token')},
+            timeout: 5000
+          })
+          .done((results) => { 
+            if(results.done){
+              this.bookedResult[0].newResults = true;
+              this.bookedResult[2].bookedSuccess = true;
+              this.dataLoaded=false;
+              this.fetchFreeRepetitions(this.$props.selectedDay);
+              this.dataLoaded=true;
+            }else{
+              this.bookedResult[0].newResults = true;
+              this.bookedResult[1].bookedError = true;
+              this.bookedResult[1].errorMsg = results.error;
+            }
+          })
+          .fail((strError) => {
+            this.bookedResult[0].newResults = true;
+            this.bookedResult[1].bookedError = true;
+            this.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+          });
+        }else{
+          this.bookedResult[0].newResults = true;
+          this.bookedResult[1].bookedError = true;
+          this.bookedResult[1].errorMsg = "Please select a Course and a Teacher, then try again.";
         }
       }
+    }
   };
+
 </script>
 
 <style scoped>
   .hiddenTeacherList{
     visibility: hidden;
-  }
-
-  .visibleTeacherList{
-    visibility: visible;
   }
 </style>

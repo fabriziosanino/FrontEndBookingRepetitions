@@ -2,7 +2,7 @@
   <div class="home">
     <section>
 
-    <div style="margin: 5px;" class="card">
+    <div style="margin: 20px;" class="card">
       <div class="card-body">
         <nav>
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -18,7 +18,7 @@
           <thead>
             <tr>
               <th scope="col">HOURS</th>
-              <th scope="col">SUBJECT</th>
+              <th scope="col">COURSE</th>
               <th scope="col">TEACHER</th>
               <th scope="col"></th>
             </tr>
@@ -29,22 +29,17 @@
         </table>
       </div>
     </div>
-  </section>
-
-  <FreeReservations></FreeReservations>
-  
+  </section>  
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import FreeReservations from '@/components/FreeReservations.vue'
 import FreeRepetitionsList from '@/components/FreeRepetitionsList.vue'
 
 export default {
   name: 'Home',
   components: {
-    FreeReservations,
     FreeRepetitionsList
   },
 

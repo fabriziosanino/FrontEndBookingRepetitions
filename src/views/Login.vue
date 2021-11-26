@@ -30,8 +30,6 @@
             <div v-else-if="error[1].pwdError" class="alert alert-danger" role="alert">{{ error[1].pwdMsg }}</div>
             <div v-else-if="error[2].generalError" class="alert alert-danger" role="alert">{{ error[2].generalMsg }}</div>
           </form>
-
-          <span class="account">{{ getUser.account }}</span>
         </div>
       </div>
     </div>
@@ -47,11 +45,6 @@
       pwd: '',
       error: [{userError:false, userMsg:"Please enter a valid Username"}, {pwdError:false, pwdMsg:"Please enter a valid Password (at least 1 digit)"}, {generalError:false, generalMsg:""}]
     }),
-    computed: {
-      getUser(){
-        return this.$store.getters.getUser;
-      }
-    },
     methods: {
       loginHandler(){
         this.error[2].generalError = false;
