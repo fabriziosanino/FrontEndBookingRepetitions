@@ -66,6 +66,7 @@
           account = localStorage.getItem('account');
 
         var self = this;
+        this.$parent.$data.loading = true;
         $.ajax({
           type: "POST",
           url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-free-repetitions",
@@ -75,23 +76,29 @@
         })
         .done((results) => { 
           if(results.done){
-            this.setFreeRepetitions(self, results.results);
+            self.setFreeRepetitions(self, results.results);
           
-            this.dataLoaded = true;
+            self.dataLoaded = true;
             $('select[id^="FormControlSub"]').val(-1);
             $('select[id^="FormControlTeacher"]').addClass("hiddenTeacherList");
             $('select[id^="FormControlTeacher"]').val(-1);
-            
-             
+
+            self.$parent.$data.loading = false;
           }
         })
         .fail((strError) => {
-          this.$parent.bookedResult[0].newResults = true;
-          this.$parent.bookedResult[1].bookedError = true;
-          if(strError.statusText != 'error')
-            this.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
-          else
-            this.$parent.bookedResult[1].errorMsg = "503: Server unavailable.";
+          self.$parent.bookedResult[0].newResults = true;
+          self.$parent.bookedResult[1].bookedError = true;
+          if(strError.statusText != 'error' && strError.status != 0)
+            self.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+          else {
+            if(strError.status == 0)
+              self.$parent.bookedResult[1].errorMsg = "Database unavailable.";
+            else
+              self.$parent.bookedResult[1].errorMsg = "503: Server unavailable.";
+          }
+
+          self.$parent.$data.loading = false;
         });
       },
       getEndTime: (startTime) => {
@@ -168,6 +175,8 @@
         var IDTeacher = $("#FormControlTeacher_"+tmp[1]).val();
         var account = localStorage.getItem('account');
         if(IDCourse != -1 && IDTeacher != -1 && account != null){
+          let self = this;
+          this.$parent.$data.loading = true;
           $.ajax({
             type: "POST",
             url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-book-a-repetition;jsessionid="+localStorage.getItem('token'),
@@ -177,25 +186,29 @@
           })
           .done((results) => { 
             if(results.done){
-              this.$parent.bookedResult[0].newResults = true;
-              this.$parent.bookedResult[2].bookedSuccess = true;
+              self.$parent.bookedResult[0].newResults = true;
+              self.$parent.bookedResult[2].bookedSuccess = true;
               
-              this.dataLoaded=false;
+              self.dataLoaded=false;
               $("#FormControlSub_"+tmp[1]).val(-1);
               $("#FormControlTeacher_"+tmp[1]).val(-1);
               $("#FormControlTeacher_"+tmp[1]).addClass("hiddenTeacherList");
-              this.fetchFreeRepetitions(this.$props.selectedDay);
-              this.dataLoaded=true;
+              self.fetchFreeRepetitions(this.$props.selectedDay);
+              self.dataLoaded=true;
+
+              self.$parent.$data.loading = false;
             }else{
-              this.$parent.bookedResult[0].newResults = true;
-              this.$parent.bookedResult[1].bookedError = true;
-              this.$parent.bookedResult[1].errorMsg = results.error;
+              self.$parent.bookedResult[0].newResults = true;
+              self.$parent.bookedResult[1].bookedError = true;
+              self.$parent.bookedResult[1].errorMsg = results.error;
+
+              self.$parent.$data.loading = false;
             }
           })
           .fail((strError) => {
-            this.$parent.bookedResult[0].newResults = true;
-            this.$parent.bookedResult[1].bookedError = true;
-            this.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+            self.$parent.bookedResult[0].newResults = true;
+            self.$parent.bookedResult[1].bookedError = true;
+            self.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
           });
         }else{
           if(account == null){
