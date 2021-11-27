@@ -129,11 +129,6 @@ export default {
   components: {
     Modal
   },
-  computed: {
-    getUser() {
-      return this.$store.getters.getUser;
-    }
-  },
   mounted: function () {
     //elements might not have been added to DOM yet
     this.dialog = "";
@@ -171,14 +166,7 @@ export default {
             if (results.done) {
               ref.courses = results.results;
             } else {
-              if (results.error == "no session") {
-                localStorage.clear();
-                ref.user.account = "";
-                ref.user.sessionToken = "";
-                ref.user.role = "";
-                this.$parent.checkSession();
-              } else
-                console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -207,19 +195,7 @@ export default {
                 ref.deleteResult[0].deleteSuccess = false;
               }, 5000);
             } else {
-              if (results.error == "no session") {
-                localStorage.clear();
-                ref.user.account = "";
-                ref.user.sessionToken = "";
-                ref.user.role = "";
-                this.$parent.checkSession();
-              } else {
-                ref.deleteResult[1].deleteError = true;
-                ref.deleteResult[1].deleteMessage += " " + results.error();
-                setTimeout(function () {
-                  ref.deleteResult[1].deleteError = false;
-                }, 5000);
-              }
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -238,14 +214,8 @@ export default {
           .done(function (results) {
             if (results.done) {
               ref.teachers = results.results;
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -273,18 +243,8 @@ export default {
               setTimeout(function () {
                 ref.deleteResult[0].deleteSuccess = false;
               }, 5000);
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              ref.deleteResult[1].deleteError = true;
-              ref.deleteResult[1].deleteMessage += " " + results.error();
-              setTimeout(function () {
-                ref.deleteResult[1].deleteError = false;
-              }, 5000);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -303,14 +263,8 @@ export default {
           .done(function (results) {
             if (results.done) {
               ref.teaches = results.results;
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -343,24 +297,35 @@ export default {
               setTimeout(function () {
                 ref.deleteResult[0].deleteSuccess = false;
               }, 5000);
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              ref.deleteResult[1].deleteError = true;
-              ref.deleteResult[1].deleteMessage += " " + results.error();
-              setTimeout(function () {
-                ref.deleteResult[1].deleteError = false;
-              }, 5000);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
           })
     }
+  }
+}
+
+function errorHandling(results, ref) {
+  if (results.error == "no session") {
+    localStorage.clear();
+    ref.user.account = "";
+    ref.user.sessionToken = "";
+    ref.user.role = "";
+
+    ref.$parent.user.sessionToken = "";
+    ref.$parent.user.role = "";
+    ref.$parent.user.account = "";
+
+    ref.$router.push("/");
+  } else {
+    ref.deleteResult[1].deleteError = true;
+    ref.deleteResult[1].deleteMessage += " " + results.error();
+    setTimeout(function () {
+      ref.deleteResult[1].deleteError = false;
+    }, 5000);
   }
 }
 </script>

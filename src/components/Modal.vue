@@ -171,18 +171,8 @@ export default {
                   setTimeout(function () {
                     ref.addResult[0].addSuccess = false;
                   }, 5000);
-                } else if (results.error == "no session") {
-                  localStorage.clear();
-                  ref.user.account = "";
-                  ref.user.sessionToken = "";
-                  ref.user.role = "";
-                  this.$parent.checkSession();
                 } else {
-                  ref.addResult[1].addError = true;
-                  ref.addResult[1].addMessage += " " + results.error();
-                  setTimeout(function () {
-                    ref.addResult[1].addError = false;
-                  }, 5000);
+                  errorHandling(results, ref);
                 }
               })
               .fail(function (strError) {
@@ -216,18 +206,8 @@ export default {
                       setTimeout(function () {
                         ref.addResult[0].addSuccess = false;
                       }, 5000);
-                    } else if (results.error == "no session") {
-                      localStorage.clear();
-                      ref.user.account = "";
-                      ref.user.sessionToken = "";
-                      ref.user.role = "";
-                      this.$parent.checkSession();
                     } else {
-                      ref.addResult[1].addError = true;
-                      ref.addResult[1].addMessage += " " + results.error();
-                      setTimeout(function () {
-                        ref.addResult[1].addError = false;
-                      }, 5000);
+                      errorHandling(results, ref);
                     }
                   })
                   .fail(function (strError) {
@@ -261,18 +241,8 @@ export default {
                   setTimeout(function () {
                     ref.addResult[0].addSuccess = false;
                   }, 5000);
-                } else if (results.error == "no session") {
-                  localStorage.clear();
-                  ref.user.account = "";
-                  ref.user.sessionToken = "";
-                  ref.user.role = "";
-                  this.$parent.checkSession();
                 } else {
-                  ref.addResult[1].addError = true;
-                  ref.addResult[1].addMessage += " " + results.error();
-                  setTimeout(function () {
-                    ref.addResult[1].addError = false;
-                  }, 5000);
+                  errorHandling(results, ref);
                 }
               })
               .fail(function (strError) {
@@ -291,5 +261,27 @@ function validateEmail(user) {
     return false;
   else
     return true;
+}
+
+function errorHandling(results, ref) {
+  if (results.error == "no session") {
+    localStorage.clear();
+    ref.user.account = "";
+    ref.user.sessionToken = "";
+    ref.user.role = "";
+
+    //TODO: settare le variabili di app.vue a null in modo che compaia LOGIN
+    /*ref.$parent.$parent.user.sessionToken = "";
+    ref.$parent.$parent.user.role = "";
+    ref.$parent.$parent.user.account = "";*/
+
+    this.$router.push("/");
+  } else {
+    ref.addResult[1].addError = true;
+    ref.addResult[1].addMessage += " " + results.error();
+    setTimeout(function () {
+      ref.addResult[1].addError = false;
+    }, 5000);
+  }
 }
 </script>

@@ -47,11 +47,13 @@
               <td>{{ el.surname }}</td>
               <td v-if="user.role == 'Administrator'">{{ el.Account }}</td>
               <td>
-                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="setDone" class="btn btn-info btn-md" value="DONE"
+                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="setDone"
+                       class="btn btn-info btn-md" value="DONE"
                        v-on:click="changeState(el.IDRepetition, 'Done')">
               </td>
               <td>
-                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="delete" class="btn btn-info btn-md" value="DELETE"
+                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="delete"
+                       class="btn btn-info btn-md" value="DELETE"
                        v-on:click="changeState(el.IDRepetition, 'Cancelled')">
               </td>
             </tr>
@@ -108,14 +110,14 @@ export default {
     getBooked() {
       let ref = this;
       let accountParam = "";
-      if(this.user.role == 'Administrator')
+      if (this.user.role == 'Administrator')
         accountParam = "all"
       else
         accountParam = this.user.account;
 
       $.ajax({
         type: "POST",
-        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + this.user.sessionToken,
+        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
         data: {
           state: this.selectedTab,
@@ -126,16 +128,10 @@ export default {
       })
           .done(function (results) {
             if (results.done) {
-              console.log(results.results);
               ref.booked = results.results;
               ref.addFinish();
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -169,17 +165,8 @@ export default {
               setTimeout(function () {
                 ref.stateChangeResult[0].changeSuccess = false;
               }, 5000);
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
             } else {
-              ref.stateChangeResult[1].changeError = true;
-              ref.stateChangeResult[1].changeMessage += " " + results.error();
-              setTimeout(function (){
-                ref.stateChangeResult[1].changeError = false;
-              });
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -188,8 +175,30 @@ export default {
     }
   }
 }
+
+function errorHandling(results, ref) {
+  if (results.error == "no session") {
+    localStorage.clear();
+    ref.user.account = "";
+    ref.user.sessionToken = "";
+    ref.user.role = "";
+
+    ref.$parent.user.sessionToken = "";
+    ref.$parent.user.role = "";
+    ref.$parent.user.account = "";
+    ref.$router.push("/");
+  } else {
+    ref.stateChangeResult[1].changeError = true;
+    ref.stateChangeResult[1].changeMessage += " " + results.error();
+    setTimeout(function () {
+      ref.stateChangeResult[1].changeError = false;
+    });
+  }
+}
 </script>
 
 <style scoped>
-  #nav-tab:hover{ cursor: pointer; }
+#nav-tab:hover {
+  cursor: pointer;
+}
 </style>
