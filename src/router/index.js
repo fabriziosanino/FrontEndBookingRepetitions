@@ -45,3 +45,6 @@ const router = new VueRouter({
 })
 
 export default router
+
+//TODO: beforeRouterEnter check session!
+//sistemare pageNotFound

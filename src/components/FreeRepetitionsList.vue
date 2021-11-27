@@ -78,10 +78,20 @@
             this.setFreeRepetitions(self, results.results);
           
             this.dataLoaded = true;
+            $('select[id^="FormControlSub"]').val(-1);
+            $('select[id^="FormControlTeacher"]').addClass("hiddenTeacherList");
+            $('select[id^="FormControlTeacher"]').val(-1);
+            
+             
           }
         })
         .fail((strError) => {
-          console.log("error: "+JSON.stringify(strError.status + ": " + strError.statusText));
+          this.$parent.bookedResult[0].newResults = true;
+          this.$parent.bookedResult[1].bookedError = true;
+          if(strError.statusText != 'error')
+            this.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+          else
+            this.$parent.bookedResult[1].errorMsg = "503: Server unavailable.";
         });
       },
       getEndTime: (startTime) => {
@@ -157,7 +167,7 @@
         var IDCourse = IDCourseJOINED.split('_')[0];
         var IDTeacher = $("#FormControlTeacher_"+tmp[1]).val();
         var account = localStorage.getItem('account');
-        if(IDCourse != -1 && IDTeacher != -1 && account != undefined){
+        if(IDCourse != -1 && IDTeacher != -1 && account != null){
           $.ajax({
             type: "POST",
             url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-book-a-repetition;jsessionid="+localStorage.getItem('token'),
@@ -188,9 +198,15 @@
             this.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
           });
         }else{
-          this.$parent.bookedResult[0].newResults = true;
-          this.$parent.bookedResult[1].bookedError = true;
-          this.$parent.bookedResult[1].errorMsg = "Please select a Course and a Teacher, then try again.";
+          if(account == null){
+            this.$parent.bookedResult[0].newResults = true;
+            this.$parent.bookedResult[1].bookedError = true;
+            this.$parent.bookedResult[1].errorMsg = "Please Sign In to book a repetition";
+          }else{
+            this.$parent.bookedResult[0].newResults = true;
+            this.$parent.bookedResult[1].bookedError = true;
+            this.$parent.bookedResult[1].errorMsg = "Please select a Course and a Teacher, then try again.";
+          }
         }
       }
     }

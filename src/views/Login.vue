@@ -69,24 +69,27 @@ export default {
             data: {account: this.mail, password: this.pwd},
             timeout: 5000
           })
-              .done(function (results) {
-                if (results.done) {
-                  localStorage.setItem("token", results.token);
-                  localStorage.setItem("account", results.account);
-                  localStorage.setItem("role", results.role);
+          .done(function (results) {
+            if (results.done) {
+              localStorage.setItem("token", results.token);
+              localStorage.setItem("account", results.account);
+              localStorage.setItem("role", results.role);
 
-                  ref.$parent.checkSession();
-                  ref.$router.push("/");
-                } else {
-                  console.log("error: " + results.error);
-                  ref.error[2].generalError = true;
-                  ref.error[2].generalMsg = results.error;
-                }
-              })
-              .fail(function (strError) {
-                console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-                ref.$router.push("/");
-              })
+              ref.$parent.checkSession();
+              ref.$router.push("/");
+            } else {
+              console.log("error: " + results.error);
+              ref.error[2].generalError = true;
+              ref.error[2].generalMsg = results.error;
+            }
+          })
+          .fail(function (strError) {
+            ref.error[2].generalError = true;
+            if(strError.statusText != 'error')
+              ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+            else
+              ref.error[2].generalMsg = "503: Server unavailable.";
+          })
         } else
           this.error[1].pwdError = true;
       else
