@@ -1,6 +1,13 @@
 <template>
   <div id="manage" class="manage" v-if="user.account !== ''">
     <section v-if="dialog==''">
+      <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
+        {{ deleteResult[0].deleteMessage }}
+      </div>
+      <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger" role="alert">{{
+          deleteResult[1].deleteError
+        }}
+      </div>
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
@@ -11,13 +18,6 @@
                  id="nav-teacher-tab" data-toggle="tab" v-on:click="setTab('teacher')">TEACHERS</a>
               <a v-bind:class="(selectedTab==='course-teacher')?'nav-item nav-link active':'nav-item nav-link'"
                  id="nav-teach-tab" data-toggle="tab" v-on:click="setTab('course-teacher')">TEACHES</a>
-              <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
-                {{ deleteResult[0].deleteMessage }}
-              </div>
-              <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger" role="alert">{{
-                  deleteResult[1].deleteError
-                }}
-              </div>
             </div>
           </nav>
           <br>

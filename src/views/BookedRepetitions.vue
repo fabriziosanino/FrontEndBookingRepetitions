@@ -1,6 +1,13 @@
 <template>
   <div class="bookedReservations" v-if="user.account !== ''">
     <section>
+      <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success" role="alert">
+        {{ stateChangeResult[0].changeMessage }}
+      </div>
+      <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger" role="alert">{{
+          stateChangeResult[1].changeError
+        }}
+      </div>
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
@@ -11,13 +18,6 @@
                  id="nav-cancelled-tab" data-toggle="tab" v-on:click="setTab('Cancelled')">CANCELLED</a>
               <a v-bind:class="(selectedTab==='Done')?'nav-item nav-link active':'nav-item nav-link'" id="nav-done-tab"
                  data-toggle="tab" v-on:click="setTab('Done')">DONE</a>
-              <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success" role="alert">
-                {{ stateChangeResult[0].changeMessage }}
-              </div>
-              <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger" role="alert">{{
-                  stateChangeResult[1].changeError
-                }}
-              </div>
             </div>
           </nav>
           <br>
@@ -30,6 +30,7 @@
               <th scope="col">Title</th>
               <th scope="col">Name</th>
               <th scope="col">Surname</th>
+              <th scope="col" v-if="user.role == 'Administrator'">Account</th>
               <th scope="col">
               </th>
               <th scope="col">
@@ -44,12 +45,13 @@
               <td>{{ el.title }}</td>
               <td>{{ el.name }}</td>
               <td>{{ el.surname }}</td>
+              <td v-if="user.role == 'Administrator'">{{ el.Account }}</td>
               <td>
-                <input v-if="selectedTab == 'Active'" id="setDone" class="btn btn-info btn-md" value="DONE"
+                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="setDone" class="btn btn-info btn-md" value="DONE"
                        v-on:click="changeState(el.IDRepetition, 'Done')">
               </td>
               <td>
-                <input v-if="selectedTab == 'Active'" id="delete" class="btn btn-info btn-md" value="DELETE"
+                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="delete" class="btn btn-info btn-md" value="DELETE"
                        v-on:click="changeState(el.IDRepetition, 'Cancelled')">
               </td>
             </tr>
@@ -65,7 +67,7 @@
 <script>
 import $ from "jquery";
 
-//TODO: se la sessione scade mentre siamo sulle my reservation non si aggirono il pulsante di login
+//TODO: se la sessione scade mentre siamo sulle my reservation non si aggiorna il pulsante di login
 
 export default {
   name: "BookedRepetitions",
@@ -79,7 +81,7 @@ export default {
     },
     stateChangeResult: [
       {
-        changeMessage: "Booked repetion state modifyed successfully",
+        changeMessage: "Booked repetition state modified successfully!",
         changeSuccess: false
       },
       {
@@ -105,19 +107,26 @@ export default {
     },
     getBooked() {
       let ref = this;
+      let accountParam = "";
+      if(this.user.role == 'Administrator')
+        accountParam = "all"
+      else
+        accountParam = this.user.account;
+
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {
           state: this.selectedTab,
-          account: this.user.account,
+          account: accountParam,
           sessionToken: this.user.sessionToken
         },
         timeout: 5000
       })
           .done(function (results) {
             if (results.done) {
+              console.log(results.results);
               ref.booked = results.results;
               ref.addFinish();
             } else if (results.error == "no session") {

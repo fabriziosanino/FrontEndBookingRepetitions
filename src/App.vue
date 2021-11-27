@@ -15,7 +15,7 @@
               HOME
             </a>
           </li>
-          <li class="nav-item" v-if="user.account !== ''">
+          <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
             <a href="/bookedRepetitions" style="color: white!important; padding-left: 21px!important;" class="nav-link">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
@@ -26,6 +26,13 @@
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
+            </a>
+          </li>
+          <li class="nav-item">
+            <a v-if="user.role === 'Administrator'" href="/bookedRepetitions" style="color: white!important; padding-left: 21px!important;" class="nav-link">
+            <span class="btn-label"><i class="fa fa-database"></i>
+            </span>
+              VIEW ALL BOOKED'S
             </a>
           </li>
         </ul>

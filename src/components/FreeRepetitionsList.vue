@@ -19,7 +19,7 @@
           </div>
         </td>
         <td >
-          <input :id="'btnBookARepetition_'+index" class="btn btn-info btn-md" value="BOOK" @click="bookThisRepetitionListener($event)">
+          <input :id="'btnBookARepetition_'+index" v-if="userRole != 'Administrator'" class="btn btn-info btn-md" value="BOOK" @click="bookThisRepetitionListener($event)">
         </td>
       </tr>
       <tr v-if="freeRepetitions.length<=0"><td><div class="alert alert-warning" role="alert">No repetitions left on this day.</div></td></tr>
@@ -45,7 +45,8 @@
         dataLoaded:false,
         courseSelected: false,
         freeRepetitions: [],
-        teachersOfSelectedCourse: []
+        teachersOfSelectedCourse: [],
+        userRole: ""
       }
     },
     mounted: function () {
@@ -53,6 +54,8 @@
       this.$parent.bookedResult[0].newResults = false;
       this.$parent.bookedResult[1].bookedError = false;
       this.$parent.bookedResult[2].bookedSuccess = false;
+
+      this.userRole = localStorage.getItem("role");
 
       this.fetchFreeRepetitions(this.$props.selectedDay);
     },
