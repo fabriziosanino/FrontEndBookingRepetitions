@@ -26,7 +26,9 @@
               </div>
 
               <div class="form-group">
-                <button v-on:click="loginHandler" id="btn-login" name="btn-login" class="btn btn-info btn-md">SIGN IN
+                <button v-on:click="loginHandler" id="btn-login" name="btn-login" class="btn btn-info btn-md">
+                  SIGN IN
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
                 </button>
               </div>
 
@@ -53,13 +55,15 @@ export default {
     error: [{userError: false, userMsg: "Please enter a valid Username"}, {
       pwdError: false,
       pwdMsg: "Please enter a valid Password (at least 1 digit)"
-    }, {generalError: false, generalMsg: ""}]
+    }, {generalError: false, generalMsg: ""}],
+    loading: false
   }),
   methods: {
     loginHandler() {
       this.error[2].generalError = false;
       this.error[1].pwdError = false;
       this.error[0].userError = false;
+      this.loading = true;
       if (validateEmail(this.mail))
         if (validatePassword(this.pwd)) {
           let ref = this;
@@ -77,18 +81,26 @@ export default {
 
               ref.$parent.checkSession();
               ref.$router.push("/");
+              ref.loading = false;
             } else {
               console.log("error: " + results.error);
               ref.error[2].generalError = true;
               ref.error[2].generalMsg = results.error;
+              ref.loading = false;
             }
           })
           .fail(function (strError) {
             ref.error[2].generalError = true;
-            if(strError.statusText != 'error')
+            if(strError.statusText != 'error' && strError.status != 0)
               ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
-            else
-              ref.error[2].generalMsg = "503: Server unavailable.";
+            else {
+              if(strError.status == 0)
+                ref.error[2].generalMsg = "Database unavailable.";
+              else
+                ref.error[2].generalMsg = "503: Server unavailable.";
+            }
+
+            ref.loading = false;
           })
         } else
           this.error[1].pwdError = true;

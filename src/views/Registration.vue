@@ -1,16 +1,18 @@
 <template>
-  <div id="login">
+  <div id="registration">
     <div class="container">
-      <div id="login-row" class="row justify-content-center align-items-center">
+      <div id="registration-row" class="row justify-content-center align-items-center">
         <div
-            id="login-column"
+            id="registration-column"
             style="border: #adacac 1px solid; padding: 5%; border-radius: 5%"
             class="col-md-6"
         >
-          <div id="login-box" class="col-md-12">
+          <div id="registration-box" class="col-md-12">
             <form
-                id="login-form"
+                id="registration-form"
                 class="form"
+                method="post"
+                onsubmit="return false"
             >
               <h1
                   class="text-center text-info"
@@ -85,13 +87,10 @@
               </div>
 
               <div class="form-group">
-                <input
-                    v-on:click="registrationHandler"
-                    id="log"
-                    type="button"
-                    class="btn btn-info btn-md"
-                    value="SIGN UP"
-                />
+                <button v-on:click="registrationHandler" id="btn-login" name="btn-login" class="btn btn-info btn-md">
+                  SIGN UP
+                  <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
+                </button>
               </div>
               <br/>
               <div
@@ -181,6 +180,7 @@ export default {
         confirmPwdMsg: "Passwords must be equals",
       },
     ],
+    loading: false
   }),
   methods: {
     registrationHandler() {
@@ -197,6 +197,7 @@ export default {
             if (validatePassword(this.pwd)) {
               if (valideteConfirmPassword(this.confirmPwd, this.pwd)) {
                 let ref = this;
+                this.loading = true;
                 $.post({
                   url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-registration",
                   dataType: 'json',
@@ -215,16 +216,28 @@ export default {
                         localStorage.setItem("account", results.account);
                         localStorage.setItem("role", results.role);
 
+                        ref.loading = false;
+
                         ref.$router.push('/');
                       } else {
                         console.log("error: " + results.error);
                         ref.error[2].generalError = true;
                         ref.error[2].generalMsg = results.error;
+                        ref.loading = false;
                       }
                     })
                     .fail(function (strError) {
-                      console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-                    })
+                      ref.error[2].generalError = true;
+                      if(strError.statusText != 'error' && strError.status != 0)
+                        ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+                      else {
+                        if(strError.status == 0)
+                          ref.error[2].generalMsg = "Database unavailable.";
+                        else
+                          ref.error[2].generalMsg = "503: Server unavailable.";
+                      }
+
+                      ref.loading = false;                    })
               } else this.error[5].confirmPwdError = true;
             } else this.error[1].pwdError = true;
           } else this.error[0].userError = true;
