@@ -49,6 +49,7 @@
             <a @click="logOut()" class="nav-link" id="aLogOut" style="color: white!important; text-align: right!important;">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG OUT
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
             </a>
           </li>
         </ul>
@@ -72,7 +73,8 @@ export default {
       role: '',
       sessionToken: ''
     },
-    connection: true
+    connection: true,
+    loading: false
   }),
   mounted: function () {
     //elements might not have been added to DOM yet
@@ -110,24 +112,32 @@ export default {
 
     logOut() {
       let ref = this;
+      this.loading = true;
       $.get({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-logout",
         dataType: 'json',
         timeout: 5000
       })
       .done(function (results) {
+        console.log(results);
         if (results.done) {
           localStorage.clear();
           ref.user.account = "";
           ref.user.role = "";
 
-          ref.$router.push('/')
+          if(ref.$router.app._route.fullPath != '/')
+            ref.$router.push('/');
         } else {
           console.log("error: " + results.error);
         }
+
+        ref.loading = false;
       })
       .fail(function (strError) {
+        alert("NO DB or SERVER connection");
         console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+
+        ref.loading = false;
       })
     },
   }
