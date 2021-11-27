@@ -177,6 +177,7 @@ export default {
               })
               .fail(function (strError) {
                 console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                ref.$router.push("/");
               })
         }
       } else if (this.type == "teacher") {
@@ -212,6 +213,7 @@ export default {
                   })
                   .fail(function (strError) {
                     console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                    ref.$router.push("/");
                   })
             } else this.error[4].surnameError = true;
           } else this.error[3].nameError = true;
@@ -247,6 +249,7 @@ export default {
               })
               .fail(function (strError) {
                 console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                ref.$router.push("/");
               })
         } else this.error[5].selectError = true;
       }
@@ -275,7 +278,8 @@ function errorHandling(results, ref) {
     ref.$parent.$parent.user.role = "";
     ref.$parent.$parent.user.account = "";*/
 
-    this.$router.push("/");
+    if(ref.$router.app._route.fullPath != '/')
+      ref.$router.push('/');
   } else {
     ref.addResult[1].addError = true;
     ref.addResult[1].addMessage += " " + results.error();

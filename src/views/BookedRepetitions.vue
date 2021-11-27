@@ -136,6 +136,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     },
     addFinish() {
@@ -171,6 +172,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     }
   }
@@ -186,7 +188,9 @@ function errorHandling(results, ref) {
     ref.$parent.user.sessionToken = "";
     ref.$parent.user.role = "";
     ref.$parent.user.account = "";
-    ref.$router.push("/");
+
+    if(ref.$router.app._route.fullPath != '/')
+      ref.$router.push('/');
   } else {
     ref.stateChangeResult[1].changeError = true;
     ref.stateChangeResult[1].changeMessage += " " + results.error();

@@ -38,7 +38,7 @@
         </ul>
       </div>
       <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
-        <ul class="navbar-nav ml-auto" style="float: right;">
+        <ul class="navbar-nav ml-auto" style="float: right;" v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
             <a href="/login" class="nav-link" style="color: white!important; text-align: right!important;">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
@@ -71,7 +71,8 @@ export default {
       account: '',
       role: '',
       sessionToken: ''
-    }
+    },
+    connection: true
   }),
   mounted: function () {
     //elements might not have been added to DOM yet

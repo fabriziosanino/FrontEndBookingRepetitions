@@ -85,6 +85,7 @@ export default {
               })
               .fail(function (strError) {
                 console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+                ref.$router.push("/");
               })
         } else
           this.error[1].pwdError = true;

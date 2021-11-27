@@ -124,10 +124,10 @@ export default {
         deleteError: false,
         deleteMessage: "Error while deleting"
       }
-    ]
+    ],
   }),
   components: {
-    Modal
+    Modal,
   },
   mounted: function () {
     //elements might not have been added to DOM yet
@@ -171,6 +171,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     },
     deleteCourse(idCourse) {
@@ -200,6 +201,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     },
     getTeachers() {
@@ -220,6 +222,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     },
     deleteTeacher(idTeacher) {
@@ -249,6 +252,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     },
     getTeaches() {
@@ -269,6 +273,7 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     },
     deleteTeach(idTeacher, idCourse) {
@@ -303,9 +308,16 @@ export default {
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.$router.push("/");
           })
     }
   }
+}
+
+function deleteParentUser(ref) {
+  ref.$parent.user.sessionToken = "";
+  ref.$parent.user.role = "";
+  ref.$parent.user.account = "";
 }
 
 function errorHandling(results, ref) {
@@ -315,11 +327,10 @@ function errorHandling(results, ref) {
     ref.user.sessionToken = "";
     ref.user.role = "";
 
-    ref.$parent.user.sessionToken = "";
-    ref.$parent.user.role = "";
-    ref.$parent.user.account = "";
+    deleteParentUser(ref);
 
-    ref.$router.push("/");
+    if(ref.$router.app._route.fullPath != '/')
+      ref.$router.push('/');
   } else {
     ref.deleteResult[1].deleteError = true;
     ref.deleteResult[1].deleteMessage += " " + results.error();
