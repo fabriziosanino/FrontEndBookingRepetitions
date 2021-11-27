@@ -1,11 +1,14 @@
 <template>
   <div class="bookedReservations" v-if="user.account !== ''">
     <section>
+      <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
+        <span class="sr-only">Loading...</span>
+      </div>
       <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success" role="alert">
         {{ stateChangeResult[0].changeMessage }}
       </div>
       <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger" role="alert">{{
-          stateChangeResult[1].changeError
+          stateChangeResult[1].changeMessage
         }}
       </div>
       <div style="margin: 5px;" class="card">
@@ -90,7 +93,8 @@ export default {
         changeError: false,
         changeMessage: "Error while updating state"
       }
-    ]
+    ],
+    loading: false
   }),
   mounted() {
     this.$nextTick(() => {
@@ -115,6 +119,8 @@ export default {
       else
         accountParam = this.user.account;
 
+      this.loading = true;
+
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
@@ -133,10 +139,11 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError);
           })
     },
     addFinish() {
@@ -148,6 +155,7 @@ export default {
       this.stateChangeResult[0].changeSuccess = false;
       this.stateChangeResult[0].changeError = false;
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "GET",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-manage-repetitions;jsessionid=" + this.user.sessionToken,
@@ -169,10 +177,11 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError);
           })
     }
   }
@@ -198,6 +207,20 @@ function errorHandling(results, ref) {
       ref.stateChangeResult[1].changeError = false;
     });
   }
+}
+
+function failRequest(ref, strError) {
+  ref.stateChangeResult[1].changeError = true;
+  if (strError.statusText != 'error' && strError.status != 0)
+    ref.stateChangeResult[1].changeMessage = JSON.stringify(strError.status + ": " + strError.statusText);
+  else {
+    if (strError.status == 0)
+      ref.stateChangeResult[1].changeMessage = "Database unavailable.";
+    else
+      ref.stateChangeResult[1].changeMessage = "503: Server unavailable.";
+  }
+
+  ref.loading = false;
 }
 </script>
 
