@@ -1,11 +1,14 @@
 <template>
   <div id="manage" class="manage" v-if="user.account !== ''">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
+      <span class="sr-only">Loading...</span>
+    </div>
     <section v-if="dialog==''">
       <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
         {{ deleteResult[0].deleteMessage }}
       </div>
       <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger" role="alert">{{
-          deleteResult[1].deleteError
+          deleteResult[1].deleteMessage
         }}
       </div>
       <div style="margin: 5px;" class="card">
@@ -122,9 +125,10 @@ export default {
       },
       {
         deleteError: false,
-        deleteMessage: "Error while deleting"
+        deleteMessage: ""
       }
     ],
+    loading: false
   }),
   components: {
     Modal,
@@ -155,6 +159,7 @@ export default {
     },
     getCourses() {
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
@@ -168,14 +173,16 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError)
           })
     },
     deleteCourse(idCourse) {
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
@@ -198,14 +205,16 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError)
           })
     },
     getTeachers() {
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
@@ -219,14 +228,16 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError)
           })
     },
     deleteTeacher(idTeacher) {
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
@@ -249,14 +260,16 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError)
           })
     },
     getTeaches() {
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
@@ -270,14 +283,16 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = false;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError)
           })
     },
     deleteTeach(idTeacher, idCourse) {
       let ref = this;
+      this.loading = true;
       $.ajax({
         type: "POST",
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
@@ -305,13 +320,28 @@ export default {
             } else {
               errorHandling(results, ref);
             }
+
+            ref.loading = true;
           })
           .fail(function (strError) {
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-            ref.$router.push("/");
+            failRequest(ref, strError)
           })
     }
   }
+}
+
+function failRequest(ref, strError) {
+  ref.deleteResult[1].deleteError = true;
+  if (strError.statusText != 'error' && strError.status != 0)
+    ref.deleteResult[1].deleteMessage = JSON.stringify(strError.status + ": " + strError.statusText);
+  else {
+    if (strError.status == 0)
+      ref.deleteResult[1].deleteMessage = "Database unavailable.";
+    else
+      ref.deleteResult[1].deleteMessage = "503: Server unavailable.";
+  }
+
+  ref.loading = false;
 }
 
 function deleteParentUser(ref) {
