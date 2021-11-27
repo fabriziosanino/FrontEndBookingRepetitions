@@ -1,6 +1,13 @@
 <template>
   <div class="bookedReservations" v-if="user.account !== ''">
     <section>
+      <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success" role="alert">
+        {{ stateChangeResult[0].changeMessage }}
+      </div>
+      <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger" role="alert">{{
+          stateChangeResult[1].changeError
+        }}
+      </div>
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
@@ -23,6 +30,7 @@
               <th scope="col">Title</th>
               <th scope="col">Name</th>
               <th scope="col">Surname</th>
+              <th scope="col" v-if="user.role == 'Administrator'">Account</th>
               <th scope="col">
               </th>
               <th scope="col">
@@ -37,12 +45,15 @@
               <td>{{ el.title }}</td>
               <td>{{ el.name }}</td>
               <td>{{ el.surname }}</td>
+              <td v-if="user.role == 'Administrator'">{{ el.Account }}</td>
               <td>
-                <input v-if="selectedTab == 'Active'" id="setDone" class="btn btn-info btn-md" value="DONE"
+                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="setDone"
+                       class="btn btn-info btn-md" value="DONE"
                        v-on:click="changeState(el.IDRepetition, 'Done')">
               </td>
               <td>
-                <input v-if="selectedTab == 'Active'" id="delete" class="btn btn-info btn-md" value="DELETE"
+                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="delete"
+                       class="btn btn-info btn-md" value="DELETE"
                        v-on:click="changeState(el.IDRepetition, 'Cancelled')">
               </td>
             </tr>
@@ -58,7 +69,7 @@
 <script>
 import $ from "jquery";
 
-//TODO: se la sessione scade mentre siamo sulle my reservation non si aggirono il pulsante di login
+//TODO: se la sessione scade mentre siamo sulle my reservation non si aggiorna il pulsante di login
 
 export default {
   name: "BookedRepetitions",
@@ -69,7 +80,17 @@ export default {
       account: "",
       sessionToken: "",
       role: ""
-    }
+    },
+    stateChangeResult: [
+      {
+        changeMessage: "Booked repetition state modified successfully!",
+        changeSuccess: false
+      },
+      {
+        changeError: false,
+        changeMessage: "Error while updating state"
+      }
+    ]
   }),
   mounted() {
     this.$nextTick(() => {
@@ -88,13 +109,19 @@ export default {
     },
     getBooked() {
       let ref = this;
+      let accountParam = "";
+      if (this.user.role == 'Administrator')
+        accountParam = "all"
+      else
+        accountParam = this.user.account;
+
       $.ajax({
         type: "POST",
-        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + this.user.sessionToken,
+        url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
         data: {
           state: this.selectedTab,
-          account: this.user.account,
+          account: accountParam,
           sessionToken: this.user.sessionToken
         },
         timeout: 5000
@@ -103,14 +130,8 @@ export default {
             if (results.done) {
               ref.booked = results.results;
               ref.addFinish();
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -123,6 +144,8 @@ export default {
       });
     },
     changeState(idRepetition, newState) {
+      this.stateChangeResult[0].changeSuccess = false;
+      this.stateChangeResult[0].changeError = false;
       let ref = this;
       $.ajax({
         type: "GET",
@@ -137,15 +160,13 @@ export default {
                 if (ref.booked[i].IDRepetition == idRepetition)
                   ref.booked.splice(i, 1);
               }
-              alert("Cambio stato fatto!");
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
+
+              ref.stateChangeResult[0].changeSuccess = true;
+              setTimeout(function () {
+                ref.stateChangeResult[0].changeSuccess = false;
+              }, 5000);
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -154,8 +175,30 @@ export default {
     }
   }
 }
+
+function errorHandling(results, ref) {
+  if (results.error == "no session") {
+    localStorage.clear();
+    ref.user.account = "";
+    ref.user.sessionToken = "";
+    ref.user.role = "";
+
+    ref.$parent.user.sessionToken = "";
+    ref.$parent.user.role = "";
+    ref.$parent.user.account = "";
+    ref.$router.push("/");
+  } else {
+    ref.stateChangeResult[1].changeError = true;
+    ref.stateChangeResult[1].changeMessage += " " + results.error();
+    setTimeout(function () {
+      ref.stateChangeResult[1].changeError = false;
+    });
+  }
+}
 </script>
 
 <style scoped>
-  #nav-tab:hover{ cursor: pointer; }
+#nav-tab:hover {
+  cursor: pointer;
+}
 </style>

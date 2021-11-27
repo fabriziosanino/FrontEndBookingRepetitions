@@ -1,6 +1,13 @@
 <template>
   <div id="manage" class="manage" v-if="user.account !== ''">
     <section v-if="dialog==''">
+      <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
+        {{ deleteResult[0].deleteMessage }}
+      </div>
+      <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger" role="alert">{{
+          deleteResult[1].deleteError
+        }}
+      </div>
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
@@ -107,15 +114,20 @@ export default {
       sessionToken: "",
       account: "",
       role: ""
-    }
+    },
+    deleteResult: [
+      {
+        deleteMessage: "",
+        deleteSuccess: false
+      },
+      {
+        deleteError: false,
+        deleteMessage: "Error while deleting"
+      }
+    ]
   }),
   components: {
     Modal
-  },
-  computed: {
-    getUser() {
-      return this.$store.getters.getUser;
-    }
   },
   mounted: function () {
     //elements might not have been added to DOM yet
@@ -154,14 +166,7 @@ export default {
             if (results.done) {
               ref.courses = results.results;
             } else {
-              if (results.error == "no session") {
-                localStorage.clear();
-                ref.user.account = "";
-                ref.user.sessionToken = "";
-                ref.user.role = "";
-                this.$parent.checkSession();
-              } else
-                console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -183,16 +188,14 @@ export default {
                 if (ref.courses[i].IDCourse == idCourse)
                   ref.courses.splice(i, 1);
               }
-              alert("Corso eliminato correttamente!");
+
+              ref.deleteResult[0].deleteSuccess = true;
+              ref.deleteResult[0].deleteMessage = "Course deleted successfully";
+              setTimeout(function () {
+                ref.deleteResult[0].deleteSuccess = false;
+              }, 5000);
             } else {
-              if (results.error == "no session") {
-                localStorage.clear();
-                ref.user.account = "";
-                ref.user.sessionToken = "";
-                ref.user.role = "";
-                this.$parent.checkSession();
-              } else
-                console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -211,14 +214,8 @@ export default {
           .done(function (results) {
             if (results.done) {
               ref.teachers = results.results;
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -240,15 +237,14 @@ export default {
                 if (ref.teachers[i].IDTeacher == idTeacher)
                   ref.teachers.splice(i, 1);
               }
-              alert("Professore eliminato correttamente!");
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
+
+              ref.deleteResult[0].deleteSuccess = true;
+              ref.deleteResult[0].deleteMessage = "Teacher deleted successfully";
+              setTimeout(function () {
+                ref.deleteResult[0].deleteSuccess = false;
+              }, 5000);
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -267,14 +263,8 @@ export default {
           .done(function (results) {
             if (results.done) {
               ref.teaches = results.results;
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
@@ -301,21 +291,41 @@ export default {
                 if (ref.teaches[i].IDTeacher == idTeacher && ref.teaches[i].IDCourse == idCourse)
                   ref.teaches.splice(i, 1);
               }
-              alert("Professore - Corso eliminato correttamente!");
-            } else if (results.error == "no session") {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.sessionToken = "";
-              ref.user.role = "";
-              this.$parent.checkSession();
+
+              ref.deleteResult[0].deleteSuccess = true;
+              ref.deleteResult[0].deleteMessage = "Teach deleted successfully";
+              setTimeout(function () {
+                ref.deleteResult[0].deleteSuccess = false;
+              }, 5000);
             } else {
-              console.log("error: " + results.error);
+              errorHandling(results, ref);
             }
           })
           .fail(function (strError) {
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
           })
     }
+  }
+}
+
+function errorHandling(results, ref) {
+  if (results.error == "no session") {
+    localStorage.clear();
+    ref.user.account = "";
+    ref.user.sessionToken = "";
+    ref.user.role = "";
+
+    ref.$parent.user.sessionToken = "";
+    ref.$parent.user.role = "";
+    ref.$parent.user.account = "";
+
+    ref.$router.push("/");
+  } else {
+    ref.deleteResult[1].deleteError = true;
+    ref.deleteResult[1].deleteMessage += " " + results.error();
+    setTimeout(function () {
+      ref.deleteResult[1].deleteError = false;
+    }, 5000);
   }
 }
 </script>
