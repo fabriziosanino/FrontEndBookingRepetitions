@@ -6,22 +6,21 @@
         <div id="login-column" style="border: #adacac 1px solid; padding: 5%;border-radius: 5%;" class="col-md-6">
           <div id="login-box" class="col-md-12">
             <form id="login-form" class="form" method="post" onsubmit="return false">
-              <h1 class="text-center text-info" style="margin-bottom: 0!important;">WELCOME</h1>
-              <h5 class="text-center" style="color:#aaa!important; ">sign in to continue</h5><br>
+              <h1 class="text-center text-info title">WELCOME</h1>
+              <h5 class="text-center">sign in to continue</h5>
               <div class="form-group">
-                <label for="username" class="text-info">Username</label><br>
+                <label for="username" class="text-info tag-info">Username</label>
                 <input type="email" v-model="mail" placeholder="mario.rossi@email.com" name="username" id="username"
                        class="form-control" required/>
               </div>
               <div class="form-group">
-                <label for="password" class="text-info">Password</label><br>
+                <label for="password" class="text-info tag-info">Password</label>
                 <input type="password" v-model="pwd" placeholder="password" name="password" id="password"
                        class="form-control" required/>
               </div>
               <div id="register-link" class="text-right">
-                <router-link class="nav-link" style="color: #aaa!important; text-align: right!important;"
-                             to="/registration">
-                  New User? SIGN UP
+                <router-link class="nav-link" to="/registration">
+                  New User? <a class="text-info">SIGN UP</a>
                 </router-link>
               </div>
 
@@ -31,8 +30,6 @@
                   <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
                 </button>
               </div>
-
-              <br/>
               <div v-if="error[0].userError" class="alert alert-danger" role="alert">{{ error[0].userMsg }}</div>
               <div v-else-if="error[1].pwdError" class="alert alert-danger" role="alert">{{ error[1].pwdMsg }}</div>
               <div v-else-if="error[2].generalError" class="alert alert-danger" role="alert">{{ error[2].generalMsg }}</div>
@@ -129,3 +126,24 @@ function validatePassword(pwd) {
     return true;
 }
 </script>
+<style>
+.tag-info{
+  float: left;
+}
+
+.card{
+  border: #adacac 1px solid; padding: 5%;border-radius: 5%;
+}
+
+.title{
+  margin-bottom: 0!important;
+}
+
+h5{
+  color:#aaa!important;
+}
+
+router-link{
+  color: #aaa!important; text-align: right!important;
+}
+</style>

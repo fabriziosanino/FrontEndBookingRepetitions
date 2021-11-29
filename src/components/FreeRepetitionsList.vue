@@ -232,9 +232,7 @@
     visibility: hidden;
   }
 
-  .btn-info{
-    color:white!important;
-  }
+
 
   td{
     vertical-align: middle!important;

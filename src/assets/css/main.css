@@ -43,6 +43,10 @@ th, td{
   /*border-bottom: 0!important;*/
 }
 
+.btn-info{
+  color:white!important;
+}
+
 .form-control{
   color:#898e95!important;
 }
