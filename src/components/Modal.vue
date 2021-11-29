@@ -265,17 +265,12 @@ function validateEmail(user) {
 function errorHandling(results, ref) {
   if (results.error == "no session") {
     localStorage.clear();
-    ref.user.account = "";
-    ref.user.sessionToken = "";
-    ref.user.role = "";
 
-    //TODO: settare le variabili di app.vue a null in modo che compaia LOGIN
-    /*ref.$parent.$parent.user.sessionToken = "";
-    ref.$parent.$parent.user.role = "";
-    ref.$parent.$parent.user.account = "";*/
+    ref.$root.$children[0].user.account = "";
+    ref.$root.$children[0].user.role = "";
+    ref.$root.$children[0].user.sessionToken = "";
 
-    if(ref.$router.app._route.fullPath != '/')
-      ref.$router.push('/');
+    ref.$router.push("/")
   } else {
     ref.addResult[1].addError = true;
     ref.addResult[1].addMessage += " " + results.error();

@@ -344,6 +344,13 @@ function failRequest(ref, strError) {
   ref.loading = false;
 }
 
+// eslint-disable-next-line no-unused-vars
+function deleteParentUserModal() {
+  this.$parent.user.sessionToken = "";
+  this.$parent.user.role = "";
+  this.$parent.user.account = "";
+}
+
 function deleteParentUser(ref) {
   ref.$parent.user.sessionToken = "";
   ref.$parent.user.role = "";

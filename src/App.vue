@@ -81,7 +81,7 @@ export default {
     this.$nextTick(() => {
       this.checkSession();
     });
-  }, 
+  },
   methods: {
     checkSession() {
       let ref = this;

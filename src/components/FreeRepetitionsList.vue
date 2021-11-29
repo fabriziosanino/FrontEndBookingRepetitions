@@ -84,7 +84,8 @@
             $('select[id^="FormControlTeacher"]').val(-1);
 
             self.$parent.$data.loading = false;
-          }
+          } else
+            errorHandling(results, self);
         })
         .fail((strError) => {
           self.$parent.bookedResult[0].newResults = true;
@@ -198,11 +199,7 @@
 
               self.$parent.$data.loading = false;
             }else{
-              self.$parent.bookedResult[0].newResults = true;
-              self.$parent.bookedResult[1].bookedError = true;
-              self.$parent.bookedResult[1].errorMsg = results.error;
-
-              self.$parent.$data.loading = false;
+              errorHandling(self, results);
             }
           })
           .fail((strError) => {
@@ -224,6 +221,24 @@
       }
     }
   };
+
+  function errorHandling(ref, results) {
+    if (results.error == "no session") {
+      localStorage.clear();
+
+      ref.$root.$children[0].user.account = "";
+      ref.$root.$children[0].user.role = "";
+      ref.$root.$children[0].user.sessionToken = "";
+
+      ref.$router.push("/")
+    } else {
+      ref.$parent.bookedResult[0].newResults = true;
+      ref.$parent.bookedResult[1].bookedError = true;
+      ref.$parent.bookedResult[1].errorMsg = results.error;
+
+      ref.$parent.$data.loading = false;
+    }
+  }
 
 </script>
 
