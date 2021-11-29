@@ -39,7 +39,16 @@ th, td{
   width:25%!important;
   text-align: center!important;
   color: #898e95;
-  border-bottom: 0!important;
+  line-height: 2!important;
+  /*border-bottom: 0!important;*/
+}
+
+.form-control{
+  color:#898e95!important;
+}
+
+th{
+  border-bottom-color: #aaa !important;
 }
 
 

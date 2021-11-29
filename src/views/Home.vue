@@ -86,4 +86,9 @@ export default {
 .active {
   font-weight: bold;
 }
+
+.table{
+  margin-bottom: 5rem;
+}
+
 </style>

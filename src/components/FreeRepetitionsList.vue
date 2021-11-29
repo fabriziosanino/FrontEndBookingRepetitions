@@ -1,7 +1,7 @@
 <template>
     <tbody id="freeRepetitionsList" v-if="dataLoaded">
       <tr v-for="(repetition, index) in freeRepetitions" :key="index">  
-        <td>{{ repetition.startTime }} - {{ getEndTime(repetition.startTime) }}</td>
+        <td><a>{{ repetition.startTime }} - {{ getEndTime(repetition.startTime) }}</a></td>
         <td>
           <div class="form-group">
             <select class="form-control" :id="'FormControlSub_'+index" @change="courseSelectedChangeListener($event)">
@@ -230,5 +230,18 @@
 <style scoped>
   .hiddenTeacherList{
     visibility: hidden;
+  }
+
+  .btn-info{
+    color:white!important;
+  }
+
+  td{
+    vertical-align: middle!important;
+    padding: 1rem!important;
+  }
+
+  .form-group{
+    margin: 0!important;
   }
 </style>
