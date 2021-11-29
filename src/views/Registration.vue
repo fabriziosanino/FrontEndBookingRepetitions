@@ -4,9 +4,7 @@
       <div id="registration-row" class="row justify-content-center align-items-center">
         <div
             id="registration-column"
-            style="border: #adacac 1px solid; padding: 5%; border-radius: 5%"
-            class="col-md-6"
-        >
+            class="col-md-6 card">
           <div id="registration-box" class="col-md-12">
             <form
                 id="registration-form"
@@ -20,7 +18,7 @@
               >
                 REGISTRATION
               </h1>
-              <h5 class="text-center" style="color: #aaa !important">
+              <h5 class="text-center" >
                 sign up to continue
               </h5>
               <br/>
@@ -81,7 +79,7 @@
                     style="color: #aaa !important; text-align: right !important"
                     to="/login"
                 >
-                  Back to Login
+                  <a class="text-info">Back to Login</a>
                 </router-link
                 >
               </div>
@@ -284,3 +282,14 @@ function valideteConfirmPassword(confirmPwd, pwd) {
   else return false;
 }
 </script>
+
+
+<style>
+.card{
+border: #adacac 1px solid; padding: 3%; border-radius: 5%;
+}
+
+h5{
+color: #aaa !important
+}
+</style>
