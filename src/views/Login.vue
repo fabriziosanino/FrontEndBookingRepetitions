@@ -1,6 +1,6 @@
 <template>
   <div id="login" class="login">
-    <h3 class="text-center text-white pt-5">Login form</h3>
+    <!--<h3 class="text-center text-white pt-5">Login form</h3>-->
     <div class="container">
       <div id="login-row" class="row justify-content-center align-items-center">
         <div id="login-column" style="border: #adacac 1px solid; padding: 5%;border-radius: 5%;" class="col-md-6">
@@ -145,5 +145,8 @@ h5{
 
 router-link{
   color: #aaa!important; text-align: right!important;
+}
+.container{
+  margin-top:5em;
 }
 </style>
