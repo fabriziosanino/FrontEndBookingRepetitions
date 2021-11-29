@@ -13,8 +13,8 @@
                        required/>
               </div>
               <div class="form-group">
-                <input type="button" value="ADD" v-on:click="insertElement">
-                <input type="button" value="BACK" v-on:click="back">
+                <input type="button" class="btn btn-outline-success btn-md" value="ADD" v-on:click="insertElement">&nbsp;&nbsp;&nbsp;
+                <input type="button" class="btn btn-outline-secondary btn-md" value="BACK" v-on:click="back">
               </div>
 
               <br/>
@@ -41,8 +41,8 @@
                        required/>
               </div>
               <div class="form-group">
-                <input type="button" value="ADD" v-on:click="insertElement">
-                <input type="button" value="BACK" v-on:click="back">
+                <input type="button" class="btn btn-outline-success btn-md" value="ADD" v-on:click="insertElement">&nbsp;&nbsp;&nbsp;
+                <input type="button" class="btn btn-outline-secondary btn-md" value="BACK" v-on:click="back">
               </div>
 
               <br/>
@@ -55,17 +55,17 @@
               </div>
             </form>
             <form v-else-if="type=='teach'">
-              <h1 class="text-center text-info" style="margin-bottom: 0!important;">Add a new Teach</h1>
+              <h1 class="text-center text-info" style="margin-bottom: 0!important;">Add a new Teacher-Course Association</h1>
               <br>
               <div class="form-group">
-                <label>IDTeacher:</label>
+                <label>IDTeacher:&nbsp;&nbsp;</label>
                 <select name="idTeachers" id="idTeachers" @change="onChangeTeacher($event)">
                   <option value="">Select a teacher</option>
                   <option v-for="teacher in this.$parent.$data.teachers" v-bind:key="teacher.IDTeacher"
                           v-bind:value="teacher.IDTeacher">{{ teacher.Name }} {{ teacher.Surname }}
                   </option>
-                </select>
-                <label>IDCourse:</label>
+                </select><br/><br/>
+                <label>IDCourse:&nbsp;&nbsp;</label>
                 <select name="idCourses" id="idCourses" @change="onChangeCourse($event)">
                   <option value="">Select a course</option>
                   <option v-for="course in this.$parent.$data.courses" v-bind:key="course.IDCourse"
@@ -74,8 +74,8 @@
                 </select>
               </div>
               <div class="form-group">
-                <input type="button" value="ADD" v-on:click="insertElement">
-                <input type="button" value="BACK" v-on:click="back">
+                <input type="button" class="btn btn-outline-success btn-md" value="ADD" v-on:click="insertElement">&nbsp;&nbsp;&nbsp;
+                <input type="button" class="btn btn-outline-secondary btn-md" value="BACK" v-on:click="back">
               </div>
 
               <br/>
@@ -121,7 +121,7 @@ export default {
       {mailError: false, mailMsg: "Please enter a valid Mail"},
       {nameError: false, nameMsg: "Please enter a valid Name"},
       {surnameError: false, surnameMsg: "Please enter a valid Surname"},
-      {selectError: false, selectMsg: "Please select a valid Teacher or Course"},
+      {selectError: false, selectMsg: "Please select a valid Teacher and Course"},
     ],
     addResult: [
       {
@@ -165,7 +165,6 @@ export default {
               .done(function (results) {
                 if (results.done) {
                   ref.$parent.getCourses();
-                  //ref.$parent.$data.dialog = "";
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Course added successfully. Press back to return..."
                   setTimeout(function () {
@@ -201,7 +200,6 @@ export default {
                   .done(function (results) {
                     if (results.done) {
                       ref.$parent.getTeachers();
-                      //ref.$parent.$data.dialog = "";
                       ref.addResult[0].addSuccess = true;
                       ref.addResult[0].addMessage = "Teacher added successfully. Press back to return..."
                       setTimeout(function () {
@@ -236,8 +234,6 @@ export default {
               .done(function (results) {
                 if (results.done) {
                   ref.$parent.getTeaches();
-                  //ref.$parent.$data.dialog = "";
-
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Teach added successfully. Press back to return..."
                   setTimeout(function () {

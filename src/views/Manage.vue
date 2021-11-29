@@ -373,4 +373,6 @@ function errorHandling(results, ref) {
 
 <style scoped>
   #nav-tab:hover{ cursor: pointer; }
+
+  .active{font-weight: bold;}
 </style>

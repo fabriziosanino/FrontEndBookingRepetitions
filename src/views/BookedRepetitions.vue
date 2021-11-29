@@ -228,4 +228,5 @@ function failRequest(ref, strError) {
 #nav-tab:hover {
   cursor: pointer;
 }
+.active{font-weight: bold;}
 </style>
