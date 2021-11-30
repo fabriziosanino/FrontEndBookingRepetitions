@@ -5,11 +5,10 @@
         <span class="sr-only">Loading...</span>
       </div>
       <div v-if="bookedResult[0].newResults">
-        <div v-if="bookedResult[1].bookedError" class="alert alert-danger" role="alert">{{
-            bookedResult[1].errorMsg
-          }}
+        <div v-if="bookedResult[1].bookedError" class="alert alert-danger customWidth" role="alert">
+          {{ bookedResult[1].errorMsg }}
         </div>
-        <div v-else-if="bookedResult[2].bookedSuccess" class="alert alert-success" role="alert">
+        <div v-else-if="bookedResult[2].bookedSuccess" class="alert alert-success customWidth" role="alert">
           {{ bookedResult[2].successMsg }}
         </div>
       </div>
@@ -89,6 +88,12 @@ export default {
 
 .table{
   margin-bottom: 5rem;
+}
+
+.customWidth{
+  position: relative;
+  left: 5%;
+  width: 90%;
 }
 
 </style>

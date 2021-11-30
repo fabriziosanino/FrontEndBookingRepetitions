@@ -27,7 +27,7 @@
                 <input
                     v-model="surname"
                     type="text"
-                    placeholder="surname"
+                    placeholder="Surname"
                     name="surname"
                     id="surname"
                     class="form-control"
@@ -37,7 +37,7 @@
                 <input
                     v-model="name"
                     type="text"
-                    placeholder="name"
+                    placeholder="Name"
                     name="name"
                     id="name"
                     class="form-control"
@@ -47,7 +47,7 @@
                 <input
                     v-model="user"
                     type="email"
-                    placeholder="email"
+                    placeholder="Email"
                     name="email"
                     id="email"
                     class="form-control"
@@ -57,7 +57,7 @@
                 <input
                     type="password"
                     v-model="pwd"
-                    placeholder="password"
+                    placeholder="Password"
                     name="password"
                     id="password"
                     class="form-control"
@@ -67,7 +67,7 @@
                 <input
                     v-model="confirmPwd"
                     type="password"
-                    placeholder="confirm password"
+                    placeholder="Confirm Password"
                     name="password"
                     id="confpassword"
                     class="form-control"
@@ -155,7 +155,7 @@ export default {
     error: [
       {
         userError: false,
-        userMsg: "Please enter a valid Username",
+        userMsg: "Please enter a valid Email",
       },
       {
         pwdError: false,
@@ -208,34 +208,35 @@ export default {
                   }, // Si possono registrare solo Client
                   timeout: 5000
                 })
-                    .done(function (results) {
-                      if (results.done) {
-                        localStorage.setItem("token", results.token);
-                        localStorage.setItem("account", results.account);
-                        localStorage.setItem("role", results.role);
+                .done(function (results) {
+                  if (results.done) {
+                    localStorage.setItem("token", results.token);
+                    localStorage.setItem("account", results.account);
+                    localStorage.setItem("role", results.role);
 
-                        ref.loading = false;
+                    ref.$parent.checkSession();
+                    ref.$router.push('/');
+                    ref.loading = false;
+                  } else {
+                    console.log("error: " + results.error);
+                    ref.error[2].generalError = true;
+                    ref.error[2].generalMsg = results.error;
+                    ref.loading = false;
+                  }
+                })
+                .fail(function (strError) {
+                  ref.error[2].generalError = true;
+                  if(strError.statusText !== 'error' && strError.status !== 0)
+                    ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+                  else {
+                    if(strError.status === 0)
+                      ref.error[2].generalMsg = "Database unavailable.";
+                    else
+                      ref.error[2].generalMsg = "503: Server unavailable.";
+                  }
 
-                        ref.$router.push('/');
-                      } else {
-                        console.log("error: " + results.error);
-                        ref.error[2].generalError = true;
-                        ref.error[2].generalMsg = results.error;
-                        ref.loading = false;
-                      }
-                    })
-                    .fail(function (strError) {
-                      ref.error[2].generalError = true;
-                      if(strError.statusText !== 'error' && strError.status !== 0)
-                        ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
-                      else {
-                        if(strError.status === 0)
-                          ref.error[2].generalMsg = "Database unavailable.";
-                        else
-                          ref.error[2].generalMsg = "503: Server unavailable.";
-                      }
-
-                      ref.loading = false;                    })
+                  ref.loading = false;                    
+                })
               } else this.error[5].confirmPwdError = true;
             } else this.error[1].pwdError = true;
           } else this.error[0].userError = true;

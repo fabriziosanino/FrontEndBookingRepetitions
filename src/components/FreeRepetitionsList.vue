@@ -66,7 +66,6 @@
           account = localStorage.getItem('account');
 
         var self = this;
-        this.$parent.$data.loading = true;
         $.post({
           url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-free-repetitions",
           dataType: 'json',
@@ -81,24 +80,20 @@
             $('select[id^="FormControlSub"]').val(-1);
             $('select[id^="FormControlTeacher"]').addClass("hiddenTeacherList");
             $('select[id^="FormControlTeacher"]').val(-1);
-
-            self.$parent.$data.loading = false;
           } else
-            errorHandling(results, self);
+            errorHandling(self, results);
         })
         .fail((strError) => {
-          self.$parent.bookedResult[0].newResults = true;
-          self.$parent.bookedResult[1].bookedError = true;
           if(strError.statusText != 'error' && strError.status != 0)
             self.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
           else {
-            if(strError.status === 0)
+            if(strError.status !== 0)
               self.$parent.bookedResult[1].errorMsg = "Database unavailable.";
             else
               self.$parent.bookedResult[1].errorMsg = "503: Server unavailable.";
           }
-
-          self.$parent.$data.loading = false;
+          self.$parent.bookedResult[0].newResults = true;
+          self.$parent.bookedResult[1].bookedError = true;
         });
       },
       getEndTime: (startTime) => {
@@ -233,8 +228,6 @@
       ref.$parent.bookedResult[0].newResults = true;
       ref.$parent.bookedResult[1].bookedError = true;
       ref.$parent.bookedResult[1].errorMsg = results.error;
-
-      ref.$parent.$data.loading = false;
     }
   }
 
