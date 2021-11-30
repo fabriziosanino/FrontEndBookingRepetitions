@@ -4,7 +4,7 @@
       <div id="modal-row" class="row justify-content-center align-items-center">
         <div id="modal-column" style="border: #adacac 1px solid; padding: 5%;border-radius: 5%;" class="col-md-6">
           <div id="modal-box" class="col-md-12">
-            <form v-if="type=='course'">
+            <form v-if="type==='course'">
               <h1 class="text-center text-info" style="margin-bottom: 0!important;">Add a new Course</h1>
               <br>
               <div class="form-group">
@@ -24,7 +24,7 @@
                 }}
               </div>
             </form>
-            <form v-else-if="type=='teacher'">
+            <form v-else-if="type==='teacher'">
               <h1 class="text-center text-info" style="margin-bottom: 0!important;">Add a new Teacher</h1>
               <br>
               <div class="form-group">
@@ -54,7 +54,7 @@
                 }}
               </div>
             </form>
-            <form v-else-if="type=='teach'">
+            <form v-else-if="type==='teach'">
               <h1 class="text-center text-info" style="margin-bottom: 0!important;">Add a new Teacher-Course Association</h1>
               <br>
               <div class="form-group">
@@ -152,11 +152,10 @@ export default {
       this.error[4].surnameError = false;
       this.error[5].selectError = false;
 
-      if (this.type == "course") {
-        if (this.title != '') {
+      if (this.type === "course") {
+        if (this.title !== '') {
           let ref = this;
-          $.ajax({
-            type: "POST",
+          $.post({
             url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + localStorage.getItem("token"),
             dataType: 'json',
             data: {type: "addCourse", title: this.title, sessionToken: localStorage.getItem("token")},
@@ -179,13 +178,12 @@ export default {
                 ref.$router.push("/");
               })
         }
-      } else if (this.type == "teacher") {
+      } else if (this.type === "teacher") {
         if (validateEmail(this.mail)) {
-          if (this.nameT != "") {
-            if (this.surname != "") {
+          if (this.nameT !== "") {
+            if (this.surname !== "") {
               let ref = this;
-              $.ajax({
-                type: "POST",
+              $.post({
                 url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + localStorage.getItem("token"),
                 dataType: 'json',
                 data: {
@@ -216,11 +214,10 @@ export default {
             } else this.error[4].surnameError = true;
           } else this.error[3].nameError = true;
         } else this.error[2].mailError = true;
-      } else if (this.type == "teach") {
-        if (this.idTeacher != '' && this.idCourse != '') {
+      } else if (this.type === "teach") {
+        if (this.idTeacher !== '' && this.idCourse !== '') {
           let ref = this;
-          $.ajax({
-            type: "POST",
+          $.post({
             url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + localStorage.getItem("token"),
             dataType: 'json',
             data: {

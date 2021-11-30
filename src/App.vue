@@ -85,8 +85,7 @@ export default {
   methods: {
     checkSession() {
       let ref = this;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
         data: {sessionToken: localStorage.getItem("token")},
@@ -96,7 +95,7 @@ export default {
         if (!result.done) {
           localStorage.clear();
 
-          if(ref.$router.app._route.fullPath != '/')
+          if(ref.$router.app._route.fullPath !== '/')
             ref.$router.push('/');
           
         } else {
@@ -125,7 +124,7 @@ export default {
           ref.user.account = "";
           ref.user.role = "";
 
-          if(ref.$router.app._route.fullPath != '/')
+          if(ref.$router.app._route.fullPath !== '/')
             ref.$router.push('/');
         } else {
           console.log("error: " + results.error);

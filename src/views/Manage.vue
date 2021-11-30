@@ -3,7 +3,7 @@
     <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
       <span class="sr-only">Loading...</span>
     </div>
-    <section v-if="dialog==''">
+    <section v-if="dialog===''">
       <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
         {{ deleteResult[0].deleteMessage }}
       </div>
@@ -150,18 +150,17 @@ export default {
   methods: {
     setTab(type) {
       this.selectedTab = type;
-      if (type == 'course')
+      if (type === 'course')
         this.getCourses();
-      else if (type == 'teacher')
+      else if (type === 'teacher')
         this.getTeachers();
-      else if (type == 'course-teacher')
+      else if (type === 'course-teacher')
         this.getTeaches();
     },
     getCourses() {
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {type: "getCourses", sessionToken: this.user.sessionToken},
@@ -183,8 +182,7 @@ export default {
     deleteCourse(idCourse) {
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {type: "deleteCourse", idCourse: idCourse, sessionToken: this.user.sessionToken},
@@ -193,7 +191,7 @@ export default {
           .done(function (results) {
             if (results.done) {
               for (let i = 0; i < ref.courses.length; i++) {
-                if (ref.courses[i].IDCourse == idCourse)
+                if (ref.courses[i].IDCourse === idCourse)
                   ref.courses.splice(i, 1);
               }
 
@@ -215,8 +213,7 @@ export default {
     getTeachers() {
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {type: "getTeachers", sessionToken: this.user.sessionToken},
@@ -238,8 +235,7 @@ export default {
     deleteTeacher(idTeacher) {
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {type: "deleteTeacher", idTeacher: idTeacher, sessionToken: this.user.sessionToken},
@@ -248,7 +244,7 @@ export default {
           .done(function (results) {
             if (results.done) {
               for (let i = 0; i < ref.teachers.length; i++) {
-                if (ref.teachers[i].IDTeacher == idTeacher)
+                if (ref.teachers[i].IDTeacher === idTeacher)
                   ref.teachers.splice(i, 1);
               }
 
@@ -270,8 +266,7 @@ export default {
     getTeaches() {
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {type: "getTeaches", sessionToken: this.user.sessionToken},
@@ -293,8 +288,7 @@ export default {
     deleteTeach(idTeacher, idCourse) {
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {
@@ -308,7 +302,7 @@ export default {
           .done(function (results) {
             if (results.done) {
               for (let i = 0; i < ref.teaches.length; i++) {
-                if (ref.teaches[i].IDTeacher == idTeacher && ref.teaches[i].IDCourse == idCourse)
+                if (ref.teaches[i].IDTeacher === idTeacher && ref.teaches[i].IDCourse === idCourse)
                   ref.teaches.splice(i, 1);
               }
 
@@ -332,7 +326,7 @@ export default {
 
 function failRequest(ref, strError) {
   ref.deleteResult[1].deleteError = true;
-  if (strError.statusText != 'error' && strError.status != 0)
+  if (strError.statusText !== 'error' && strError.status !== 0)
     ref.deleteResult[1].deleteMessage = JSON.stringify(strError.status + ": " + strError.statusText);
   else {
     if (strError.status == 0)
@@ -366,7 +360,7 @@ function errorHandling(results, ref) {
 
     deleteParentUser(ref);
 
-    if(ref.$router.app._route.fullPath != '/')
+    if(ref.$router.app._route.fullPath !== '/')
       ref.$router.push('/');
   } else {
     ref.deleteResult[1].deleteError = true;

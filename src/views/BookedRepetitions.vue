@@ -33,7 +33,7 @@
               <th scope="col">Title</th>
               <th scope="col">Name</th>
               <th scope="col">Surname</th>
-              <th scope="col" v-if="user.role == 'Administrator'">Account</th>
+              <th scope="col" v-if="user.role === 'Administrator'">Account</th>
               <th scope="col">
               </th>
               <th scope="col">
@@ -48,14 +48,14 @@
               <td>{{ el.title }}</td>
               <td>{{ el.name }}</td>
               <td>{{ el.surname }}</td>
-              <td v-if="user.role == 'Administrator'">{{ el.Account }}</td>
+              <td v-if="user.role === 'Administrator'">{{ el.Account }}</td>
               <td>
-                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="setDone"
+                <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="setDone"
                        class="btn btn-info btn-md" value="DONE"
                        v-on:click="changeState(el.IDRepetition, 'Done')">
               </td>
               <td>
-                <input v-if="selectedTab == 'Active' && user.role != 'Administrator'" id="delete"
+                <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="delete"
                        class="btn btn-info btn-md" value="DELETE"
                        v-on:click="changeState(el.IDRepetition, 'Cancelled')">
               </td>
@@ -114,15 +114,14 @@ export default {
     getBooked() {
       let ref = this;
       let accountParam = "";
-      if (this.user.role == 'Administrator')
+      if (this.user.role === 'Administrator')
         accountParam = "all"
       else
         accountParam = this.user.account;
 
       this.loading = true;
 
-      $.ajax({
-        type: "POST",
+      $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
         data: {
@@ -156,8 +155,7 @@ export default {
       this.stateChangeResult[0].changeError = false;
       let ref = this;
       this.loading = true;
-      $.ajax({
-        type: "GET",
+      $.get({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-manage-repetitions;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
         data: {newState: newState, IDRepetition: idRepetition, sessionToken: this.user.sessionToken},
@@ -166,7 +164,7 @@ export default {
           .done(function (results) {
             if (results.done) {
               for (let i = 0; i < ref.booked.length; i++) {
-                if (ref.booked[i].IDRepetition == idRepetition)
+                if (ref.booked[i].IDRepetition === idRepetition)
                   ref.booked.splice(i, 1);
               }
 
@@ -188,7 +186,7 @@ export default {
 }
 
 function errorHandling(results, ref) {
-  if (results.error == "no session") {
+  if (results.error === "no session") {
     localStorage.clear();
     ref.user.account = "";
     ref.user.sessionToken = "";
@@ -198,7 +196,7 @@ function errorHandling(results, ref) {
     ref.$parent.user.role = "";
     ref.$parent.user.account = "";
 
-    if(ref.$router.app._route.fullPath != '/')
+    if(ref.$router.app._route.fullPath !== '/')
       ref.$router.push('/');
   } else {
     ref.stateChangeResult[1].changeError = true;
@@ -211,10 +209,10 @@ function errorHandling(results, ref) {
 
 function failRequest(ref, strError) {
   ref.stateChangeResult[1].changeError = true;
-  if (strError.statusText != 'error' && strError.status != 0)
+  if (strError.statusText !== 'error' && strError.status !== 0)
     ref.stateChangeResult[1].changeMessage = JSON.stringify(strError.status + ": " + strError.statusText);
   else {
-    if (strError.status == 0)
+    if (strError.status === 0)
       ref.stateChangeResult[1].changeMessage = "Database unavailable.";
     else
       ref.stateChangeResult[1].changeMessage = "503: Server unavailable.";

@@ -226,10 +226,10 @@ export default {
                     })
                     .fail(function (strError) {
                       ref.error[2].generalError = true;
-                      if(strError.statusText != 'error' && strError.status != 0)
+                      if(strError.statusText !== 'error' && strError.status !== 0)
                         ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
                       else {
-                        if(strError.status == 0)
+                        if(strError.status === 0)
                           ref.error[2].generalMsg = "Database unavailable.";
                         else
                           ref.error[2].generalMsg = "503: Server unavailable.";
@@ -262,7 +262,7 @@ function validatePassword(pwd) {
 }
 
 function validateSurname(surname) {
-  if (surname == "") {
+  if (surname === "") {
     return false;
   } else {
     return true;
@@ -270,7 +270,7 @@ function validateSurname(surname) {
 }
 
 function validateName(name) {
-  if (name == "") {
+  if (name === "") {
     return false;
   } else {
     return true;
@@ -278,7 +278,7 @@ function validateName(name) {
 }
 
 function valideteConfirmPassword(confirmPwd, pwd) {
-  if (confirmPwd == pwd) return true;
+  if (confirmPwd === pwd) return true;
   else return false;
 }
 </script>

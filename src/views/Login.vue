@@ -88,10 +88,10 @@ export default {
           })
           .fail(function (strError) {
             ref.error[2].generalError = true;
-            if(strError.statusText != 'error' && strError.status != 0)
+            if(strError.statusText !== 'error' && strError.status !== 0)
               ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
             else {
-              if(strError.status == 0)
+              if(strError.status === 0)
                 ref.error[2].generalMsg = "Database unavailable.";
               else
                 ref.error[2].generalMsg = "503: Server unavailable.";

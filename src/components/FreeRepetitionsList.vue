@@ -67,8 +67,7 @@
 
         var self = this;
         this.$parent.$data.loading = true;
-        $.ajax({
-          type: "POST",
+        $.post({
           url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-free-repetitions",
           dataType: 'json',
           data: {day: selectedDay, account: account},
@@ -93,7 +92,7 @@
           if(strError.statusText != 'error' && strError.status != 0)
             self.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
           else {
-            if(strError.status == 0)
+            if(strError.status === 0)
               self.$parent.bookedResult[1].errorMsg = "Database unavailable.";
             else
               self.$parent.bookedResult[1].errorMsg = "503: Server unavailable.";
@@ -178,8 +177,7 @@
         if(IDCourse != -1 && IDTeacher != -1 && account != null){
           let self = this;
           this.$parent.$data.loading = true;
-          $.ajax({
-            type: "POST",
+          $.post({
             url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-book-a-repetition;jsessionid="+localStorage.getItem('token'),
             dataType: 'json',
             data: {day: day, startTime: startTime, IDCourse: IDCourse, IDTeacher:IDTeacher, account:account, sessionToken: localStorage.getItem('token')},
@@ -208,7 +206,7 @@
             self.$parent.bookedResult[1].errorMsg = JSON.stringify(strError.status + ": " + strError.statusText);
           });
         }else{
-          if(account == null){
+          if(account === null){
             this.$parent.bookedResult[0].newResults = true;
             this.$parent.bookedResult[1].bookedError = true;
             this.$parent.bookedResult[1].errorMsg = "Please Sign In to book a repetition";
@@ -223,7 +221,7 @@
   };
 
   function errorHandling(ref, results) {
-    if (results.error == "no session") {
+    if (results.error === "no session") {
       localStorage.clear();
 
       ref.$root.$children[0].user.account = "";
