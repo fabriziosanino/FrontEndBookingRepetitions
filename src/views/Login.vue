@@ -126,7 +126,7 @@ function validatePassword(pwd) {
     return true;
 }
 </script>
-<style>
+<style scoped>
 .tag-info{
   float: left;
 }

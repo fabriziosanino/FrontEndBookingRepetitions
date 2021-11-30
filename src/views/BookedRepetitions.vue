@@ -24,44 +24,47 @@
             </div>
           </nav>
           <br>
-          <table class="table">
-            <thead>
-            <tr>
-              <th scope="col">Day</th>
-              <th scope="col">From</th>
-              <th scope="col">To</th>
-              <th scope="col">Title</th>
-              <th scope="col">Name</th>
-              <th scope="col">Surname</th>
-              <th scope="col" v-if="user.role === 'Administrator'">Account</th>
-              <th scope="col">
-              </th>
-              <th scope="col">
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="el in booked" v-bind:key="el.IDRepetition">
-              <td>{{ el.day }}</td>
-              <td>{{ el.startTime }}</td>
-              <td>{{ el.finishTime }}</td>
-              <td>{{ el.title }}</td>
-              <td>{{ el.name }}</td>
-              <td>{{ el.surname }}</td>
-              <td v-if="user.role === 'Administrator'">{{ el.Account }}</td>
-              <td>
-                <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="setDone"
-                       class="btn btn-info btn-md" value="DONE"
-                       v-on:click="changeState(el.IDRepetition, 'Done')">
-              </td>
-              <td>
-                <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="delete"
-                       class="btn btn-info btn-md" value="DELETE"
-                       v-on:click="changeState(el.IDRepetition, 'Cancelled')">
-              </td>
-            </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <caption>List of active, cancelled and done repetitions.</caption>
+              <thead>
+              <tr>
+                <th scope="col">Day</th>
+                <th scope="col">From</th>
+                <th scope="col">To</th>
+                <th scope="col">Title</th>
+                <th scope="col">Name</th>
+                <th scope="col">Surname</th>
+                <th scope="col" v-if="user.role === 'Administrator'">Account</th>
+                <th scope="col">
+                </th>
+                <th scope="col">
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="el in booked" v-bind:key="el.IDRepetition">
+                <td>{{ el.day }}</td>
+                <td>{{ el.startTime }}</td>
+                <td>{{ el.finishTime }}</td>
+                <td>{{ el.title }}</td>
+                <td>{{ el.name }}</td>
+                <td>{{ el.surname }}</td>
+                <td v-if="user.role === 'Administrator'">{{ el.Account }}</td>
+                <td>
+                  <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="setDone"
+                        class="btn btn-info btn-md" value="DONE"
+                        v-on:click="changeState(el.IDRepetition, 'Done')">
+                </td>
+                <td>
+                  <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="delete"
+                        class="btn btn-info btn-md" value="DELETE"
+                        v-on:click="changeState(el.IDRepetition, 'Cancelled')">
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -227,4 +230,6 @@ function failRequest(ref, strError) {
   cursor: pointer;
 }
 .active{font-weight: bold;}
+
+thead{border-top:0px !important;}
 </style>

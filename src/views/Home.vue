@@ -29,19 +29,22 @@
             </div>
           </nav>
           <br>
-          <table class="table">
-            <thead>
-            <tr>
-              <th scope="col">HOURS</th>
-              <th scope="col">COURSE</th>
-              <th scope="col">TEACHER</th>
-              <th scope="col"></th>
-            </tr>
-            </thead>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <caption>Free repetitions list.</caption>
+              <thead>
+              <tr>
+                <th scope="col">HOURS</th>
+                <th scope="col">COURSE</th>
+                <th scope="col">TEACHER</th>
+                <th scope="col"></th>
+              </tr>
+              </thead>
 
-            <FreeRepetitionsList v-bind:selectedDay="selectedDay"></FreeRepetitionsList>
+              <FreeRepetitionsList v-bind:selectedDay="selectedDay"></FreeRepetitionsList>
 
-          </table>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -96,4 +99,5 @@ export default {
   width: 90%;
 }
 
+thead{border-top:0px !important;}
 </style>

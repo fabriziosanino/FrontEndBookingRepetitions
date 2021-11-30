@@ -285,7 +285,7 @@ function valideteConfirmPassword(confirmPwd, pwd) {
 </script>
 
 
-<style>
+<style scoped>
 .card{
 border: #adacac 1px solid; padding: 3%; border-radius: 5%;
 }

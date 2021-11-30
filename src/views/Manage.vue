@@ -24,7 +24,9 @@
             </div>
           </nav>
           <br>
-          <table class="table" v-if="selectedTab === 'course'">
+          <div class="table-responsive">
+            <table class="table table-hover" v-if="selectedTab === 'course'">
+            <caption>List of Courses, Teachers and their associations.</caption>
             <thead>
             <tr>
               <th scope="col">IDCourse</th>
@@ -44,56 +46,57 @@
               </td>
             </tr>
             </tbody>
-          </table>
-          <table class="table" v-if="selectedTab === 'teacher'">
-            <thead>
-            <tr>
-              <th scope="col">IDTeacher</th>
-              <th scope="col">Mail</th>
-              <th scope="col">Surname</th>
-              <th scope="col">Name</th>
-              <th scope="col">
-                <input id="addTeacher" class="btn btn-info btn-md" value="ADD NEW TEACHER"
-                       v-on:click="dialog='teacher'">
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="teacher in teachers" v-bind:key="teacher.IDTeacher">
-              <td>{{ teacher.IDTeacher }}</td>
-              <td>{{ teacher.Mail }}</td>
-              <td>{{ teacher.Surname }}</td>
-              <td>{{ teacher.Name }}</td>
-              <td>
-                <input id="deleteTeacher" class="btn btn-info btn-md" value="DELETE"
-                       v-on:click="deleteTeacher(teacher.IDTeacher)">
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <table class="table" v-if="selectedTab === 'course-teacher'">
-            <thead>
-            <tr>
-              <th scope="col">Title</th>
-              <th scope="col">Name</th>
-              <th scope="col">Surname</th>
-              <th scope="col">
-                <input id="addTeach" class="btn btn-info btn-md" value="ADD NEW TEACH" v-on:click="dialog='teach'">
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(teach, index) in teaches" v-bind:key="index">
-              <td>{{ teach.Title }}</td>
-              <td>{{ teach.Name }}</td>
-              <td>{{ teach.Surname }}</td>
-              <td>
-                <input id="deleteTeach" class="btn btn-info btn-md" value="DELETE"
-                       v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
-              </td>
-            </tr>
-            </tbody>
-          </table>
+            </table>
+            <table class="table" v-if="selectedTab === 'teacher'">
+              <thead>
+              <tr>
+                <th scope="col">IDTeacher</th>
+                <th scope="col">Mail</th>
+                <th scope="col">Surname</th>
+                <th scope="col">Name</th>
+                <th scope="col">
+                  <input id="addTeacher" class="btn btn-info btn-md" value="ADD NEW TEACHER"
+                        v-on:click="dialog='teacher'">
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="teacher in teachers" v-bind:key="teacher.IDTeacher">
+                <td>{{ teacher.IDTeacher }}</td>
+                <td>{{ teacher.Mail }}</td>
+                <td>{{ teacher.Surname }}</td>
+                <td>{{ teacher.Name }}</td>
+                <td>
+                  <input id="deleteTeacher" class="btn btn-info btn-md" value="DELETE"
+                        v-on:click="deleteTeacher(teacher.IDTeacher)">
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <table class="table" v-if="selectedTab === 'course-teacher'">
+              <thead>
+              <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Name</th>
+                <th scope="col">Surname</th>
+                <th scope="col">
+                  <input id="addTeach" class="btn btn-info btn-md" value="ADD NEW TEACH" v-on:click="dialog='teach'">
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="(teach, index) in teaches" v-bind:key="index">
+                <td>{{ teach.Title }}</td>
+                <td>{{ teach.Name }}</td>
+                <td>{{ teach.Surname }}</td>
+                <td>
+                  <input id="deleteTeach" class="btn btn-info btn-md" value="DELETE"
+                        v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>
@@ -376,4 +379,6 @@ function errorHandling(results, ref) {
   #nav-tab:hover{ cursor: pointer; }
 
   .active{font-weight: bold;}
+
+  thead{border-top:0px !important;}
 </style>

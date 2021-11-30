@@ -10,7 +10,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a href="/" class="nav-link" style="color: white!important;">
+            <a href="/" id="home_reloading" class="nav-link" style="color: white!important;">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
             </a>
@@ -57,7 +57,9 @@
 
     </nav>
 
-    <router-view/>
+    <main>
+      <router-view/>
+    </main>
 
   </div>
 </template>
@@ -126,6 +128,8 @@ export default {
 
           if(ref.$router.app._route.fullPath !== '/')
             ref.$router.push('/');
+          
+          $("#home_reloading").click();
         } else {
           console.log("error: " + results.error);
         }
@@ -143,7 +147,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
