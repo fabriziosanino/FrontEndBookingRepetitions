@@ -10,26 +10,26 @@
       <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link to="/" v-on:click.native="switchActive($event)" id="router-link1" class="nav-link">
+            <router-link to="/" v-on:click.native="switchActive('home')" id="router-link1" v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
             </router-link>
           </li>
           <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
-            <router-link to="/bookedRepetitions" v-on:click.native="switchActive($event)" id="router-link2" class="nav-link">
+            <router-link to="/bookedRepetitions" v-on:click.native="switchActive('booked')" id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive($event)" to="/manage" id="router-link3" class="nav-link">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('management')" to="/manage" id="router-link3" v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive($event)" to="/bookedRepetitions" id="router-link4" class="nav-link">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('reservation')" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
               RESERVATION LIST
@@ -40,7 +40,7 @@
       <div class="collapse navbar-collapse myNavbar" id="myNavbar">
         <ul class="navbar-nav ml-auto"  v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
-            <router-link to="/login" v-on:click.native="switchActive($event)" id="router-link5" class="nav-link">
+            <router-link to="/login" v-on:click.native="switchActive('login')" id="router-link5" v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG IN
             </router-link>
@@ -76,21 +76,18 @@ export default {
       sessionToken: ''
     },
     connection: true,
-    loading: false
+    loading: false,
+    navSelected: 'home'
   }),
   mounted: function () {
     //elements might not have been added to DOM yet
     this.$nextTick(() => {
-      $("#router-link1").addClass("active");
       this.checkSession();
     });
-  },
+  },  
   methods: {
-    switchActive(event){
-      let toClass = "#"+event.currentTarget.id;
-      
-      $("router-link").removeClass("active");
-      $(toClass).addClass("active");
+    switchActive(itemSelected){
+      this.navSelected=itemSelected;
     },
     checkSession() {
       let ref = this;
