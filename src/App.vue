@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -178,7 +178,7 @@ export default {
 }
 
 .ml-auto{
-  float: right;
+  /*float: right;*/
 }
 #aLogOut:hover{ cursor: pointer; }
 </style>
