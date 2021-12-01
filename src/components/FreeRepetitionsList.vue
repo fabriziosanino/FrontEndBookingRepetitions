@@ -235,12 +235,6 @@
 </script>
 
 <style scoped>
-  /*.hiddenTeacherList{
-    visibility: hidden;
-  }*/
-
-
-
   td{
     vertical-align: middle!important;
     padding: 1rem!important;

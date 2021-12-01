@@ -6,6 +6,7 @@
 
 
     <section>
+
       <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
         <span class="sr-only">Loading...</span>
       </div>
@@ -17,6 +18,7 @@
           {{ bookedResult[2].successMsg }}
         </div>
       </div>
+     
       <div style="margin: 5px;" class="card">
         <div class="card-body">
           <nav>
@@ -88,6 +90,7 @@ export default {
     loggedOut: function(){
       this.$children[0].fetchFreeRepetitions(this.selectedDay);
       this.loggedOut=false;
+      this.$parent.navSelected='home';
     }
   }
 }
