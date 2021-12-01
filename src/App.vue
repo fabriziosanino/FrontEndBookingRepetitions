@@ -1,35 +1,35 @@
 <template>
   <div id="app">
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #1DA1F2!important;">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+    <nav class="navbar navbar-expand-lg">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a href="/" id="home_reloading" class="nav-link" style="color: white!important;">
+            <a href="/" id="home_reloading" class="nav-link">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
             </a>
           </li>
           <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
-            <a href="/bookedRepetitions" style="color: white!important; padding-left: 21px!important;" class="nav-link">
+            <a href="/bookedRepetitions" class="nav-link">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
             </a>
           </li>
           <li class="nav-item">
-            <a v-if="user.role === 'Administrator'" href="/manage" style="color: white!important; padding-left: 21px!important;" class="nav-link">
+            <a v-if="user.role === 'Administrator'" href="/manage" class="nav-link">
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
             </a>
           </li>
           <li class="nav-item">
-            <a v-if="user.role === 'Administrator'" href="/bookedRepetitions" style="color: white!important; padding-left: 21px!important;" class="nav-link">
+            <a v-if="user.role === 'Administrator'" href="/bookedRepetitions"  class="nav-link">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
               VIEW ALL BOOKED'S
@@ -37,16 +37,16 @@
           </li>
         </ul>
       </div>
-      <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
-        <ul class="navbar-nav ml-auto" style="float: right;" v-if="connection">
+      <div class="collapse navbar-collapse myNavbar" id="myNavbar">
+        <ul class="navbar-nav ml-auto"  v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
-            <a href="/login" class="nav-link" style="color: white!important; text-align: right!important;">
+            <a href="/login" class="nav-link">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG IN
             </a>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
-            <a @click="logOut()" class="nav-link" id="aLogOut" style="color: white!important; text-align: right!important;">
+            <a @click="logOut()" class="nav-link" id="aLogOut">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG OUT
               <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
@@ -168,5 +168,17 @@ export default {
   color: #42b983;
 }
 
+.nav-link{
+  color:white!important;
+  padding-right: 20px!important;
+}
+
+.navbar{
+  background-color: #1DA1F2!important;
+}
+
+.ml-auto{
+  float: right;
+}
 #aLogOut:hover{ cursor: pointer; }
 </style>
