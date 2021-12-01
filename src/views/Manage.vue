@@ -164,7 +164,6 @@ export default {
     },
     getCourses() {
       let ref = this;
-      this.loading = true;
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
@@ -177,8 +176,6 @@ export default {
             } else {
               errorHandling(results, ref);
             }
-
-            ref.loading = false;
           })
           .fail(function (strError) {
             failRequest(ref, strError)
@@ -217,7 +214,6 @@ export default {
     },
     getTeachers() {
       let ref = this;
-      this.loading = true;
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
@@ -230,8 +226,6 @@ export default {
             } else {
               errorHandling(results, ref);
             }
-
-            ref.loading = false;
           })
           .fail(function (strError) {
             failRequest(ref, strError)
@@ -270,7 +264,6 @@ export default {
     },
     getTeaches() {
       let ref = this;
-      this.loading = true;
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
@@ -283,8 +276,6 @@ export default {
             } else {
               errorHandling(results, ref);
             }
-
-            ref.loading = false;
           })
           .fail(function (strError) {
             failRequest(ref, strError)
