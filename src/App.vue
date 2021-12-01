@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 
-    <nav class="navbar navbar-expand-lg">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -10,30 +10,29 @@
       <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a href="/" id="home_reloading" class="nav-link">
+            <router-link to="/" v-on:click.native="switchActive('home')" id="router-link1" v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
-            </a>
+            </router-link>
           </li>
-          <li class="nav-item" v-if="user.account !== ''">
-            <router-link to="/bookedRepetitions" class="nav-link" @click.native="setPersonal(true)">
+          <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
+            <router-link to="/bookedRepetitions" v-on:click.native="switchActive('booked'); setPersonal(true)" id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/manage" class="nav-link" v-if="user.role === 'Administrator'">
-              <span class="btn-label"><i class="fa fa-wrench"></i>
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('management')" to="/manage" id="router-link3" v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
+            <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/bookedRepetitions" class="nav-link" v-if="user.role === 'Administrator'"
-                         @click.native="setPersonal(false)">
-              <span class="btn-label"><i class="fa fa-database"></i>
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('reservation'); setPersonal(false)" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
+            <span class="btn-label"><i class="fa fa-database"></i>
             </span>
-              VIEW ALL BOOKED'S
+              RESERVATION LIST
             </router-link>
           </li>
         </ul>
@@ -41,10 +40,10 @@
       <div class="collapse navbar-collapse myNavbar" id="myNavbar">
         <ul class="navbar-nav ml-auto" v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
-            <a href="/login" class="nav-link">
+            <router-link to="/login" v-on:click.native="switchActive('login')" id="router-link5" v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG IN
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
             <a @click="logOut()" class="nav-link" id="aLogOut">
@@ -78,17 +77,21 @@ export default {
     },
     connection: true,
     loading: false,
+    navSelected: 'home'
   }),
   mounted: function () {
     //elements might not have been added to DOM yet
     this.$nextTick(() => {
       this.checkSession();
     });
-  },
+  },  
   methods: {
     setPersonal(value) {
       localStorage.setItem("personal", value);
       this.$children[3].personal = value;
+    },
+    switchActive(itemSelected){
+      this.navSelected=itemSelected;
     },
     checkSession() {
       let ref = this;
@@ -124,28 +127,29 @@ export default {
         dataType: 'json',
         timeout: 5000
       })
-          .done(function (results) {
-            console.log(results);
-            if (results.done) {
-              localStorage.clear();
-              ref.user.account = "";
-              ref.user.role = "";
+      .done(function (results) {
+        if (results.done) {
+          localStorage.clear();
+          ref.user.account = "";
+          ref.user.role = "";
 
-              if (ref.$router.app._route.fullPath !== '/')
-                ref.$router.push('/');
-            } else {
-              console.log("error: " + results.error);
-            }
+          ref.$children[1].loggedOut=true;
 
-            ref.loading = false;
-          })
-          .fail(function (strError) {
-            alert("NO DB or SERVER connection");
-            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+          if(ref.$router.app._route.fullPath !== '/')
+            ref.$router.push('/');
+        } else {
+          console.log("error: " + results.error);
+        }
 
-            ref.loading = false;
-          })
-    }
+        ref.loading = false;
+      })
+      .fail(function (strError) {
+        alert("NO DB or SERVER connection");
+        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+
+        ref.loading = false;
+      })
+    },
   }
 };
 </script>
@@ -181,11 +185,10 @@ export default {
   background-color: #1DA1F2 !important;
 }
 
-.ml-auto {
-  float: right;
+.ml-auto{
+  /*float: right;*/
 }
+#aLogOut:hover{ cursor: pointer; }
 
-#aLogOut:hover {
-  cursor: pointer;
-}
+.active{text-decoration: underline;}
 </style>

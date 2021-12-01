@@ -73,13 +73,21 @@ export default {
         bookedSuccess: false,
         successMsg: "Repetition booked successfully! Check it out in the \"My Reservations\" section."
       }],
-      loading: false
+      loading: false,
+      loggedOut: false
     }
   },
 
   methods: {
     getWeekDay: function (day) {
       this.selectedDay = day;
+    }
+  },
+
+  watch:{
+    loggedOut: function(){
+      this.$children[0].fetchFreeRepetitions(this.selectedDay);
+      this.loggedOut=false;
     }
   }
 }
