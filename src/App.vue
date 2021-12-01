@@ -129,7 +129,6 @@ export default {
           if(ref.$router.app._route.fullPath !== '/')
             ref.$router.push('/');
           
-          $("#home_reloading").click();
         } else {
           console.log("error: " + results.error);
         }

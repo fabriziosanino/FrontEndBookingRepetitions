@@ -4,10 +4,10 @@
       <span class="sr-only">Loading...</span>
     </div>
     <section v-if="dialog===''">
-      <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success" role="alert">
+      <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success customWidth" role="alert">
         {{ deleteResult[0].deleteMessage }}
       </div>
-      <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger" role="alert">{{
+      <div v-else-if="deleteResult[1].deleteError" class="alert alert-danger customWidth" role="alert">{{
           deleteResult[1].deleteMessage
         }}
       </div>
@@ -26,7 +26,7 @@
           <br>
           <div class="table-responsive">
             <table class="table table-hover" v-if="selectedTab === 'course'">
-            <caption>List of Courses, Teachers and their associations.</caption>
+            <caption>List of Courses</caption>
             <thead>
             <tr>
               <th scope="col">IDCourse</th>
@@ -41,13 +41,14 @@
               <td>{{ course.IDCourse }}</td>
               <td>{{ course.Title }}</td>
               <td>
-                <input id="deleteCourse" class="btn btn-info btn-md" value="DELETE"
+                <input id="deleteCourse" class="btn btn-outline-danger btn-md" value="DELETE"
                        v-on:click="deleteCourse(course.IDCourse)">
               </td>
             </tr>
             </tbody>
             </table>
             <table class="table" v-if="selectedTab === 'teacher'">
+              <caption>List of Teachers</caption>
               <thead>
               <tr>
                 <th scope="col">IDTeacher</th>
@@ -67,13 +68,14 @@
                 <td>{{ teacher.Surname }}</td>
                 <td>{{ teacher.Name }}</td>
                 <td>
-                  <input id="deleteTeacher" class="btn btn-info btn-md" value="DELETE"
+                  <input id="deleteTeacher" class="btn btn-outline-danger btn-md" value="DELETE"
                         v-on:click="deleteTeacher(teacher.IDTeacher)">
                 </td>
               </tr>
               </tbody>
             </table>
             <table class="table" v-if="selectedTab === 'course-teacher'">
+              <caption>List of Course-Teacher Associations</caption>
               <thead>
               <tr>
                 <th scope="col">Title</th>
@@ -90,7 +92,7 @@
                 <td>{{ teach.Name }}</td>
                 <td>{{ teach.Surname }}</td>
                 <td>
-                  <input id="deleteTeach" class="btn btn-info btn-md" value="DELETE"
+                  <input id="deleteTeach" class="btn btn-outline-danger btn-md" value="DELETE"
                         v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
                 </td>
               </tr>
@@ -318,7 +320,7 @@ export default {
               errorHandling(results, ref);
             }
 
-            ref.loading = true;
+            ref.loading = false;
           })
           .fail(function (strError) {
             failRequest(ref, strError)
@@ -339,13 +341,6 @@ function failRequest(ref, strError) {
   }
 
   ref.loading = false;
-}
-
-// eslint-disable-next-line no-unused-vars
-function deleteParentUserModal() {
-  this.$parent.user.sessionToken = "";
-  this.$parent.user.role = "";
-  this.$parent.user.account = "";
 }
 
 function deleteParentUser(ref) {
@@ -381,4 +376,11 @@ function errorHandling(results, ref) {
   .active{font-weight: bold;}
 
   thead{border-top:0px !important;}
+
+  .customWidth{
+    position: relative;
+    left: 5%;
+    width: 90%;
+    margin-top: 2%;
+  }
 </style>

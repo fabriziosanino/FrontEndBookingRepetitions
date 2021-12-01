@@ -4,10 +4,10 @@
       <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
         <span class="sr-only">Loading...</span>
       </div>
-      <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success" role="alert">
+      <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success customWidth" role="alert">
         {{ stateChangeResult[0].changeMessage }}
       </div>
-      <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger" role="alert">{{
+      <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger customWidth" role="alert">{{
           stateChangeResult[1].changeMessage
         }}
       </div>
@@ -58,7 +58,7 @@
                 </td>
                 <td>
                   <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="delete"
-                        class="btn btn-danger btn-md" value="DELETE"
+                        class="btn btn-outline-danger btn-md" value="DELETE"
                         v-on:click="changeState(el.IDRepetition, 'Cancelled')">
                 </td>
               </tr>
@@ -122,8 +122,6 @@ export default {
       else
         accountParam = this.user.account;
 
-      this.loading = true;
-
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
@@ -141,8 +139,6 @@ export default {
             } else {
               errorHandling(results, ref);
             }
-
-            ref.loading = false;
           })
           .fail(function (strError) {
             failRequest(ref, strError);
@@ -232,4 +228,11 @@ function failRequest(ref, strError) {
 .active{font-weight: bold;}
 
 thead{border-top:0px !important;}
+
+.customWidth{
+  position: relative;
+  left: 5%;
+  width: 90%;
+  margin-top: 2%;
+}
 </style>

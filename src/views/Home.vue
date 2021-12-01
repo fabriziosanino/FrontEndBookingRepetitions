@@ -102,6 +102,7 @@ export default {
   position: relative;
   left: 5%;
   width: 90%;
+  margin-top: 2%;
 }
 
 thead{border-top:0px !important;}

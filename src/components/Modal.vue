@@ -277,3 +277,7 @@ function errorHandling(results, ref) {
   }
 }
 </script>
+
+<style scoped>
+  #modal{padding-top:2%;}
+</style>
