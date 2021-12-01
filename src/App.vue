@@ -10,26 +10,26 @@
       <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link to="/" v-on:click.native="switchActive('home')" id="router-link1" v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
+            <router-link to="/" v-on:click.native="switchActive_setPersonal('home', '')" id="router-link1" v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
             </router-link>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
-            <router-link to="/bookedRepetitions" v-on:click.native="switchActive('booked'); setPersonal(true)" id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
+            <router-link to="/bookedRepetitions" v-on:click.native="switchActive_setPersonal('booked', 'true')" id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('management')" to="/manage" id="router-link3" v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive_setPersonal('management', '')" to="/manage" id="router-link3" v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('reservation'); setPersonal(false);" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive_setPersonal('reservation', 'false');" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
               RESERVATION LIST
@@ -40,7 +40,7 @@
       <div class="collapse navbar-collapse myNavbar" id="myNavbar">
         <ul class="navbar-nav ml-auto" v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
-            <router-link to="/login" v-on:click.native="switchActive('login')" id="router-link5" v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
+            <router-link to="/login" v-on:click.native="switchActive_setPersonal('login', '')" id="router-link5" v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG IN
             </router-link>
@@ -88,11 +88,12 @@ export default {
     });
   },  
   methods: {
-    setPersonal(value) {
-      localStorage.setItem("personal", value);
-      this.$children[3].personal = value;
-    },
-    switchActive(itemSelected){
+    switchActive_setPersonal(itemSelected, value){
+      if(value != "") {
+        localStorage.setItem("personal", value);
+        this.$children[4].personal = value;
+      }
+
       this.navSelected=itemSelected;
     },
     checkSession() {

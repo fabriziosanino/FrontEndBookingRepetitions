@@ -125,13 +125,10 @@ export default {
       let accountParam = "";
 
       let personalRead = localStorage.getItem("personal")
-      console.log("-->" + personalRead);
       if (personalRead ==  'true') {
-        console.log(".....");
         accountParam = this.user.account;
       }else
         accountParam = "all";
-      console.log("--" + accountParam);
 
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),

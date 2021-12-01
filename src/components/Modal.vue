@@ -92,7 +92,7 @@
               {{ addResult[0].addMessage }}
             </div>
             <div v-else-if="addResult[1].addError" class="alert alert-danger" role="alert">{{
-                addResult[1].addError
+                addResult[1].addMessage
               }}
             </div>
           </div>
