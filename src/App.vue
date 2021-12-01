@@ -10,40 +10,40 @@
       <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a href="/" id="home_reloading" class="nav-link">
+            <router-link to="/" v-on:click.native="switchActive($event)" id="router-link1" class="nav-link">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
-            <a href="/bookedRepetitions" class="nav-link">
+            <router-link to="/bookedRepetitions" v-on:click.native="switchActive($event)" id="router-link2" class="nav-link">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a v-if="user.role === 'Administrator'" href="/manage" class="nav-link">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive($event)" to="/manage" id="router-link3" class="nav-link">
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a v-if="user.role === 'Administrator'" href="/bookedRepetitions"  class="nav-link">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive($event)" to="/bookedRepetitions" id="router-link4" class="nav-link">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
-              VIEW ALL BOOKED'S
-            </a>
+              RESERVATION LIST
+            </router-link>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse myNavbar" id="myNavbar">
         <ul class="navbar-nav ml-auto"  v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
-            <a href="/login" class="nav-link">
+            <router-link to="/login" v-on:click.native="switchActive($event)" id="router-link5" class="nav-link">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG IN
-            </a>
+            </router-link>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
             <a @click="logOut()" class="nav-link" id="aLogOut">
@@ -81,10 +81,17 @@ export default {
   mounted: function () {
     //elements might not have been added to DOM yet
     this.$nextTick(() => {
+      $("#router-link1").addClass("active");
       this.checkSession();
     });
   },
   methods: {
+    switchActive(event){
+      let toClass = "#"+event.currentTarget.id;
+      
+      $("router-link").removeClass("active");
+      $(toClass).addClass("active");
+    },
     checkSession() {
       let ref = this;
       $.post({
@@ -181,4 +188,6 @@ export default {
   /*float: right;*/
 }
 #aLogOut:hover{ cursor: pointer; }
+
+.active{text-decoration: underline;}
 </style>
