@@ -124,15 +124,15 @@ export default {
         timeout: 5000
       })
       .done(function (results) {
-        console.log(results);
         if (results.done) {
           localStorage.clear();
           ref.user.account = "";
           ref.user.role = "";
 
+          ref.$children[1].loggedOut=true;
+
           if(ref.$router.app._route.fullPath !== '/')
             ref.$router.push('/');
-          
         } else {
           console.log("error: " + results.error);
         }
