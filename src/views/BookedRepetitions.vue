@@ -53,12 +53,12 @@
                 <td v-if="user.role === 'Administrator'">{{ el.Account }}</td>
                 <td>
                   <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="setDone"
-                        class="btn btn-info btn-md" value="DONE"
+                        class="btn btn-info btn-md fa-file-text-o" value="DONE"
                         v-on:click="changeState(el.IDRepetition, 'Done')">
                 </td>
                 <td>
                   <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="delete"
-                        class="btn btn-info btn-md" value="DELETE"
+                        class="btn btn-danger btn-md" value="DELETE"
                         v-on:click="changeState(el.IDRepetition, 'Cancelled')">
                 </td>
               </tr>

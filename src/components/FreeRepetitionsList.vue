@@ -12,7 +12,7 @@
         </td>
         <td>
           <div class="form-group" >
-            <select :id="'FormControlTeacher_'+index" class="form-control hiddenTeacherList">
+            <select :id="'FormControlTeacher_'+index" class="form-control" disabled>
               <option selected value="-1">Choose a teacher...</option>
               <option v-for="(teacherItem, index3) in teachersOfSelectedCourse" :key="index3" :value="teacherItem.IDTeacher">{{ teacherItem.Surname }}</option>
             </select>
@@ -78,7 +78,8 @@
           
             self.dataLoaded = true;
             $('select[id^="FormControlSub"]').val(-1);
-            $('select[id^="FormControlTeacher"]').addClass("hiddenTeacherList");
+            //$('select[id^="FormControlTeacher"]').addClass("hiddenTeacherList");
+            $('select[id^="FormControlTeacher"]').prop("disabled", true);
             $('select[id^="FormControlTeacher"]').val(-1);
           } else
             errorHandling(self, results);
@@ -149,9 +150,11 @@
               return teachersListItem;
             }
           });
-          $("#FormControlTeacher_"+tmp[1]).removeClass('hiddenTeacherList');
+          //$("#FormControlTeacher_"+tmp[1]).removeClass('hiddenTeacherList');
+          $("#FormControlTeacher_"+tmp[1]).prop("disabled", false);
         }else{
-          $("#FormControlTeacher_"+tmp[1]).addClass('hiddenTeacherList');
+          //$("#FormControlTeacher_"+tmp[1]).addClass('hiddenTeacherList');
+          $("#FormControlTeacher_"+tmp[1]).prop("disabled", true);
           this.teachersOfSelectedCourse = [];
        }
       },
@@ -186,7 +189,8 @@
               self.dataLoaded=false;
               $("#FormControlSub_"+tmp[1]).val(-1);
               $("#FormControlTeacher_"+tmp[1]).val(-1);
-              $("#FormControlTeacher_"+tmp[1]).addClass("hiddenTeacherList");
+              //$("#FormControlTeacher_"+tmp[1]).addClass("hiddenTeacherList");
+              $("#FormControlTeacher_"+tmp[1]).prop("disabled", true);
               self.fetchFreeRepetitions(this.$props.selectedDay);
               self.dataLoaded=true;
 
@@ -234,9 +238,9 @@
 </script>
 
 <style scoped>
-  .hiddenTeacherList{
+  /*.hiddenTeacherList{
     visibility: hidden;
-  }
+  }*/
 
 
 
