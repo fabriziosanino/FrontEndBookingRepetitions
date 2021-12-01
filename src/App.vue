@@ -29,7 +29,7 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('reservation'); setPersonal(false)" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
+            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive('reservation'); setPersonal(false);" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
               RESERVATION LIST
@@ -58,6 +58,8 @@
     </nav>
 
     <main>
+      <div class="sayHi" v-if="this.user.account==''">Hi, Guest</div>
+      <div class="sayHi" v-else >Hi, {{ this.user.account }}</div>
       <router-view/>
     </main>
 
@@ -134,7 +136,7 @@ export default {
           ref.user.role = "";
 
           ref.$children[1].loggedOut=true;
-
+          ref.navSelected='home';
           if(ref.$router.app._route.fullPath !== '/')
             ref.$router.push('/');
         } else {
@@ -191,4 +193,14 @@ export default {
 #aLogOut:hover{ cursor: pointer; }
 
 .active{text-decoration: underline;}
+
+.sayHi{
+  position:relative;
+  margin-top:1%;
+  margin-bottom:1%;
+  margin-left:2%;
+  text-align: left;
+  font-weight: bold;
+  font-size: larger;
+}
 </style>

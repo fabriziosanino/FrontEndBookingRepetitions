@@ -76,9 +76,10 @@ export default {
               localStorage.setItem("account", results.account);
               localStorage.setItem("role", results.role);
 
+              ref.$parent.navSelected='home';
               ref.$parent.checkSession();
-              ref.$router.push("/");
               ref.loading = false;
+              ref.$router.push("/");              
             } else {
               console.log("error: " + results.error);
               ref.error[2].generalError = true;
