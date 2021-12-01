@@ -35,7 +35,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
-                <th scope="col">Account</th>
+                <th scope="col" v-if="user.role === 'Administrator'">Account</th>
                 <th scope="col">
                 </th>
                 <th scope="col">
@@ -210,7 +210,7 @@ function errorHandling(results, ref) {
       ref.$router.push('/');
   } else {
     ref.stateChangeResult[1].changeError = true;
-    ref.stateChangeResult[1].changeMessage += " " + results.error();
+    ref.stateChangeResult[1].changeMessage += " " + results.error;
     setTimeout(function () {
       ref.stateChangeResult[1].changeError = false;
     });

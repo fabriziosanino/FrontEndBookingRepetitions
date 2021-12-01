@@ -15,7 +15,7 @@
               HOME
             </router-link>
           </li>
-          <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
+          <li class="nav-item" v-if="user.account !== ''">
             <router-link to="/bookedRepetitions" v-on:click.native="switchActive('booked'); setPersonal(true)" id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS

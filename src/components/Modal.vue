@@ -270,7 +270,7 @@ function errorHandling(results, ref) {
     ref.$router.push("/")
   } else {
     ref.addResult[1].addError = true;
-    ref.addResult[1].addMessage += " " + results.error();
+    ref.addResult[1].addMessage += " " + results.error;
     setTimeout(function () {
       ref.addResult[1].addError = false;
     }, 5000);
