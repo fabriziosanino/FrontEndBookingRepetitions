@@ -2,12 +2,12 @@
   <div id="app">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #1DA1F2!important;">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <a href="/" id="home_reloading" class="nav-link" style="color: white!important;">
@@ -37,7 +37,7 @@
           </li>
         </ul>
       </div>
-      <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar">
+      <div class="collapse navbar-collapse myNavbar" id="myNavbar">
         <ul class="navbar-nav ml-auto" style="float: right;" v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
             <a href="/login" class="nav-link" style="color: white!important; text-align: right!important;">
