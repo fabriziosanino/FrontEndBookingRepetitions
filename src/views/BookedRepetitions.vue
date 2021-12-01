@@ -35,7 +35,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
-                <th scope="col" v-if="user.role === 'Administrator'">Account</th>
+                <th scope="col">Account</th>
                 <th scope="col">
                 </th>
                 <th scope="col">
@@ -52,12 +52,12 @@
                 <td>{{ el.surname }}</td>
                 <td v-if="user.role === 'Administrator'">{{ el.Account }}</td>
                 <td>
-                  <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="setDone"
+                  <input v-if="selectedTab === 'Active'" id="setDone"
                         class="btn btn-info btn-md fa-file-text-o" value="DONE"
                         v-on:click="changeState(el.IDRepetition, 'Done')">
                 </td>
                 <td>
-                  <input v-if="selectedTab === 'Active' && user.role !== 'Administrator'" id="delete"
+                  <input v-if="selectedTab === 'Active'" id="delete"
                         class="btn btn-outline-danger btn-md" value="DELETE"
                         v-on:click="changeState(el.IDRepetition, 'Cancelled')">
                 </td>
@@ -97,8 +97,14 @@ export default {
         changeMessage: "Error while updating state"
       }
     ],
-    loading: false
+    loading: false,
+    personal: ""
   }),
+  watch: {
+    personal: function () {
+      this.getBooked();
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       //definetely added
@@ -117,10 +123,15 @@ export default {
     getBooked() {
       let ref = this;
       let accountParam = "";
-      if (this.user.role === 'Administrator')
-        accountParam = "all"
-      else
+
+      let personalRead = localStorage.getItem("personal")
+      console.log("-->" + personalRead);
+      if (personalRead ==  'true') {
+        console.log(".....");
         accountParam = this.user.account;
+      }else
+        accountParam = "all";
+      console.log("--" + accountParam);
 
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),

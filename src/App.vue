@@ -15,30 +15,31 @@
               HOME
             </a>
           </li>
-          <li class="nav-item" v-if="user.account !== '' && user.role !== 'Administrator'">
-            <a href="/bookedRepetitions" class="nav-link">
+          <li class="nav-item" v-if="user.account !== ''">
+            <router-link to="/bookedRepetitions" class="nav-link" @click.native="setPersonal(true)">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a v-if="user.role === 'Administrator'" href="/manage" class="nav-link">
-            <span class="btn-label"><i class="fa fa-wrench"></i>
+            <router-link to="/manage" class="nav-link" v-if="user.role === 'Administrator'">
+              <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
-            </a>
+            </router-link>
           </li>
           <li class="nav-item">
-            <a v-if="user.role === 'Administrator'" href="/bookedRepetitions"  class="nav-link">
-            <span class="btn-label"><i class="fa fa-database"></i>
+            <router-link to="/bookedRepetitions" class="nav-link" v-if="user.role === 'Administrator'"
+                         @click.native="setPersonal(false)">
+              <span class="btn-label"><i class="fa fa-database"></i>
             </span>
               VIEW ALL BOOKED'S
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>
       <div class="collapse navbar-collapse myNavbar" id="myNavbar">
-        <ul class="navbar-nav ml-auto"  v-if="connection">
+        <ul class="navbar-nav ml-auto" v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
             <a href="/login" class="nav-link">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
@@ -69,14 +70,14 @@ import $ from "jquery";
 
 export default {
   name: 'App',
-  data:() => ({
+  data: () => ({
     user: {
       account: '',
       role: '',
       sessionToken: ''
     },
     connection: true,
-    loading: false
+    loading: false,
   }),
   mounted: function () {
     //elements might not have been added to DOM yet
@@ -85,6 +86,10 @@ export default {
     });
   },
   methods: {
+    setPersonal(value) {
+      localStorage.setItem("personal", value);
+      this.$children[3].personal = value;
+    },
     checkSession() {
       let ref = this;
       $.post({
@@ -93,22 +98,22 @@ export default {
         data: {sessionToken: localStorage.getItem("token")},
         timeout: 5000
       })
-      .done(function (result) {
-        if (!result.done) {
-          localStorage.clear();
+          .done(function (result) {
+            if (!result.done) {
+              localStorage.clear();
 
-          if(ref.$router.app._route.fullPath !== '/')
-            ref.$router.push('/');
-          
-        } else {
-          ref.user.account = result.account;
-          ref.user.role = result.role;
-          ref.user.sessionToken = result.token;
-        }
-      })
-      .fail(function (strError) {
-        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-      });
+              if (ref.$router.app._route.fullPath !== '/')
+                ref.$router.push('/');
+
+            } else {
+              ref.user.account = result.account;
+              ref.user.role = result.role;
+              ref.user.sessionToken = result.token;
+            }
+          })
+          .fail(function (strError) {
+            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+          });
     },
 
     logOut() {
@@ -119,29 +124,28 @@ export default {
         dataType: 'json',
         timeout: 5000
       })
-      .done(function (results) {
-        console.log(results);
-        if (results.done) {
-          localStorage.clear();
-          ref.user.account = "";
-          ref.user.role = "";
+          .done(function (results) {
+            console.log(results);
+            if (results.done) {
+              localStorage.clear();
+              ref.user.account = "";
+              ref.user.role = "";
 
-          if(ref.$router.app._route.fullPath !== '/')
-            ref.$router.push('/');
-          
-        } else {
-          console.log("error: " + results.error);
-        }
+              if (ref.$router.app._route.fullPath !== '/')
+                ref.$router.push('/');
+            } else {
+              console.log("error: " + results.error);
+            }
 
-        ref.loading = false;
-      })
-      .fail(function (strError) {
-        alert("NO DB or SERVER connection");
-        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.loading = false;
+          })
+          .fail(function (strError) {
+            alert("NO DB or SERVER connection");
+            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
 
-        ref.loading = false;
-      })
-    },
+            ref.loading = false;
+          })
+    }
   }
 };
 </script>
@@ -168,17 +172,20 @@ export default {
   color: #42b983;
 }
 
-.nav-link{
-  color:white!important;
-  padding-right: 20px!important;
+.nav-link {
+  color: white !important;
+  padding-right: 20px !important;
 }
 
-.navbar{
-  background-color: #1DA1F2!important;
+.navbar {
+  background-color: #1DA1F2 !important;
 }
 
-.ml-auto{
+.ml-auto {
   float: right;
 }
-#aLogOut:hover{ cursor: pointer; }
+
+#aLogOut:hover {
+  cursor: pointer;
+}
 </style>
