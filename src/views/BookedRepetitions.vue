@@ -207,7 +207,7 @@ function errorHandling(results, ref) {
       ref.$router.push('/');
   } else {
     ref.stateChangeResult[1].changeError = true;
-    ref.stateChangeResult[1].changeMessage += " " + results.error;
+    ref.stateChangeResult[1].changeMessage = results.error;
     setTimeout(function () {
       ref.stateChangeResult[1].changeError = false;
     });
