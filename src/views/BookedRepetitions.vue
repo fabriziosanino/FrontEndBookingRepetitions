@@ -35,7 +35,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
-                <th scope="col" v-if="user.role === 'Administrator' && this.personal !== 'true'">Account</th>
+                <th scope="col" v-if="user.role === 'Administrator' && personal !== 'true'">Account</th>
                 <th scope="col">
                 </th>
                 <th scope="col">
@@ -50,7 +50,7 @@
                 <td>{{ el.title }}</td>
                 <td>{{ el.name }}</td>
                 <td>{{ el.surname }}</td>
-                <td v-if="user.role === 'Administrator' && this.personal !== 'true'">{{ el.Account }}</td>
+                <td v-if="user.role === 'Administrator' && personal !== 'true'">{{ el.Account }}</td>
                 <td>
                   <input v-if="selectedTab === 'Active'" id="setDone"
                         class="btn btn-info btn-md fa-file-text-o" value="DONE"
@@ -130,6 +130,8 @@ export default {
         accountParam = this.user.account;
       }else
         accountParam = "all";
+
+      this.personal = personalRead;
 
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
