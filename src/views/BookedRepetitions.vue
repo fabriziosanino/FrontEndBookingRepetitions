@@ -35,7 +35,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
-                <th scope="col" v-if="user.role === 'Administrator'">Account</th>
+                <th scope="col" v-if="user.role === 'Administrator' && this.personal !== 'true'">Account</th>
                 <th scope="col">
                 </th>
                 <th scope="col">
@@ -50,7 +50,7 @@
                 <td>{{ el.title }}</td>
                 <td>{{ el.name }}</td>
                 <td>{{ el.surname }}</td>
-                <td v-if="user.role === 'Administrator'">{{ el.Account }}</td>
+                <td v-if="user.role === 'Administrator' && this.personal !== 'true'">{{ el.Account }}</td>
                 <td>
                   <input v-if="selectedTab === 'Active'" id="setDone"
                         class="btn btn-info btn-md fa-file-text-o" value="DONE"
@@ -98,7 +98,7 @@ export default {
       }
     ],
     loading: false,
-    personal: ""
+    personal: 'false'
   }),
   watch: {
     personal: function () {
@@ -111,6 +111,7 @@ export default {
       this.user.account = localStorage.getItem("account");
       this.user.role = localStorage.getItem("role");
       this.user.sessionToken = localStorage.getItem("token");
+      this.personal = localStorage.getItem("personal");
 
       this.getBooked();
     });
@@ -124,7 +125,7 @@ export default {
       let ref = this;
       let accountParam = "";
 
-      let personalRead = localStorage.getItem("personal")
+      let personalRead = localStorage.getItem("personal");
       if (personalRead ==  'true') {
         accountParam = this.user.account;
       }else
