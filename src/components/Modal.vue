@@ -201,6 +201,7 @@ export default {
           })
               .done(function (results) {
                 if (results.done) {
+                  ref.title = "";
                   ref.$parent.getCourses();
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Course added successfully. Press back to return..."
@@ -235,6 +236,9 @@ export default {
               })
                   .done(function (results) {
                     if (results.done) {
+                      ref.mail = "";
+                      ref.nameT = "";
+                      ref.surname = "";
                       ref.$parent.getTeachers();
                       ref.addResult[0].addSuccess = true;
                       ref.addResult[0].addMessage = "Teacher added successfully. Press back to return..."
@@ -268,6 +272,9 @@ export default {
           })
               .done(function (results) {
                 if (results.done) {
+                  $("#idCourses").prop('selectedIndex', 0);
+                  $("#idTeachers").prop('selectedIndex', 0);
+
                   ref.$parent.getTeaches();
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Teach added successfully. Press back to return..."

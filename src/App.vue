@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-
     <nav class="navbar navbar-expand-lg navbar-dark">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,26 +9,32 @@
       <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link to="/" v-on:click.native="switchActive_setPersonal('home', '')" id="router-link1" v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
+            <router-link to="/" v-on:click.native="switchActive_setPersonal('home', '')" id="router-link1"
+                         v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-home"></i></span>
               HOME
             </router-link>
           </li>
           <li class="nav-item" v-if="user.account !== ''">
-            <router-link to="/bookedRepetitions" v-on:click.native="switchActive_setPersonal('booked', 'true')" id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
+            <router-link to="/bookedRepetitions" v-on:click.native="switchActive_setPersonal('booked', 'true')"
+                         id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
               MY RESERVATIONS
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive_setPersonal('management', '')" to="/manage" id="router-link3" v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
+            <router-link v-if="user.role === 'Administrator'"
+                         v-on:click.native="switchActive_setPersonal('management', '')" to="/manage" id="router-link3"
+                         v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
               MANAGEMENT
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive_setPersonal('reservation', 'false');" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
+            <router-link v-if="user.role === 'Administrator'"
+                         v-on:click.native="switchActive_setPersonal('reservation', 'false');" to="/bookedRepetitions"
+                         id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
               RESERVATION LIST
@@ -40,7 +45,8 @@
       <div class="collapse navbar-collapse myNavbar" id="myNavbar">
         <ul class="navbar-nav ml-auto" v-if="connection">
           <li class="nav-item" v-if="user.account === ''">
-            <router-link to="/login" v-on:click.native="switchActive_setPersonal('login', '')" id="router-link5" v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
+            <router-link to="/login" v-on:click.native="switchActive_setPersonal('login', '')" id="router-link5"
+                         v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
               <span class="btn-label"><i class="fa fa-sign-out"></i></span>
               LOG IN
             </router-link>
@@ -56,21 +62,24 @@
       </div>
 
     </nav>
-
     <main>
       <div class="sayHi" v-if="this.user.account==''">Hi, Guest</div>
-      <div class="sayHi" v-else >Hi, {{ this.user.account }}</div>
+      <div class="sayHi" v-else>Hi, {{ this.user.account }}</div>
       <router-view/>
     </main>
-
+    <Footer/>
   </div>
 </template>
 
 <script>
 import $ from "jquery";
+import Footer from '@/components/Footer.vue';
 
 export default {
   name: 'App',
+  components: {
+    Footer
+  },
   data: () => ({
     user: {
       account: '',
@@ -86,15 +95,15 @@ export default {
     this.$nextTick(() => {
       this.checkSession();
     });
-  },  
+  },
   methods: {
-    switchActive_setPersonal(itemSelected, value){
-      if(value != "") {
+    switchActive_setPersonal(itemSelected, value) {
+      if (value != "") {
         localStorage.setItem("personal", value);
         this.$children[4].personal = value;
       }
 
-      this.navSelected=itemSelected;
+      this.navSelected = itemSelected;
     },
     checkSession() {
       let ref = this;
@@ -130,28 +139,28 @@ export default {
         dataType: 'json',
         timeout: 5000
       })
-      .done(function (results) {
-        if (results.done) {
-          localStorage.clear();
-          ref.user.account = "";
-          ref.user.role = "";
+          .done(function (results) {
+            if (results.done) {
+              localStorage.clear();
+              ref.user.account = "";
+              ref.user.role = "";
 
-          ref.$children[1].loggedOut=true;
-          ref.navSelected='home';
-          if(ref.$router.app._route.fullPath !== '/')
-            ref.$router.push('/');
-        } else {
-          console.log("error: " + results.error);
-        }
+              ref.$children[1].loggedOut = true;
+              ref.navSelected = 'home';
+              if (ref.$router.app._route.fullPath !== '/')
+                ref.$router.push('/');
+            } else {
+              console.log("error: " + results.error);
+            }
 
-        ref.loading = false;
-      })
-      .fail(function (strError) {
-        alert("NO DB or SERVER connection");
-        console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
+            ref.loading = false;
+          })
+          .fail(function (strError) {
+            alert("NO DB or SERVER connection");
+            console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
 
-        ref.loading = false;
-      })
+            ref.loading = false;
+          })
     },
   }
 };
@@ -188,18 +197,23 @@ export default {
   background-color: #1DA1F2 !important;
 }
 
-.ml-auto{
+.ml-auto {
   /*float: right;*/
 }
-#aLogOut:hover{ cursor: pointer; }
 
-.active{text-decoration: underline;}
+#aLogOut:hover {
+  cursor: pointer;
+}
 
-.sayHi{
-  position:relative;
-  margin-top:1%;
-  margin-bottom:1%;
-  margin-left:2%;
+.active {
+  text-decoration: underline;
+}
+
+.sayHi {
+  position: relative;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 2%;
   text-align: left;
   font-weight: bold;
   font-size: larger;
