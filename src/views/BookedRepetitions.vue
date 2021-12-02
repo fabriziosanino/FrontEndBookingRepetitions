@@ -35,7 +35,7 @@
                 <th scope="col">Title</th>
                 <th scope="col">Name</th>
                 <th scope="col">Surname</th>
-                <th scope="col" v-if="user.role === 'Administrator' && this.personal !== 'true'">Account</th>
+                <th scope="col" v-if="user.role === 'Administrator' && personal !== 'true'">Account</th>
                 <th scope="col">
                 </th>
                 <th scope="col">
@@ -50,7 +50,7 @@
                 <td>{{ el.title }}</td>
                 <td>{{ el.name }}</td>
                 <td>{{ el.surname }}</td>
-                <td v-if="user.role === 'Administrator' && this.personal !== 'true'">{{ el.Account }}</td>
+                <td v-if="user.role === 'Administrator' && personal !== 'true'">{{ el.Account }}</td>
                 <td>
                   <input v-if="selectedTab === 'Active'" id="setDone"
                         class="btn btn-info btn-md fa-file-text-o" value="DONE"
@@ -98,7 +98,7 @@ export default {
       }
     ],
     loading: false,
-    personal: 'false'
+    personal: ''
   }),
   watch: {
     personal: function () {
@@ -111,7 +111,6 @@ export default {
       this.user.account = localStorage.getItem("account");
       this.user.role = localStorage.getItem("role");
       this.user.sessionToken = localStorage.getItem("token");
-      this.personal = localStorage.getItem("personal");
 
       this.getBooked();
     });
@@ -196,6 +195,8 @@ export default {
 function errorHandling(results, ref) {
   if (results.error === "no session") {
     localStorage.clear();
+    localStorage.setItem("currentPath", "home");
+    ref.$parent.navSelected='home';
     ref.user.account = "";
     ref.user.sessionToken = "";
     ref.user.role = "";

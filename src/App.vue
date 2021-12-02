@@ -32,7 +32,7 @@
             <router-link v-if="user.role === 'Administrator'" v-on:click.native="switchActive_setPersonal('reservation', 'false');" to="/bookedRepetitions" id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
-              RESERVATION LIST
+              CLIENTS RESERVATIONS
             </router-link>
           </li>
         </ul>
@@ -58,8 +58,8 @@
     </nav>
 
     <main>
-      <div class="sayHi" v-if="this.user.account==''">Hi, Guest</div>
-      <div class="sayHi" v-else >Hi, {{ this.user.account }}</div>
+      <div class="sayHi" v-if="this.user.account==='' && this.navSelected==='home'">Hi, Guest</div>
+      <div class="sayHi" v-else-if="this.user.account!=='' && this.navSelected==='home'" >Hi, {{ this.user.account }}</div>
       <router-view/>
     </main>
 
@@ -83,7 +83,10 @@ export default {
   }),
   mounted: function () {
     //elements might not have been added to DOM yet
+    
     this.$nextTick(() => {
+      if(localStorage.getItem("currentPath")!==undefined) //mantiene l'ultima posizione dopo il refresh
+        this.navSelected = localStorage.getItem("currentPath");
       this.checkSession();
     });
   },  
@@ -94,6 +97,7 @@ export default {
         this.$children[4].personal = value;
       }
 
+      localStorage.setItem("currentPath", itemSelected);
       this.navSelected=itemSelected;
     },
     checkSession() {
@@ -107,6 +111,7 @@ export default {
           .done(function (result) {
             if (!result.done) {
               localStorage.clear();
+              localStorage.setItem("currentPath", "home");
 
               if (ref.$router.app._route.fullPath !== '/')
                 ref.$router.push('/');
@@ -155,6 +160,30 @@ export default {
     },
   }
 };
+/*
+function getPath(router){
+  let thisPath = router.currentRoute.fullPath;
+  console.log(thisPath);
+  let ret = '';
+  switch(thisPath) {
+    case '/':
+      ret = 'home';
+      break;
+    case '/bookedRepetitions':
+      ret = 'booked';
+      break;
+    case '/registration':
+    case '/login':
+      ret = 'login';
+      break;
+    case '/manage':
+      ret = 'management';
+      break;
+    default:
+      break;
+  }
+  return ret;
+}*/
 </script>
 
 <style scoped>
@@ -188,9 +217,6 @@ export default {
   background-color: #1DA1F2 !important;
 }
 
-.ml-auto{
-  /*float: right;*/
-}
 #aLogOut:hover{ cursor: pointer; }
 
 .active{text-decoration: underline;}

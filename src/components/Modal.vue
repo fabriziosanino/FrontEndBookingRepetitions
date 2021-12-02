@@ -263,6 +263,8 @@ function errorHandling(results, ref) {
   if (results.error == "no session") {
     localStorage.clear();
 
+    ref.$parent.navSelected='home';
+    localStorage.setItem("currentPath", "home");
     ref.$root.$children[0].user.account = "";
     ref.$root.$children[0].user.role = "";
     ref.$root.$children[0].user.sessionToken = "";

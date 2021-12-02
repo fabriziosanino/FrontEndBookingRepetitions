@@ -183,7 +183,6 @@
               self.dataLoaded=false;
               $("#FormControlSub_"+tmp[1]).val(-1);
               $("#FormControlTeacher_"+tmp[1]).val(-1);
-              //$("#FormControlTeacher_"+tmp[1]).addClass("hiddenTeacherList");
               $("#FormControlTeacher_"+tmp[1]).prop("disabled", true);
               self.fetchFreeRepetitions(this.$props.selectedDay);
               self.dataLoaded=true;
@@ -191,7 +190,13 @@
               self.$parent.$data.loading = false;
             }else{
               errorHandling(self, results);
+              self.$parent.$data.loading = false;
+              self.fetchFreeRepetitions(this.$props.selectedDay);
+              self.$parent.bookedResult[0].newResults = true;
+              self.$parent.bookedResult[1].bookedError = true;
+              self.$parent.bookedResult[1].errorMsg = "Session expired. Login again to book a repetition";
             }
+
           })
           .fail((strError) => {
             self.$parent.bookedResult[0].newResults = true;
@@ -216,12 +221,15 @@
   function errorHandling(ref, results) {
     if (results.error === "no session") {
       localStorage.clear();
+      ref.$parent.navSelected='home';
+      localStorage.setItem("currentPath", "home");
 
       ref.$root.$children[0].user.account = "";
       ref.$root.$children[0].user.role = "";
       ref.$root.$children[0].user.sessionToken = "";
 
-      ref.$router.push("/")
+      if(ref.$router.app._route.fullPath !== '/')
+        ref.$router.push("/")
     } else {
       ref.$parent.bookedResult[0].newResults = true;
       ref.$parent.bookedResult[1].bookedError = true;

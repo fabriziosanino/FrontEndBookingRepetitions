@@ -88,7 +88,8 @@ export default {
       this.$parent.navSelected='home';
     }
   }
-}
+};
+
 </script>
 
 <style scoped>

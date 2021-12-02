@@ -77,6 +77,7 @@ export default {
               localStorage.setItem("role", results.role);
 
               ref.$parent.navSelected='home';
+              localStorage.setItem("currentPath", "home");
               ref.$parent.checkSession();
               ref.loading = false;
               ref.$router.push("/");              

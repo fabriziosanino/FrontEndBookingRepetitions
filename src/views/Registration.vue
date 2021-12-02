@@ -214,20 +214,26 @@ export default {
                     localStorage.setItem("account", results.account);
                     localStorage.setItem("role", results.role);
 
+                    ref.$parent.navSelected='home';
+                    localStorage.setItem("currentPath", "home");
                     ref.$parent.checkSession();
                     ref.$router.push('/');
                     ref.loading = false;
                   } else {
-                    console.log("error: " + results.error);
+                    if(results.error !== '' && !results.error.includes('Duplicate entry'))
+                      ref.error[2].generalMsg = results.error;
+                    else
+                      ref.error[2].generalMsg = "Username already taken. Please enter another one and try again.";
+
                     ref.error[2].generalError = true;
-                    ref.error[2].generalMsg = results.error;
                     ref.loading = false;
                   }
                 })
                 .fail(function (strError) {
                   ref.error[2].generalError = true;
-                  if(strError.statusText !== 'error' && strError.status !== 0)
+                  if(strError.statusText !== 'error' && strError.status !== 0){
                     ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
+                  }
                   else {
                     if(strError.status === 0)
                       ref.error[2].generalMsg = "Database unavailable.";
@@ -293,4 +299,6 @@ border: #adacac 1px solid; padding: 3%; border-radius: 5%;
 h5{
 color: #aaa !important
 }
+
+.container{margin-top: 5em;}
 </style>

@@ -343,6 +343,8 @@ function deleteParentUser(ref) {
 function errorHandling(results, ref) {
   if (results.error == "no session") {
     localStorage.clear();
+    localStorage.setItem("currentPath", "home");
+    ref.$parent.navSelected='home';
     ref.user.account = "";
     ref.user.sessionToken = "";
     ref.user.role = "";
@@ -351,7 +353,8 @@ function errorHandling(results, ref) {
 
     if(ref.$router.app._route.fullPath !== '/')
       ref.$router.push('/');
-  } else {
+    
+} else {
     ref.deleteResult[1].deleteError = true;
     ref.deleteResult[1].deleteMessage += " " + results.error;
     setTimeout(function () {
