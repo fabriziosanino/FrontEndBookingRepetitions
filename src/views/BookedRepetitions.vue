@@ -130,6 +130,8 @@ export default {
       }else
         accountParam = "all";
 
+      this.personal = personalRead;
+
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-booked-history-repetitions;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
@@ -209,7 +211,7 @@ function errorHandling(results, ref) {
       ref.$router.push('/');
   } else {
     ref.stateChangeResult[1].changeError = true;
-    ref.stateChangeResult[1].changeMessage += " " + results.error;
+    ref.stateChangeResult[1].changeMessage = results.error;
     setTimeout(function () {
       ref.stateChangeResult[1].changeError = false;
     });

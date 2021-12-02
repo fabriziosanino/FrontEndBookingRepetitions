@@ -356,7 +356,7 @@ function errorHandling(results, ref) {
     
 } else {
     ref.deleteResult[1].deleteError = true;
-    ref.deleteResult[1].deleteMessage += " " + results.error;
+    ref.deleteResult[1].deleteMessage = results.error;
     setTimeout(function () {
       ref.deleteResult[1].deleteError = false;
     }, 5000);

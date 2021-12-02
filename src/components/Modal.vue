@@ -59,16 +59,16 @@
               <br>
               <div class="form-group">
                 <label>IDTeacher:&nbsp;&nbsp;</label>
-                <select name="idTeachers" id="idTeachers" @change="onChangeTeacher($event)">
+                <select name="idTeachers" id="idTeachers" @change="onChangeTeacher($event)" class="form-control">
                   <option value="">Select a teacher</option>
-                  <option v-for="teacher in this.$parent.$data.teachers" v-bind:key="teacher.IDTeacher"
+                  <option v-for="teacher in this.ausTeachers" v-bind:key="teacher.IDTeacher"
                           v-bind:value="teacher.IDTeacher">{{ teacher.Name }} {{ teacher.Surname }}
                   </option>
                 </select><br/><br/>
                 <label>IDCourse:&nbsp;&nbsp;</label>
-                <select name="idCourses" id="idCourses" @change="onChangeCourse($event)">
+                <select name="idCourses" id="idCourses" @change="onChangeCourse($event)" class="form-control">
                   <option value="">Select a course</option>
-                  <option v-for="course in this.$parent.$data.courses" v-bind:key="course.IDCourse"
+                  <option v-for="course in this.ausCourses" v-bind:key="course.IDCourse"
                           v-bind:value="course.IDCourse">{{ course.Title }}
                   </option>
                 </select>
@@ -115,6 +115,9 @@ export default {
     surname: "",
     idCourse: "",
     idTeacher: "",
+    ausTeachers: [],
+    ausCourses: [],
+    ausTeaches: [],
     error: [
       {titleError: false, titleMsg: "Please enter a valid Title"},
       {generalError: false, generalMsg: ""},
@@ -134,12 +137,47 @@ export default {
       }
     ]
   }),
+  mounted() {
+    this.ausCourses = this.$parent.$data.courses;
+    this.ausTeachers = this.$parent.$data.teachers;
+    this.ausTeaches = this.$parent.$data.teaches;
+  },
   methods: {
     onChangeTeacher(e) {
       this.idTeacher = e.target.value;
+
+      this.$parent.getCourses();
+      this.ausCourses = this.$parent.$data.courses;
+
+      for(let i = 0; i < this.ausTeaches.length; i++){
+        if(this.ausTeaches[i].IDTeacher == this.idTeacher) {
+          //elimino il corso dai corsi che posso scegliere
+          for(let j = 0; j < this.ausCourses.length; j++) {
+            if(this.ausCourses[j].IDCourse == this.ausTeaches[i].IDCourse) {
+              this.ausCourses.splice(j, 1);
+              break;
+            }
+          }
+        }
+      }
     },
     onChangeCourse(e) {
       this.idCourse = e.target.value;
+
+      this.$parent.getTeachers();
+      this.ausTeachers = this.$parent.$data.teachers;
+
+      for(let i = 0; i < this.ausTeaches.length; i++){
+        if(this.ausTeaches[i].IDCourse == this.idCourse) {
+          //elimino il professore dai professori che posso scegliere
+          for(let j = 0; j < this.ausTeachers.length; j++) {
+            if(this.ausTeachers[j].IDTeacher == this.ausTeaches[i].IDTeacher) {
+              this.ausTeachers.splice(j, 1);
+              break;
+            }
+          }
+        }
+      }
     },
     back() {
       this.$parent.$data.dialog = "";
@@ -163,6 +201,7 @@ export default {
           })
               .done(function (results) {
                 if (results.done) {
+                  ref.title = "";
                   ref.$parent.getCourses();
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Course added successfully. Press back to return..."
@@ -197,6 +236,9 @@ export default {
               })
                   .done(function (results) {
                     if (results.done) {
+                      ref.mail = "";
+                      ref.nameT = "";
+                      ref.surname = "";
                       ref.$parent.getTeachers();
                       ref.addResult[0].addSuccess = true;
                       ref.addResult[0].addMessage = "Teacher added successfully. Press back to return..."
@@ -230,6 +272,9 @@ export default {
           })
               .done(function (results) {
                 if (results.done) {
+                  $("#idCourses").prop('selectedIndex', 0);
+                  $("#idTeachers").prop('selectedIndex', 0);
+
                   ref.$parent.getTeaches();
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Teach added successfully. Press back to return..."
@@ -272,7 +317,7 @@ function errorHandling(results, ref) {
     ref.$router.push("/")
   } else {
     ref.addResult[1].addError = true;
-    ref.addResult[1].addMessage += " " + results.error;
+    ref.addResult[1].addMessage = results.error;
     setTimeout(function () {
       ref.addResult[1].addError = false;
     }, 5000);
