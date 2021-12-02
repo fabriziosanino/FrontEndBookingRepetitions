@@ -1,73 +1,75 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-dark">
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".myNavbar"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <router-link to="/" v-on:click.native="switchActive_setPersonal('home', '')" id="router-link1"
-                         v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
-              <span class="btn-label"><i class="fa fa-home"></i></span>
-              HOME
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="user.account !== ''">
-            <router-link to="/bookedRepetitions" v-on:click.native="switchActive_setPersonal('booked', 'true')"
-                         id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
-              <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
-              MY RESERVATIONS
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'"
-                         v-on:click.native="switchActive_setPersonal('management', '')" to="/manage" id="router-link3"
-                         v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
+        <div class="collapse navbar-collapse myNavbar" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <router-link to="/" v-on:click.native="switchActive_setPersonal('home', '')" id="router-link1"
+                           v-bind:class="(navSelected==='home')?'nav-link active':'nav-link'">
+                <span class="btn-label"><i class="fa fa-home"></i></span>
+                HOME
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="user.account !== ''">
+              <router-link to="/bookedRepetitions" v-on:click.native="switchActive_setPersonal('booked', 'true')"
+                           id="router-link2" v-bind:class="(navSelected==='booked')?'nav-link active':'nav-link'">
+                <span class="btn-label"><i class="fa fa-calendar-check-o"></i></span>
+                MY RESERVATIONS
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link v-if="user.role === 'Administrator'"
+                           v-on:click.native="switchActive_setPersonal('management', '')" to="/manage" id="router-link3"
+                           v-bind:class="(navSelected==='management')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-wrench"></i>
             </span>
-              MANAGEMENT
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link v-if="user.role === 'Administrator'"
-                         v-on:click.native="switchActive_setPersonal('reservation', 'false');" to="/bookedRepetitions"
-                         id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
+                MANAGEMENT
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link v-if="user.role === 'Administrator'"
+                           v-on:click.native="switchActive_setPersonal('reservation', 'false');" to="/bookedRepetitions"
+                           id="router-link4" v-bind:class="(navSelected==='reservation')?'nav-link active':'nav-link'">
             <span class="btn-label"><i class="fa fa-database"></i>
             </span>
-              CLIENTS RESERVATIONS
-            </router-link>
-          </li>
-        </ul>
-      </div>
-      <div class="collapse navbar-collapse myNavbar" id="myNavbar">
-        <ul class="navbar-nav ml-auto" v-if="connection">
-          <li class="nav-item" v-if="user.account === ''">
-            <router-link to="/login" v-on:click.native="switchActive_setPersonal('login', '')" id="router-link5"
-                         v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
-              <span class="btn-label"><i class="fa fa-sign-out"></i></span>
-              LOG IN
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="user.account !== ''">
-            <a @click="logOut()" class="nav-link" id="aLogOut">
-              <span class="btn-label"><i class="fa fa-sign-out"></i></span>
-              LOG OUT
-              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
-            </a>
-          </li>
-        </ul>
-      </div>
+                CLIENTS RESERVATIONS
+              </router-link>
+            </li>
+          </ul>
+        </div>
+        <div class="collapse navbar-collapse myNavbar" id="myNavbar">
+          <ul class="navbar-nav ml-auto" v-if="connection">
+            <li class="nav-item" v-if="user.account === ''">
+              <router-link to="/login" v-on:click.native="switchActive_setPersonal('login', '')" id="router-link5"
+                           v-bind:class="(navSelected==='login')?'nav-link active':'nav-link'">
+                <span class="btn-label"><i class="fa fa-sign-out"></i></span>
+                LOG IN
+              </router-link>
+            </li>
+            <li class="nav-item" v-if="user.account !== ''">
+              <a @click="logOut()" class="nav-link" id="aLogOut">
+                <span class="btn-label"><i class="fa fa-sign-out"></i></span>
+                LOG OUT
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" v-if="loading"></span>
+              </a>
+            </li>
+          </ul>
+        </div>
 
-    </nav>
+      </nav>
+    </header>
     <main>
       <div class="sayHi" v-if="this.user.account==='' && this.navSelected==='home'">Hi, Guest</div>
       <div class="sayHi" v-else-if="this.user.account!=='' && this.navSelected==='home'" >Hi, {{ this.user.account }}</div>
       <router-view/>
     </main>
-    <Footer/>
+    <Footer></Footer>
   </div>
 </template>
 
@@ -204,6 +206,17 @@ function getPath(router){
   color: #2c3e50;
 }
 
+
+.sayHi {
+  position: relative;
+  margin-top: 20mm;
+  margin-bottom: 1%;
+  margin-left: 2%;
+  text-align: left;
+  font-weight: bold;
+  font-size: larger;
+}
+
 #nav {
   padding: 30px;
 }
@@ -236,13 +249,15 @@ function getPath(router){
   text-decoration: underline;
 }
 
-.sayHi {
-  position: relative;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  margin-left: 2%;
-  text-align: left;
-  font-weight: bold;
-  font-size: larger;
+header{
+  overflow: hidden;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%;
+  z-index: 2;
+  -webkit-box-shadow:0px 1px 8px 5px rgba(50, 50, 50, 0.15);
+  -moz-box-shadow:0px 1px 8px 5px rgba(50, 50, 50, 0.15);
+  box-shadow: 0px 1px 8px 5px rgba(50, 50, 50, 0.15);
+
 }
 </style>

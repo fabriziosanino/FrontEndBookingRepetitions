@@ -293,7 +293,10 @@ function valideteConfirmPassword(confirmPwd, pwd) {
 
 <style scoped>
 .card{
-border: #adacac 1px solid; padding: 3%; border-radius: 5%;
+border: #adacac 1px ; padding: 0.4%; border-radius: 5%;
+  -webkit-box-shadow:0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
 }
 
 h5{

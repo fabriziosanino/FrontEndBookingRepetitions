@@ -3,7 +3,7 @@
     <!--<h3 class="text-center text-white pt-5">Login form</h3>-->
     <div class="container">
       <div id="login-row" class="row justify-content-center align-items-center">
-        <div id="login-column" style="border: #adacac 1px solid; padding: 5%;border-radius: 5%;" class="col-md-6">
+        <div id="login-column" class="card col-md-6">
           <div id="login-box" class="col-md-12">
             <form id="login-form" class="form" method="post" onsubmit="return false">
               <h1 class="text-center text-info title">WELCOME</h1>
@@ -134,7 +134,10 @@ function validatePassword(pwd) {
 }
 
 .card{
-  border: #adacac 1px solid; padding: 5%;border-radius: 5%;
+  border: #adacac 1px ; padding: 5%;border-radius: 5%;
+  -webkit-box-shadow:0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
 }
 
 .title{

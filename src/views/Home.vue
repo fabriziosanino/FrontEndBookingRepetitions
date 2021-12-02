@@ -51,12 +51,12 @@
       </div>
     </section>
   </div>
+
 </template>
 
 <script>
 // @ is an alias to /src
 import FreeRepetitionsList from '@/components/FreeRepetitionsList.vue'
-
 export default {
   name: 'Home',
   components: {
