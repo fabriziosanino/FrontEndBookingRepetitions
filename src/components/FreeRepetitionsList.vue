@@ -172,7 +172,7 @@
           $.post({
             url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-book-a-repetition;jsessionid="+localStorage.getItem('token'),
             dataType: 'json',
-            data: {day: day, startTime: startTime, IDCourse: IDCourse, IDTeacher:IDTeacher, account:account, sessionToken: localStorage.getItem('token')},
+            data: {day: day, startTime: startTime, IDCourse: IDCourse, IDTeacher:IDTeacher, account:account},
             timeout: 5000
           })
           .done((results) => { 

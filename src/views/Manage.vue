@@ -167,7 +167,7 @@ export default {
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
-        data: {type: "getCourses", sessionToken: this.user.sessionToken},
+        data: {type: "getCourses"},
         timeout: 5000
       })
           .done(function (results) {
@@ -187,7 +187,7 @@ export default {
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
-        data: {type: "deleteCourse", idCourse: idCourse, sessionToken: this.user.sessionToken},
+        data: {type: "deleteCourse", idCourse: idCourse},
         timeout: 5000
       })
           .done(function (results) {
@@ -217,7 +217,7 @@ export default {
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
-        data: {type: "getTeachers", sessionToken: this.user.sessionToken},
+        data: {type: "getTeachers"},
         timeout: 5000
       })
           .done(function (results) {
@@ -237,7 +237,7 @@ export default {
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
-        data: {type: "deleteTeacher", idTeacher: idTeacher, sessionToken: this.user.sessionToken},
+        data: {type: "deleteTeacher", idTeacher: idTeacher},
         timeout: 5000
       })
           .done(function (results) {
@@ -267,7 +267,7 @@ export default {
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-managment-administrator;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
-        data: {type: "getTeaches", sessionToken: this.user.sessionToken},
+        data: {type: "getTeaches"},
         timeout: 5000
       })
           .done(function (results) {
@@ -290,8 +290,7 @@ export default {
         data: {
           type: "deleteTeach",
           idTeacher: idTeacher,
-          idCourse: idCourse,
-          sessionToken: this.user.sessionToken
+          idCourse: idCourse
         },
         timeout: 5000
       })

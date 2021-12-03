@@ -1,5 +1,5 @@
 <template>
-  <div class="bookedReservations" v-if="user.account !== ''">
+  <div id="bookedRepetitions" class="bookedReservations" v-if="user.account !== ''">
     <section>
       <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
         <span class="sr-only">Loading...</span>
@@ -125,10 +125,17 @@ export default {
       let accountParam = "";
 
       let personalRead = localStorage.getItem("personal");
-      if (personalRead ==  'true') {
-        accountParam = this.user.account;
-      }else
-        accountParam = "all";
+      if(personalRead !== null){
+        if (personalRead ===  'true')
+          accountParam = this.user.account;
+        else
+          accountParam = "all";
+      }else{
+        if(this.personal === 'true')
+          accountParam = this.user.account;
+        else
+          accountParam = "all";
+      }
 
       this.personal = personalRead;
 
@@ -137,8 +144,7 @@ export default {
         dataType: 'json',
         data: {
           state: this.selectedTab,
-          account: accountParam,
-          sessionToken: this.user.sessionToken
+          account: accountParam
         },
         timeout: 5000
       })
@@ -167,7 +173,7 @@ export default {
       $.get({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-manage-repetitions;jsessionid=" + this.user.sessionToken,
         dataType: 'json',
-        data: {newState: newState, IDRepetition: idRepetition, sessionToken: this.user.sessionToken},
+        data: {newState: newState, IDRepetition: idRepetition},
         timeout: 5000
       })
           .done(function (results) {

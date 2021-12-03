@@ -105,7 +105,10 @@ export default {
     switchActive_setPersonal(itemSelected, value) {
       if (value != "") {
         localStorage.setItem("personal", value);
-        this.$children[4].personal = value;
+        for(let i=0; i<this.$children.length; i++){
+          if(this.$children[i].$el._prevClass === "bookedReservations")
+            this.$children[i].personal = value;
+        }
       }
 
       localStorage.setItem("currentPath", itemSelected);
@@ -116,7 +119,7 @@ export default {
       $.post({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-check-session;jsessionid=" + localStorage.getItem("token"),
         dataType: 'json',
-        data: {sessionToken: localStorage.getItem("token")},
+        data: {},
         timeout: 5000
       })
           .done(function (result) {
