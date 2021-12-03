@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <section id="pageNotFound">
     <div id="header">
       <h1>Server Error</h1>
     </div>
@@ -11,7 +11,7 @@
         </fieldset>
       </div>
     </div>
-  </main>
+  </section>
 </template>
 
 <style scoped>

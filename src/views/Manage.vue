@@ -1,9 +1,9 @@
 <template>
-  <div id="manage" class="manage" v-if="user.account !== ''">
+  <section id="manage" class="manage" v-if="user.account !== ''">
     <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
       <span class="sr-only">Loading...</span>
     </div>
-    <section v-if="dialog===''">
+    <section id="management" v-if="dialog===''">
       <div v-if="deleteResult[0].deleteSuccess" class="alert alert-success customWidth" role="alert">
         {{ deleteResult[0].deleteMessage }}
       </div>
@@ -103,7 +103,7 @@
       </div>
     </section>
     <Modal :type="dialog" v-else></Modal>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -374,6 +374,17 @@ function errorHandling(results, ref) {
     position: relative;
     left: 5%;
     width: 90%;
+    margin-top: 2%;
+  }
+
+  .card{
+  border: #adacac 1px ; padding: 0.4%; border-radius: 1%;
+    -webkit-box-shadow:0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+    -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+    box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  }
+
+  #management{
     margin-top: 2%;
   }
 </style>

@@ -1,75 +1,72 @@
 <template>
-  <div id="bookedRepetitions" class="bookedReservations" v-if="user.account !== ''">
-    <section>
-      <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
-        <span class="sr-only">Loading...</span>
-      </div>
-      <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success customWidth" role="alert">
-        {{ stateChangeResult[0].changeMessage }}
-      </div>
-      <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger customWidth" role="alert">{{
-          stateChangeResult[1].changeMessage
-        }}
-      </div>
-      <div style="margin: 5px;" class="card">
-        <div class="card-body">
-          <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-              <a v-bind:class="(selectedTab==='Active')?'nav-item nav-link active':'nav-item nav-link'"
-                 id="nav-active-tab" data-toggle="tab" v-on:click="setTab('Active')">ACTIVE</a>
-              <a v-bind:class="(selectedTab==='Cancelled')?'nav-item nav-link active':'nav-item nav-link'"
-                 id="nav-cancelled-tab" data-toggle="tab" v-on:click="setTab('Cancelled')">CANCELLED</a>
-              <a v-bind:class="(selectedTab==='Done')?'nav-item nav-link active':'nav-item nav-link'" id="nav-done-tab"
-                 data-toggle="tab" v-on:click="setTab('Done')">DONE</a>
-            </div>
-          </nav>
-          <br>
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <caption>List of active, cancelled and done repetitions.</caption>
-              <thead>
-              <tr>
-                <th scope="col">Day</th>
-                <th scope="col">From</th>
-                <th scope="col">To</th>
-                <th scope="col">Title</th>
-                <th scope="col">Name</th>
-                <th scope="col">Surname</th>
-                <th scope="col" v-if="user.role === 'Administrator' && personal !== 'true'">Account</th>
-                <th scope="col">
-                </th>
-                <th scope="col">
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="el in booked" v-bind:key="el.IDRepetition">
-                <td>{{ el.day }}</td>
-                <td>{{ el.startTime }}</td>
-                <td>{{ el.finishTime }}</td>
-                <td>{{ el.title }}</td>
-                <td>{{ el.name }}</td>
-                <td>{{ el.surname }}</td>
-                <td v-if="user.role === 'Administrator' && personal !== 'true'">{{ el.Account }}</td>
-                <td>
-                  <input v-if="selectedTab === 'Active'" id="setDone"
-                        class="btn btn-info btn-md fa-file-text-o" value="DONE"
-                        v-on:click="changeState(el.IDRepetition, 'Done')">
-                </td>
-                <td>
-                  <input v-if="selectedTab === 'Active'" id="delete"
-                        class="btn btn-outline-danger btn-md" value="DELETE"
-                        v-on:click="changeState(el.IDRepetition, 'Cancelled')">
-                </td>
-              </tr>
-              </tbody>
-            </table>
+  <section id="bookedRepetitions" class="bookedReservations" v-if="user.account !== ''">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <div v-if="stateChangeResult[0].changeSuccess" class="alert alert-success customWidth" role="alert">
+      {{ stateChangeResult[0].changeMessage }}
+    </div>
+    <div v-else-if="stateChangeResult[1].changeError" class="alert alert-danger customWidth" role="alert">{{
+        stateChangeResult[1].changeMessage
+      }}
+    </div>
+    <div style="margin: 5px;" class="card">
+      <div class="card-body">
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a v-bind:class="(selectedTab==='Active')?'nav-item nav-link active':'nav-item nav-link'"
+                id="nav-active-tab" data-toggle="tab" v-on:click="setTab('Active')">ACTIVE</a>
+            <a v-bind:class="(selectedTab==='Cancelled')?'nav-item nav-link active':'nav-item nav-link'"
+                id="nav-cancelled-tab" data-toggle="tab" v-on:click="setTab('Cancelled')">CANCELLED</a>
+            <a v-bind:class="(selectedTab==='Done')?'nav-item nav-link active':'nav-item nav-link'" id="nav-done-tab"
+                data-toggle="tab" v-on:click="setTab('Done')">DONE</a>
           </div>
+        </nav>
+        <br>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <caption>List of active, cancelled and done repetitions.</caption>
+            <thead>
+            <tr>
+              <th scope="col">Day</th>
+              <th scope="col">From</th>
+              <th scope="col">To</th>
+              <th scope="col">Title</th>
+              <th scope="col">Name</th>
+              <th scope="col">Surname</th>
+              <th scope="col" v-if="user.role === 'Administrator' && personal !== 'true'">Account</th>
+              <th scope="col">
+              </th>
+              <th scope="col">
+              </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="el in booked" v-bind:key="el.IDRepetition">
+              <td>{{ el.day }}</td>
+              <td>{{ el.startTime }}</td>
+              <td>{{ el.finishTime }}</td>
+              <td>{{ el.title }}</td>
+              <td>{{ el.name }}</td>
+              <td>{{ el.surname }}</td>
+              <td v-if="user.role === 'Administrator' && personal !== 'true'">{{ el.Account }}</td>
+              <td>
+                <input v-if="selectedTab === 'Active'" id="setDone"
+                      class="btn btn-info btn-md fa-file-text-o" value="DONE"
+                      v-on:click="changeState(el.IDRepetition, 'Done')">
+              </td>
+              <td>
+                <input v-if="selectedTab === 'Active'" id="delete"
+                      class="btn btn-outline-danger btn-md" value="DELETE"
+                      v-on:click="changeState(el.IDRepetition, 'Cancelled')">
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </section>
-    <br/><br/>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -251,6 +248,17 @@ thead{border-top:0px !important;}
   position: relative;
   left: 5%;
   width: 90%;
+  margin-top: 2%;
+}
+
+.card{
+border: #adacac 1px ; padding: 0.4%; border-radius: 1%;
+  -webkit-box-shadow:0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+}
+
+#bookedRepetitions{
   margin-top: 2%;
 }
 </style>

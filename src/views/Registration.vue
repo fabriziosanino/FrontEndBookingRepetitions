@@ -1,5 +1,5 @@
 <template>
-  <div id="registration">
+  <section id="registration">
     <div class="container">
       <div id="registration-row" class="row justify-content-center align-items-center">
         <div
@@ -138,7 +138,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>

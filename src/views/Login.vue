@@ -1,5 +1,5 @@
 <template>
-  <div id="login" class="login">
+  <section id="login" class="login">
     <div class="container">
       <div id="login-row" class="row justify-content-center align-items-center">
         <div id="login-column" class="card col-md-6">
@@ -10,12 +10,12 @@
               <div class="form-group">
                 <label for="username" class="text-info tag-info">Username</label>
                 <input type="email" v-model="mail" placeholder="mario.rossi@email.com" name="username" id="username"
-                       class="form-control" required/>
+                      class="form-control" required/>
               </div>
               <div class="form-group">
                 <label for="password" class="text-info tag-info">Password</label>
                 <input type="password" v-model="pwd" placeholder="password" name="password" id="password"
-                       class="form-control" required/>
+                      class="form-control" required/>
               </div>
               <div id="register-link" class="text-right">
                 <router-link class="nav-link" to="/registration">
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>

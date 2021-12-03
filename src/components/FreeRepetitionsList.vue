@@ -1,29 +1,29 @@
 <template>
-    <tbody id="freeRepetitionsList" v-if="dataLoaded">
-      <tr v-for="(repetition, index) in freeRepetitions" :key="index">  
-        <td><a>{{ repetition.startTime }} - {{ getEndTime(repetition.startTime) }}</a></td>
-        <td>
-          <div class="form-group">
-            <select class="form-control" :id="'FormControlSub_'+index" @change="courseSelectedChangeListener($event)">
-              <option selected value="-1">Choose a course...</option>
-              <option v-for="(courseItem, index2) in freeRepetitions[index].coursesList" :key="index2" :value="courseItem.IDCourse+'_'+index2">{{ courseItem.Title }}</option>
-            </select>
-          </div>
-        </td>
-        <td>
-          <div class="form-group" >
-            <select :id="'FormControlTeacher_'+index" class="form-control" disabled>
-              <option selected value="-1">Choose a teacher...</option>
-              <option v-for="(teacherItem, index3) in teachersOfSelectedCourse" :key="index3" :value="teacherItem.IDTeacher">{{ teacherItem.Surname }} {{ teacherItem.Name }}</option>
-            </select>
-          </div>
-        </td>
-        <td >
-          <input :id="'btnBookARepetition_'+index" class="btn btn-info btn-md" value="BOOK" @click="bookThisRepetitionListener($event)">
-        </td>
-      </tr>
-      <tr v-if="freeRepetitions.length<=0"><td><div class="alert alert-warning" role="alert">No repetitions left on this day.</div></td></tr>
-    </tbody>
+  <tbody id="freeRepetitionsList" v-if="dataLoaded">
+    <tr v-for="(repetition, index) in freeRepetitions" :key="index">  
+      <td><a>{{ repetition.startTime }} - {{ getEndTime(repetition.startTime) }}</a></td>
+      <td>
+        <div class="form-group">
+          <select class="form-control" :id="'FormControlSub_'+index" @change="courseSelectedChangeListener($event)">
+            <option selected value="-1">Choose a course...</option>
+            <option v-for="(courseItem, index2) in freeRepetitions[index].coursesList" :key="index2" :value="courseItem.IDCourse+'_'+index2">{{ courseItem.Title }}</option>
+          </select>
+        </div>
+      </td>
+      <td>
+        <div class="form-group" >
+          <select :id="'FormControlTeacher_'+index" class="form-control" disabled>
+            <option selected value="-1">Choose a teacher...</option>
+            <option v-for="(teacherItem, index3) in teachersOfSelectedCourse" :key="index3" :value="teacherItem.IDTeacher">{{ teacherItem.Surname }} {{ teacherItem.Name }}</option>
+          </select>
+        </div>
+      </td>
+      <td >
+        <input :id="'btnBookARepetition_'+index" class="btn btn-info btn-md" value="BOOK" @click="bookThisRepetitionListener($event)">
+      </td>
+    </tr>
+    <tr v-if="freeRepetitions.length<=0"><td><div class="alert alert-warning" role="alert">No repetitions left on this day.</div></td></tr>
+  </tbody>
 </template>
 
 <script>

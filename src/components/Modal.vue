@@ -1,5 +1,5 @@
 <template>
-  <div id="modal">
+  <section id="modal">
     <div class="container">
       <div id="modal-row" class="row justify-content-center align-items-center">
         <div id="modal-column" class="card col-md-6">
@@ -99,7 +99,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
