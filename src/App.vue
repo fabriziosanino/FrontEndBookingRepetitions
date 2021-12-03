@@ -171,30 +171,7 @@ export default {
     },
   }
 };
-/*
-function getPath(router){
-  let thisPath = router.currentRoute.fullPath;
-  console.log(thisPath);
-  let ret = '';
-  switch(thisPath) {
-    case '/':
-      ret = 'home';
-      break;
-    case '/bookedRepetitions':
-      ret = 'booked';
-      break;
-    case '/registration':
-    case '/login':
-      ret = 'login';
-      break;
-    case '/manage':
-      ret = 'management';
-      break;
-    default:
-      break;
-  }
-  return ret;
-}*/
+
 </script>
 
 <style scoped>
@@ -209,7 +186,7 @@ function getPath(router){
 
 .sayHi {
   position: relative;
-  margin-top: 20mm;
+  margin-top: 4mm;
   margin-bottom: 1%;
   margin-left: 2%;
   text-align: left;
@@ -251,7 +228,6 @@ function getPath(router){
 
 header{
   overflow: hidden;
-  position: fixed; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
   width: 100%;
   z-index: 2;

@@ -2,7 +2,7 @@
   <div id="modal">
     <div class="container">
       <div id="modal-row" class="row justify-content-center align-items-center">
-        <div id="modal-column" style="border: #adacac 1px solid; padding: 5%;border-radius: 5%;" class="col-md-6">
+        <div id="modal-column" class="card col-md-6">
           <div id="modal-box" class="col-md-12">
             <form v-if="type==='course'">
               <h1 class="text-center text-info" style="margin-bottom: 0!important;">Add a new Course</h1>
@@ -327,4 +327,11 @@ function errorHandling(results, ref) {
 
 <style scoped>
   #modal{padding-top:2%;}
+
+  .card{
+  border: #adacac 1px ; padding: 5%;border-radius: 5%;
+  -webkit-box-shadow:0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+}
 </style>
