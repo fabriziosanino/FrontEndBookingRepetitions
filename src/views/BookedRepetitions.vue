@@ -72,7 +72,6 @@
 <script>
 import $ from "jquery";
 
-//TODO: se la sessione scade mentre siamo sulle my reservation non si aggiorna il pulsante di login
 
 export default {
   name: "BookedRepetitions",

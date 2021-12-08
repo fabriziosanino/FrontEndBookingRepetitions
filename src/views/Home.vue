@@ -66,7 +66,6 @@ export default {
         bookedSuccess: false,
         successMsg: "Repetition booked successfully! Check it out in the \"My Reservations\" section."
       }],
-      loading: false,
       loggedOut: false
     }
   },
