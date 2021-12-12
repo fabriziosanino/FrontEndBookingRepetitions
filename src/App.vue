@@ -89,7 +89,6 @@ export default {
       sessionToken: ''
     },
     connection: true,
-    loading: false,
     navSelected: 'home'
   }),
   mounted: function () {
@@ -143,7 +142,6 @@ export default {
 
     logOut() {
       let ref = this;
-      this.loading = true;
       $.get({
         url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-logout",
         dataType: 'json',
@@ -162,14 +160,10 @@ export default {
             } else {
               console.log("error: " + results.error);
             }
-
-            ref.loading = false;
           })
           .fail(function (strError) {
             alert("NO DB or SERVER connection");
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
-
-            ref.loading = false;
           })
     },
   }

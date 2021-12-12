@@ -61,7 +61,6 @@
         let account = "";
         if(localStorage.getItem('token') != undefined)
           account = localStorage.getItem('account');
-
         var self = this;
         $.post({
           url: "http://localhost:8080/ProvaAppAndroid_war_exploded/servlet-get-free-repetitions",

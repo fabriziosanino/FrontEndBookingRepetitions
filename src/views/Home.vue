@@ -1,8 +1,8 @@
 <template>
   <section class="home">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
+    <!--<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status" v-if="loading">
       <span class="sr-only">Loading...</span>
-    </div>
+    </div>-->
     <div v-if="bookedResult[0].newResults">
       <div v-if="bookedResult[1].bookedError" class="alert alert-danger customWidth" role="alert">
         {{ bookedResult[1].errorMsg }}

@@ -26,28 +26,28 @@
           <br>
           <div class="table-responsive">
             <table class="table table-hover" v-if="selectedTab === 'course'">
-            <caption>List of Courses</caption>
-            <thead>
-            <tr>
-              <th scope="col">IDCourse</th>
-              <th scope="col">Title</th>
-              <th scope="col">
-                <input id="addCourse" class="btn btn-info btn-md" value="ADD NEW COURSE" v-on:click="dialog='course'">
-              </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="course in courses" v-bind:key="course.IDCourse">
-              <td>{{ course.IDCourse }}</td>
-              <td>{{ course.Title }}</td>
-              <td>
-                <input id="deleteCourse" class="btn btn-outline-danger btn-md" value="DELETE"
-                       v-on:click="deleteCourse(course.IDCourse)">
-              </td>
-            </tr>
-            </tbody>
+              <caption>List of Courses</caption>
+              <thead>
+              <tr>
+                <th scope="col">IDCourse</th>
+                <th scope="col">Title</th>
+                <th scope="col">
+                  <input id="addCourse" class="btn btn-info btn-md" value="ADD NEW COURSE" v-on:click="dialog='course'">
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="course in courses" v-bind:key="course.IDCourse">
+                <td>{{ course.IDCourse }}</td>
+                <td>{{ course.Title }}</td>
+                <td>
+                  <input id="deleteCourse" class="btn btn-outline-danger btn-md" value="DELETE"
+                         v-on:click="deleteCourse(course.IDCourse)">
+                </td>
+              </tr>
+              </tbody>
             </table>
-            <table class="table" v-if="selectedTab === 'teacher'">
+            <table class="table table-hover" v-if="selectedTab === 'teacher'">
               <caption>List of Teachers</caption>
               <thead>
               <tr>
@@ -57,7 +57,7 @@
                 <th scope="col">Name</th>
                 <th scope="col">
                   <input id="addTeacher" class="btn btn-info btn-md" value="ADD NEW TEACHER"
-                        v-on:click="dialog='teacher'">
+                         v-on:click="dialog='teacher'">
                 </th>
               </tr>
               </thead>
@@ -69,12 +69,12 @@
                 <td>{{ teacher.Name }}</td>
                 <td>
                   <input id="deleteTeacher" class="btn btn-outline-danger btn-md" value="DELETE"
-                        v-on:click="deleteTeacher(teacher.IDTeacher)">
+                         v-on:click="deleteTeacher(teacher.IDTeacher)">
                 </td>
               </tr>
               </tbody>
             </table>
-            <table class="table" v-if="selectedTab === 'course-teacher'">
+            <table class="table table-hover" v-if="selectedTab === 'course-teacher'">
               <caption>List of Course-Teacher Associations</caption>
               <thead>
               <tr>
@@ -93,7 +93,7 @@
                 <td>{{ teach.Surname }}</td>
                 <td>
                   <input id="deleteTeach" class="btn btn-outline-danger btn-md" value="DELETE"
-                        v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
+                         v-on:click="deleteTeach(teach.IDTeacher, teach.IDCourse)">
                 </td>
               </tr>
               </tbody>
@@ -343,17 +343,17 @@ function errorHandling(results, ref) {
   if (results.error == "no session") {
     localStorage.clear();
     localStorage.setItem("currentPath", "home");
-    ref.$parent.navSelected='home';
+    ref.$parent.navSelected = 'home';
     ref.user.account = "";
     ref.user.sessionToken = "";
     ref.user.role = "";
 
     deleteParentUser(ref);
 
-    if(ref.$router.app._route.fullPath !== '/')
+    if (ref.$router.app._route.fullPath !== '/')
       ref.$router.push('/');
-    
-} else {
+
+  } else {
     ref.deleteResult[1].deleteError = true;
     ref.deleteResult[1].deleteMessage = results.error;
     setTimeout(function () {
@@ -364,27 +364,35 @@ function errorHandling(results, ref) {
 </script>
 
 <style scoped>
-  #nav-tab:hover{ cursor: pointer; }
+#nav-tab:hover {
+  cursor: pointer;
+}
 
-  .active{font-weight: bold;}
+.active {
+  font-weight: bold;
+}
 
-  thead{border-top:0px !important;}
+thead {
+  border-top: 0px !important;
+}
 
-  .customWidth{
-    position: relative;
-    left: 5%;
-    width: 90%;
-    margin-top: 2%;
-  }
+.customWidth {
+  position: relative;
+  left: 5%;
+  width: 90%;
+  margin-top: 2%;
+}
 
-  .card{
-  border: #adacac 1px ; padding: 0.4%; border-radius: 1%;
-    -webkit-box-shadow:0px 10px 15px 6px rgba(50, 50, 50, 0.15);
-    -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
-    box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
-  }
+.card {
+  border: #adacac 1px;
+  padding: 0.4%;
+  border-radius: 1%;
+  -webkit-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  -moz-box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+  box-shadow: 0px 10px 15px 6px rgba(50, 50, 50, 0.15);
+}
 
-  #management{
-    margin-top: 2%;
-  }
+#management {
+  margin-top: 2%;
+}
 </style>
