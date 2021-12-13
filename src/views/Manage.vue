@@ -324,10 +324,7 @@ function failRequest(ref, strError) {
   if (strError.statusText !== 'error' && strError.status !== 0)
     ref.deleteResult[1].deleteMessage = JSON.stringify(strError.status + ": " + strError.statusText);
   else {
-    if (strError.status == 0)
-      ref.deleteResult[1].deleteMessage = "Database unavailable.";
-    else
-      ref.deleteResult[1].deleteMessage = "503: Server unavailable.";
+    ref.deleteResult[1].deleteMessage = "503: Server unavailable.";
   }
 
   ref.loading = false;

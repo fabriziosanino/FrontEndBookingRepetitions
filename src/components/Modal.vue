@@ -124,7 +124,7 @@ export default {
       {mailError: false, mailMsg: "Please enter a valid Mail"},
       {nameError: false, nameMsg: "Please enter a valid Name"},
       {surnameError: false, surnameMsg: "Please enter a valid Surname"},
-      {selectError: false, selectMsg: "Please select a valid Teacher and Course"},
+      {selectError: false, selectMsg: "Please select a valid Teacher and Course"}
     ],
     addResult: [
       {
@@ -216,7 +216,8 @@ export default {
                 console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
                 ref.$router.push("/");
               })
-        }
+        }else
+           this.error[0].titleError = true;
       } else if (this.type === "teacher") {
         if (validateEmail(this.mail)) {
           if (this.nameT !== "") {
@@ -278,6 +279,11 @@ export default {
                   ref.$parent.getTeaches();
                   ref.addResult[0].addSuccess = true;
                   ref.addResult[0].addMessage = "Teach added successfully. Press back to return..."
+                  setTimeout(function(){
+                    ref.ausCourses = ref.$parent.$data.courses;
+                    ref.ausTeachers = ref.$parent.$data.teachers;
+                    ref.ausTeaches = ref.$parent.$data.teaches;
+                  }, 500);
                   setTimeout(function () {
                     ref.addResult[0].addSuccess = false;
                   }, 5000);

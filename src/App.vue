@@ -89,6 +89,7 @@ export default {
       sessionToken: ''
     },
     connection: true,
+    loading: false,
     navSelected: 'home'
   }),
   mounted: function () {
@@ -162,7 +163,6 @@ export default {
             }
           })
           .fail(function (strError) {
-            alert("NO DB or SERVER connection");
             console.log("error: " + JSON.stringify(strError.status + ": " + strError.statusText));
           })
     },

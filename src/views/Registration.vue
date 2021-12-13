@@ -235,10 +235,7 @@ export default {
                     ref.error[2].generalMsg = JSON.stringify(strError.status + ": " + strError.statusText);
                   }
                   else {
-                    if(strError.status === 0)
-                      ref.error[2].generalMsg = "Database unavailable.";
-                    else
-                      ref.error[2].generalMsg = "503: Server unavailable.";
+                    ref.error[2].generalMsg = "503: Server unavailable.";
                   }
 
                   ref.loading = false;                    
