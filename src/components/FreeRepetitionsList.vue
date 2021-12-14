@@ -71,7 +71,7 @@
         .done((results) => { 
           if(results.done){
             self.setFreeRepetitions(self, results.results);
-          
+
             self.dataLoaded = true;
             $('select[id^="FormControlSub"]').val(-1);
             $('select[id^="FormControlTeacher"]').prop("disabled", true);

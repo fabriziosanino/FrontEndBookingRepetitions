@@ -154,7 +154,10 @@ export default {
               ref.user.account = "";
               ref.user.role = "";
 
-              ref.$children[1].loggedOut = true;
+              for(let i=0; i<ref.$children.length; i++){
+                if(ref.$children[i].$el._prevClass === "home")
+                   ref.$children[i].loggedOut = true;
+              }
               ref.navSelected = 'home';
               if (ref.$router.app._route.fullPath !== '/')
                 ref.$router.push('/');
